@@ -1,0 +1,223 @@
+"use client";
+
+import * as React from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowRight, Sparkles } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import { heroRotatingRoles, personal } from "@/lib/data";
+import { cn } from "@/lib/utils";
+
+/* ─── typewriter ──────────────────────────────────────────────── */
+function useTypewriter(words: string[], typingMs = 55, pauseMs = 2000) {
+  const [display, setDisplay] = React.useState("");
+  const [wordIdx, setWordIdx] = React.useState(0);
+  const [phase, setPhase] = React.useState<"typing"|"pausing"|"erasing">("typing");
+  const [charIdx, setCharIdx] = React.useState(0);
+
+  React.useEffect(() => {
+    const word = words[wordIdx];
+    if (phase === "typing") {
+      if (charIdx < word.length) {
+        const t = setTimeout(() => { setDisplay(word.slice(0, charIdx+1)); setCharIdx(c=>c+1); }, typingMs + Math.random()*30);
+        return () => clearTimeout(t);
+      }
+      const t = setTimeout(() => setPhase("pausing"), pauseMs);
+      return () => clearTimeout(t);
+    }
+    if (phase === "pausing") { const t = setTimeout(() => setPhase("erasing"), 120); return () => clearTimeout(t); }
+    if (phase === "erasing") {
+      if (charIdx > 0) {
+        const t = setTimeout(() => { setDisplay(word.slice(0, charIdx-1)); setCharIdx(c=>c-1); }, typingMs*0.55);
+        return () => clearTimeout(t);
+      }
+      setWordIdx(i => (i+1) % words.length);
+      setPhase("typing");
+    }
+  }, [phase, charIdx, wordIdx, words, typingMs, pauseMs]);
+
+  return display;
+}
+
+export function Hero() {
+  const reduceMotion = useReducedMotion();
+  const typed = useTypewriter(heroRotatingRoles);
+  const word = reduceMotion ? heroRotatingRoles[0] : typed;
+
+  return (
+    <section
+      id="home"
+      aria-label="Introduction"
+      className="relative isolate overflow-hidden pt-28 pb-20 sm:pt-32 sm:pb-28"
+    >
+      <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 sm:px-6 lg:flex-row lg:items-center lg:gap-16">
+
+        {/* ── LEFT ── */}
+        <div className="flex-1 space-y-8">
+
+          <motion.div
+            initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-wrap items-center gap-3"
+          >
+            <Badge className="gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-emerald-700 dark:text-emerald-300">
+              <span className="relative flex h-2 w-2" aria-hidden>
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+              </span>
+              Open to internship opportunities
+            </Badge>
+            <Badge variant="outline" className="gap-1.5 rounded-full text-muted-foreground">
+              <Sparkles className="size-3.5" aria-hidden />
+              Montreal, QC
+            </Badge>
+          </motion.div>
+
+          <motion.div
+            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.05, ease: [0.22,1,0.36,1] }}
+            className="space-y-4"
+          >
+            <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+              <span className="block">{personal.name.split(" ")[0]}</span>
+              {/* shimmer gradient on surname */}
+              <span
+                className="block"
+                style={{
+                  background: "linear-gradient(135deg, #818cf8 0%, #c4b5fd 25%, #e0d9ff 50%, #c4b5fd 75%, #818cf8 100%)",
+                  backgroundSize: "200% auto",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  animation: reduceMotion ? undefined : "text-shimmer 5s linear infinite",
+                }}
+              >
+                {personal.name.split(" ").slice(1).join(" ")}
+              </span>
+            </h1>
+
+            <p className="max-w-xl text-lg text-muted-foreground sm:text-xl">
+              {personal.headline}
+            </p>
+
+            <p className="font-mono text-sm text-primary sm:text-base" aria-live="polite">
+              <span className="text-muted-foreground">Currently: </span>
+              <span className="font-semibold text-foreground">{word}</span>
+              <span className="ml-0.5 inline-block h-[1em] w-[2px] translate-y-[2px] animate-pulse rounded-sm bg-primary" aria-hidden />
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.14 }}
+            className="flex flex-wrap gap-3"
+          >
+            <a
+              href="#projects"
+              className={cn(
+                buttonVariants({ size: "lg" }),
+                "group gap-2 shadow-[0_0_22px_rgba(99,102,241,0.40)] transition-all duration-300 hover:shadow-[0_0_38px_rgba(99,102,241,0.65)] hover:scale-[1.02]"
+              )}
+            >
+              View featured work
+              <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden />
+            </a>
+            <a
+              href="/resume.pdf"
+              download
+              className={cn(
+                buttonVariants({ variant: "outline", size: "lg" }),
+                "transition-all duration-300 hover:scale-[1.02]"
+              )}
+            >
+              Download resume
+            </a>
+          </motion.div>
+        </div>
+
+        {/* ── RIGHT: floating code card ── */}
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0, scale: 0.96, x: 24 }}
+          animate={{ opacity: 1, scale: 1, x: 0 }}
+          transition={{ duration: 0.7, delay: 0.16, ease: [0.22,1,0.36,1] }}
+          className="relative flex-1"
+          style={{ animation: reduceMotion ? undefined : "float-card 6s ease-in-out infinite" }}
+        >
+          {/* glow ring behind card */}
+          <div
+            className="absolute -inset-3 rounded-3xl opacity-30"
+            style={{
+              background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(99,102,241,0.5), transparent 70%)",
+              filter: "blur(16px)",
+            }}
+          />
+
+          <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-card/90 p-6 shadow-xl backdrop-blur-md dark:bg-card/70">
+            {/* gradient tint */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/6 via-transparent to-violet-500/6" />
+
+            {/* top accent line */}
+            <div
+              className="absolute inset-x-0 top-0 h-px"
+              style={{ background: "linear-gradient(90deg, transparent, rgba(129,140,248,0.6) 40%, rgba(196,181,253,0.7) 60%, transparent)" }}
+            />
+
+            <div className="relative space-y-4 font-mono text-xs sm:text-sm">
+              <div className="flex items-center justify-between text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <span className="size-2.5 rounded-full bg-red-400/80" />
+                  <span className="size-2.5 rounded-full bg-yellow-400/80" />
+                  <span className="size-2.5 rounded-full bg-green-400/80" />
+                </div>
+                <span className="text-[11px] text-muted-foreground/60">focus.ts</span>
+                <span className="rounded bg-muted px-2 py-0.5 text-[10px] uppercase tracking-wider">portfolio</span>
+              </div>
+              <pre className="overflow-x-auto text-left">
+                <code>
+                  <span className="text-violet-400">const</span>
+                  <span className="text-foreground/90"> engineer </span>
+                  <span className="text-violet-400">=</span>
+                  <span className="text-foreground/90">{" {\n"}</span>
+                  <span className="text-foreground/50">{"  "}</span>
+                  <span className="text-sky-400">school</span>
+                  <span className="text-foreground/70">{": "}</span>
+                  <span className="text-emerald-400">&quot;Concordia · Software Eng (Co-op)&quot;</span>
+                  <span className="text-foreground/70">{",\n"}</span>
+                  <span className="text-foreground/50">{"  "}</span>
+                  <span className="text-sky-400">strengths</span>
+                  <span className="text-foreground/70">{": ["}</span>
+                  <span className="text-emerald-400">&quot;data&quot;</span>
+                  <span className="text-foreground/70">{", "}</span>
+                  <span className="text-emerald-400">&quot;backend&quot;</span>
+                  <span className="text-foreground/70">{", "}</span>
+                  <span className="text-emerald-400">&quot;full-stack&quot;</span>
+                  <span className="text-foreground/70">{"],\n"}</span>
+                  <span className="text-foreground/50">{"  "}</span>
+                  <span className="text-sky-400">languages</span>
+                  <span className="text-foreground/70">{": ["}</span>
+                  <span className="text-emerald-400">&quot;FR&quot;</span>
+                  <span className="text-foreground/70">{", "}</span>
+                  <span className="text-emerald-400">&quot;EN&quot;</span>
+                  <span className="text-foreground/70">{"],\n"}</span>
+                  <span className="text-foreground/50">{"  "}</span>
+                  <span className="text-sky-400">gpa</span>
+                  <span className="text-foreground/70">{": "}</span>
+                  <span className="text-orange-400">3.4</span>
+                  <span className="text-foreground/70">{",\n"}</span>
+                  <span className="text-foreground/50">{"  "}</span>
+                  <span className="text-sky-400">goal</span>
+                  <span className="text-foreground/70">{": "}</span>
+                  <span className="text-emerald-400">&quot;Ship reliable software that scales&quot;</span>
+                  <span className="text-foreground/70">{",\n}"}</span>
+                </code>
+              </pre>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
