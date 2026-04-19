@@ -7,6 +7,38 @@ import { AnimatedSection } from "@/components/ui/animated-section";
 import { Card, CardContent } from "@/components/ui/card";
 import { education, personal } from "@/lib/data";
 
+/* ── 3-D tilt wrapper ──────────────────────────────────────────── */
+function Tilt3D({ children, className }: { children: React.ReactNode; className?: string }) {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+
+  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (reduceMotion || !ref.current) return;
+    const el = ref.current;
+    const rect = el.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    el.style.transform = `perspective(1000px) rotateX(${(0.5 - y) * 14}deg) rotateY(${(x - 0.5) * 14}deg) scale3d(1.03,1.03,1.03)`;
+  };
+
+  const onLeave = () => {
+    if (!ref.current) return;
+    ref.current.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)";
+  };
+
+  return (
+    <div
+      ref={ref}
+      className={className}
+      onMouseMove={reduceMotion ? undefined : onMove}
+      onMouseLeave={reduceMotion ? undefined : onLeave}
+      style={{ transition: "transform 0.15s ease, box-shadow 0.15s ease", transformStyle: "preserve-3d", willChange: "transform" }}
+    >
+      {children}
+    </div>
+  );
+}
+
 /* ── Animated counter ─────────────────────────────────────────── */
 function Counter({ to, suffix = "", decimals = 0 }: { to: number; suffix?: string; decimals?: number }) {
   const ref = React.useRef<HTMLSpanElement>(null);
@@ -81,16 +113,17 @@ export function About() {
               whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ duration: 0.45, delay: i * 0.08 }}
-              className="group relative overflow-hidden rounded-xl border border-border/80 bg-card/60 p-5 text-center backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_8px_30px_rgba(99,102,241,0.14)]"
             >
-              <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                style={{ background: "radial-gradient(ellipse 70% 60% at 50% 0%, rgba(99,102,241,0.10), transparent)" }}
-              />
-              <p className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                <Counter to={s.value} suffix={s.suffix} decimals={s.decimals} />
-              </p>
-              <p className="mt-1 text-sm font-semibold text-primary">{s.label}</p>
-              <p className="mt-0.5 text-xs text-muted-foreground">{s.sub}</p>
+              <Tilt3D className="group relative overflow-hidden rounded-xl border border-border/80 bg-card/60 p-5 text-center backdrop-blur-sm transition-colors duration-300 hover:border-primary/30 hover:shadow-[0_8px_30px_rgba(99,102,241,0.14)]">
+                <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  style={{ background: "radial-gradient(ellipse 70% 60% at 50% 0%, rgba(99,102,241,0.10), transparent)" }}
+                />
+                <p className="relative z-20 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                  <Counter to={s.value} suffix={s.suffix} decimals={s.decimals} />
+                </p>
+                <p className="relative z-20 mt-1 text-sm font-semibold text-primary">{s.label}</p>
+                <p className="relative z-20 mt-0.5 text-xs text-muted-foreground">{s.sub}</p>
+              </Tilt3D>
             </motion.div>
           ))}
         </div>
@@ -140,6 +173,7 @@ export function About() {
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.55, ease: [0.22,1,0.36,1] }}
           >
+            <Tilt3D className="rounded-xl">
             <Card className="border-border/80">
               <CardContent className="space-y-4 p-6">
                 {[
@@ -173,6 +207,7 @@ export function About() {
                 ))}
               </CardContent>
             </Card>
+            </Tilt3D>
           </motion.div>
         </div>
       </div>

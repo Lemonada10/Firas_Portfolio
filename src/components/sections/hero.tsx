@@ -8,6 +8,31 @@ import { buttonVariants } from "@/components/ui/button";
 import { heroRotatingRoles, personal } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
+/* ── CSS-based 3-D tilt hook ─────────────────────────────────── */
+function useTilt3D(maxDeg = 10) {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+
+  const onMove = React.useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (reduceMotion || !ref.current) return;
+      const el = ref.current;
+      const rect = el.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+      el.style.transform = `perspective(1000px) rotateX(${(0.5 - y) * maxDeg}deg) rotateY(${(x - 0.5) * maxDeg}deg) scale3d(1.03,1.03,1.03)`;
+    },
+    [reduceMotion, maxDeg]
+  );
+
+  const onLeave = React.useCallback(() => {
+    if (!ref.current) return;
+    ref.current.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)";
+  }, []);
+
+  return { ref, onMove, onLeave, reduceMotion };
+}
+
 /* ─── typewriter ──────────────────────────────────────────────── */
 function useTypewriter(words: string[], typingMs = 55, pauseMs = 2000) {
   const [display, setDisplay] = React.useState("");
@@ -44,6 +69,7 @@ export function Hero() {
   const typed = useTypewriter(heroRotatingRoles);
   const word = reduceMotion ? heroRotatingRoles[0] : typed;
   const heroRef = React.useRef<HTMLElement>(null);
+  const tilt = useTilt3D(9);
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -168,7 +194,17 @@ export function Hero() {
             }}
           />
 
-          <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-card/90 p-6 shadow-xl backdrop-blur-md dark:bg-card/70">
+          <div
+            ref={tilt.ref}
+            onMouseMove={tilt.reduceMotion ? undefined : tilt.onMove}
+            onMouseLeave={tilt.reduceMotion ? undefined : tilt.onLeave}
+            style={{
+              transition: "transform 0.15s ease, box-shadow 0.15s ease",
+              transformStyle: "preserve-3d",
+              willChange: "transform",
+            }}
+            className="relative overflow-hidden rounded-2xl border border-border/80 bg-card/90 shadow-xl backdrop-blur-md hover:shadow-[0_20px_50px_rgba(80,90,255,0.30)] dark:bg-card/70"
+          >
             {/* inner tint: neutral in light, violet wash in dark */}
             <div className="absolute inset-0 bg-gradient-to-br from-slate-500/[0.07] via-transparent to-slate-600/[0.05] dark:from-primary/6 dark:via-transparent dark:to-violet-500/6" />
 
@@ -188,7 +224,8 @@ export function Hero() {
               }}
             />
 
-            <div className="relative space-y-4 font-mono text-xs sm:text-sm">
+            <div className="p-6" style={{ transform: "translateZ(28px)", transformStyle: "preserve-3d" }}>
+            <div className="space-y-4 font-mono text-xs sm:text-sm">
               <div className="flex items-center justify-between text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <span className="size-2.5 rounded-full bg-red-400/80" />
@@ -237,6 +274,7 @@ export function Hero() {
                   <span className="text-foreground/70">{",\n}"}</span>
                 </code>
               </pre>
+            </div>
             </div>
           </div>
         </motion.div>
