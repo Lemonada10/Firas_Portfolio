@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
 import { FolderGit2 } from "lucide-react";
 import { AnimatedSection } from "@/components/ui/animated-section";
 import { ProjectCard } from "@/components/ui/project-card";
@@ -68,12 +69,16 @@ export function Projects() {
             </Link>
           </div>
 
-          <div className="mt-10 flex flex-wrap items-center gap-2">
+          <motion.div
+            layout
+            className="mt-10 flex flex-wrap items-center gap-2"
+          >
             {techOptions.map((t) => {
               const active = t === activeTech;
               return (
-                <button
+                <motion.button
                   key={t}
+                  layout
                   type="button"
                   onClick={() => setActiveTech(t)}
                   className={cn(
@@ -85,26 +90,33 @@ export function Projects() {
                   aria-pressed={active}
                 >
                   {t}
-                </button>
+                </motion.button>
               );
             })}
-            <Badge
-              variant="outline"
-              className="ml-auto hidden font-mono text-[11px] text-muted-foreground sm:inline-flex"
-            >
-              {visible.length} shown
-            </Badge>
-          </div>
+            <motion.div layout className="ml-auto hidden sm:block">
+              <Badge
+                variant="outline"
+                className="font-mono text-[11px] text-muted-foreground"
+              >
+                {visible.length} shown
+              </Badge>
+            </motion.div>
+          </motion.div>
 
-          <div className="mt-10 grid gap-8 lg:grid-cols-2">
-            {visible.map((p, i) => (
-              <ProjectCard
-                key={p.slug}
-                project={p}
-                index={i}
-                onOpen={() => handleOpen(p)}
-              />
-            ))}
+          <motion.div
+            layout
+            className="mt-10 grid gap-8 lg:grid-cols-2"
+          >
+            <AnimatePresence mode="popLayout" initial={false}>
+              {visible.map((p, i) => (
+                <ProjectCard
+                  key={p.slug}
+                  project={p}
+                  index={i}
+                  onOpen={() => handleOpen(p)}
+                />
+              ))}
+            </AnimatePresence>
 
             <div className="flex min-h-[280px] flex-col items-center justify-center rounded-2xl border border-dashed border-border/80 bg-muted/30 p-8 text-center">
               <p className="text-sm font-medium text-foreground">
@@ -127,7 +139,7 @@ export function Projects() {
                 Collaborate
               </a>
             </div>
-          </div>
+          </motion.div>
         </div>
       </AnimatedSection>
 

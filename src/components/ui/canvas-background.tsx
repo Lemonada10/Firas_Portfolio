@@ -121,14 +121,20 @@ export function CanvasBackground() {
       t += 0.006;
       ctx.clearRect(0, 0, W, H);
 
-      // — base background —
-      ctx.fillStyle = "#09090f";
+      const isDark =
+        typeof document !== "undefined" &&
+        document.documentElement.classList.contains("dark");
+
+      // — base background (must track theme — light text sits on this layer) —
+      ctx.fillStyle = isDark ? "#09090f" : "#fafaf9";
       ctx.fillRect(0, 0, W, H);
 
       // — aurora layer 1: top-left indigo —
       {
         const g = ctx.createRadialGradient(W*0.15, H*0.22, 0, W*0.15, H*0.22, W*0.55);
-        const a = 0.18 + Math.sin(t * 0.6) * 0.05;
+        const a = isDark
+          ? 0.18 + Math.sin(t * 0.6) * 0.05
+          : 0.05 + Math.sin(t * 0.6) * 0.016;
         g.addColorStop(0, `rgba(99,102,241,${a})`);
         g.addColorStop(1, "rgba(99,102,241,0)");
         ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
@@ -136,7 +142,9 @@ export function CanvasBackground() {
       // — aurora layer 2: bottom-right violet —
       {
         const g = ctx.createRadialGradient(W*0.85, H*0.72, 0, W*0.85, H*0.72, W*0.48);
-        const a = 0.14 + Math.sin(t * 0.45 + 1.2) * 0.04;
+        const a = isDark
+          ? 0.14 + Math.sin(t * 0.45 + 1.2) * 0.04
+          : 0.038 + Math.sin(t * 0.45 + 1.2) * 0.012;
         g.addColorStop(0, `rgba(139,92,246,${a})`);
         g.addColorStop(1, "rgba(139,92,246,0)");
         ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
@@ -144,7 +152,9 @@ export function CanvasBackground() {
       // — aurora layer 3: centre soft blue —
       {
         const g = ctx.createRadialGradient(W*0.5, H*0.5, 0, W*0.5, H*0.5, W*0.38);
-        const a = 0.07 + Math.sin(t * 0.35 + 2.5) * 0.03;
+        const a = isDark
+          ? 0.07 + Math.sin(t * 0.35 + 2.5) * 0.03
+          : 0.022 + Math.sin(t * 0.35 + 2.5) * 0.01;
         g.addColorStop(0, `rgba(59,130,246,${a})`);
         g.addColorStop(1, "rgba(59,130,246,0)");
         ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
@@ -175,11 +185,12 @@ export function CanvasBackground() {
           const d2 = dx*dx + dy*dy;
           if (d2 < MAX_DIST*MAX_DIST) {
             const fade = 1 - Math.sqrt(d2)/MAX_DIST;
+            const lineA = fade * (isDark ? 0.14 : 0.072);
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(129,140,248,${fade * 0.14})`;
-            ctx.lineWidth = 0.9;
+            ctx.strokeStyle = `rgba(99,102,241,${lineA})`;
+            ctx.lineWidth = isDark ? 0.9 : 0.75;
             ctx.stroke();
           }
         }
@@ -216,13 +227,21 @@ export function CanvasBackground() {
         const py   = from.y + (to.y - from.y) * pulse.progress;
 
         const glow = ctx.createRadialGradient(px, py, 0, px, py, 9);
-        glow.addColorStop(0, pulse.hue===240 ? "rgba(129,140,248,0.55)" : "rgba(167,139,250,0.55)");
+        const g0 = isDark ? 0.55 : 0.26;
+        glow.addColorStop(
+          0,
+          pulse.hue === 240 ? `rgba(129,140,248,${g0})` : `rgba(167,139,250,${g0})`
+        );
         glow.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = glow;
         ctx.beginPath(); ctx.arc(px, py, 9, 0, Math.PI*2); ctx.fill();
 
         ctx.beginPath(); ctx.arc(px, py, 2.2, 0, Math.PI*2);
-        ctx.fillStyle = pulse.hue===240 ? "rgba(165,180,252,0.95)" : "rgba(196,181,253,0.95)";
+        const core = isDark ? 0.95 : 0.72;
+        ctx.fillStyle =
+          pulse.hue === 240
+            ? `rgba(79,70,229,${core})`
+            : `rgba(109,40,217,${core})`;
         ctx.fill();
       }
 
@@ -234,14 +253,17 @@ export function CanvasBackground() {
 
         if (breathe > 0.65) {
           const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r*5);
-          g.addColorStop(0, `rgba(167,139,250,${opacity*0.3})`);
+          const haloA = isDark ? opacity * 0.3 : opacity * 0.12;
+          g.addColorStop(0, `rgba(129,140,248,${haloA})`);
           g.addColorStop(1, "rgba(0,0,0,0)");
           ctx.fillStyle = g;
           ctx.beginPath(); ctx.arc(p.x, p.y, r*5, 0, Math.PI*2); ctx.fill();
         }
 
         ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI*2);
-        ctx.fillStyle = `rgba(165,180,252,${opacity})`;
+        ctx.fillStyle = isDark
+          ? `rgba(165,180,252,${opacity})`
+          : `rgba(71,85,105,${0.22 + breathe * 0.38})`;
         ctx.fill();
       }
 
@@ -256,15 +278,22 @@ export function CanvasBackground() {
         // outer ring
         ctx.beginPath();
         ctx.arc(rp.x, rp.y, rp.radius, 0, Math.PI*2);
-        ctx.strokeStyle = `rgba(165,180,252,${rp.opacity})`;
-        ctx.lineWidth   = 1.6;
+        ctx.strokeStyle = isDark
+          ? `rgba(165,180,252,${rp.opacity})`
+          : `rgba(99,102,241,${rp.opacity * 0.42})`;
+        ctx.lineWidth   = isDark ? 1.6 : 1.15;
         ctx.stroke();
 
         // inner glowing fill (near origin only)
         if (rp.radius < 60) {
           const inner = ctx.createRadialGradient(rp.x, rp.y, 0, rp.x, rp.y, rp.radius);
-          inner.addColorStop(0,   `rgba(196,181,253,${rp.opacity * 0.25})`);
-          inner.addColorStop(0.5, `rgba(129,140,248,${rp.opacity * 0.08})`);
+          if (isDark) {
+            inner.addColorStop(0,   `rgba(196,181,253,${rp.opacity * 0.25})`);
+            inner.addColorStop(0.5, `rgba(129,140,248,${rp.opacity * 0.08})`);
+          } else {
+            inner.addColorStop(0,   `rgba(129,140,248,${rp.opacity * 0.12})`);
+            inner.addColorStop(0.5, `rgba(99,102,241,${rp.opacity * 0.05})`);
+          }
           inner.addColorStop(1,   "rgba(0,0,0,0)");
           ctx.fillStyle = inner;
           ctx.beginPath(); ctx.arc(rp.x, rp.y, rp.radius, 0, Math.PI*2); ctx.fill();
@@ -275,7 +304,9 @@ export function CanvasBackground() {
         if (r2 > 4) {
           ctx.beginPath();
           ctx.arc(rp.x, rp.y, r2, 0, Math.PI*2);
-          ctx.strokeStyle = `rgba(196,181,253,${rp.opacity * 0.45})`;
+          ctx.strokeStyle = isDark
+            ? `rgba(196,181,253,${rp.opacity * 0.45})`
+            : `rgba(99,102,241,${rp.opacity * 0.28})`;
           ctx.lineWidth   = 0.7;
           ctx.stroke();
         }
@@ -283,11 +314,19 @@ export function CanvasBackground() {
 
       // — top edge glow line —
       const edgeGrad = ctx.createLinearGradient(0, 0, W, 0);
-      edgeGrad.addColorStop(0,   "rgba(129,140,248,0)");
-      edgeGrad.addColorStop(0.3, "rgba(129,140,248,0.45)");
-      edgeGrad.addColorStop(0.5, "rgba(167,139,250,0.55)");
-      edgeGrad.addColorStop(0.7, "rgba(129,140,248,0.45)");
-      edgeGrad.addColorStop(1,   "rgba(129,140,248,0)");
+      if (isDark) {
+        edgeGrad.addColorStop(0,   "rgba(129,140,248,0)");
+        edgeGrad.addColorStop(0.3, "rgba(129,140,248,0.45)");
+        edgeGrad.addColorStop(0.5, "rgba(167,139,250,0.55)");
+        edgeGrad.addColorStop(0.7, "rgba(129,140,248,0.45)");
+        edgeGrad.addColorStop(1,   "rgba(129,140,248,0)");
+      } else {
+        edgeGrad.addColorStop(0,   "rgba(99,102,241,0)");
+        edgeGrad.addColorStop(0.35, "rgba(99,102,241,0.12)");
+        edgeGrad.addColorStop(0.5, "rgba(129,140,248,0.16)");
+        edgeGrad.addColorStop(0.65, "rgba(99,102,241,0.12)");
+        edgeGrad.addColorStop(1,   "rgba(99,102,241,0)");
+      }
       ctx.fillStyle = edgeGrad;
       ctx.fillRect(0, 0, W, 1);
 

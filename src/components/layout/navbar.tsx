@@ -14,6 +14,7 @@ import {
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { useActiveSection } from "@/hooks/use-active-section";
 import { personal } from "@/lib/data";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 
@@ -32,10 +33,12 @@ function NavLinks({
   activeId,
   onNavigate,
   className,
+  showLayoutIndicator = false,
 }: {
   activeId: string;
   onNavigate?: () => void;
   className?: string;
+  showLayoutIndicator?: boolean;
 }) {
   return (
     <nav
@@ -53,13 +56,21 @@ function NavLinks({
             href={`#${item.id}`}
             onClick={onNavigate}
             className={cn(
-              "rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-              active
-                ? "bg-primary/12 text-primary"
-                : "text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+              "relative z-0 overflow-hidden rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+              active && showLayoutIndicator && "text-primary",
+              active && !showLayoutIndicator && "bg-primary/12 text-primary",
+              !active &&
+                "text-muted-foreground hover:bg-muted/80 hover:text-foreground"
             )}
           >
-            {item.label}
+            {active && showLayoutIndicator && (
+              <motion.span
+                layoutId="nav-indicator"
+                className="absolute inset-0 z-0 rounded-lg bg-primary/12"
+                transition={{ type: "spring", stiffness: 400, damping: 34 }}
+              />
+            )}
+            <span className="relative z-10">{item.label}</span>
           </a>
         );
       })}
@@ -72,13 +83,13 @@ export function Navbar() {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-background/75 shadow-sm backdrop-blur-xl supports-[backdrop-filter]:bg-background/65">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-border/60 bg-background/85 shadow-[inset_0_1px_0_0_rgba(15,23,42,0.05)] backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-background/70 dark:border-white/[0.06] dark:bg-background/80 dark:shadow-[0_1px_0_0_rgba(255,255,255,0.03)_inset] dark:supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link
           href="#home"
           className="group flex shrink-0 items-center gap-2 font-semibold tracking-tight text-foreground"
         >
-          <span className="inline-flex size-8 items-center justify-center rounded-lg bg-primary/12 text-sm font-bold text-primary ring-1 ring-primary/20">
+          <span className="inline-flex size-8 items-center justify-center rounded-lg bg-primary/12 text-sm font-bold text-primary ring-1 ring-primary/20 transition-[box-shadow,transform] duration-300 group-hover:scale-[1.03] group-hover:shadow-[0_0_24px_rgba(99,102,241,0.28)] dark:group-hover:shadow-[0_0_28px_rgba(129,140,248,0.22)]">
             FA
           </span>
           <span className="hidden sm:inline">
@@ -87,7 +98,7 @@ export function Navbar() {
         </Link>
 
         <div className="hidden md:flex md:flex-1 md:justify-center">
-          <NavLinks activeId={activeId} />
+          <NavLinks activeId={activeId} showLayoutIndicator />
         </div>
 
         <div className="flex items-center gap-2">

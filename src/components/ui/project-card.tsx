@@ -50,6 +50,7 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
       layout
       initial={reduceMotion ? false : { opacity: 0, y: 24 }}
       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+      exit={reduceMotion ? undefined : { opacity: 0, scale: 0.98 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.5, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
       onMouseMove={handleMouseMove}

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
@@ -43,14 +43,29 @@ export function Hero() {
   const reduceMotion = useReducedMotion();
   const typed = useTypewriter(heroRotatingRoles);
   const word = reduceMotion ? heroRotatingRoles[0] : typed;
+  const heroRef = React.useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const scrollOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0.6]);
+  const scrollTranslateY = useTransform(scrollYProgress, [0, 0.6], [0, -30]);
 
   return (
     <section
+      ref={heroRef}
       id="home"
       aria-label="Introduction"
       className="relative isolate overflow-hidden pt-28 pb-20 sm:pt-32 sm:pb-28"
     >
-      <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 sm:px-6 lg:flex-row lg:items-center lg:gap-16">
+      <motion.div
+        className="mx-auto flex max-w-6xl flex-col gap-10 px-4 sm:px-6 lg:flex-row lg:items-center lg:gap-16"
+        style={
+          reduceMotion
+            ? undefined
+            : { opacity: scrollOpacity, y: scrollTranslateY }
+        }
+      >
 
         {/* ── LEFT ── */}
         <div className="flex-1 space-y-8">
@@ -82,17 +97,15 @@ export function Hero() {
           >
             <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               <span className="block">{personal.name.split(" ")[0]}</span>
-              {/* shimmer gradient on surname */}
+              {/* Surname: deep violet in light (readable); soft shimmer in dark */}
               <span
-                className="block"
-                style={{
-                  background: "linear-gradient(135deg, #818cf8 0%, #c4b5fd 25%, #e0d9ff 50%, #c4b5fd 75%, #818cf8 100%)",
-                  backgroundSize: "200% auto",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  animation: reduceMotion ? undefined : "text-shimmer 5s linear infinite",
-                }}
+                className={cn(
+                  "block bg-clip-text text-transparent",
+                  "bg-[linear-gradient(135deg,#312e81_0%,#5b21b6_38%,#4c1d95_52%,#5b21b6_65%,#3730a3_100%)]",
+                  "dark:bg-[linear-gradient(135deg,#818cf8_0%,#c4b5fd_25%,#e0d9ff_50%,#c4b5fd_75%,#818cf8_100%)]",
+                  !reduceMotion &&
+                    "bg-[length:200%_auto] motion-safe:animate-[text-shimmer_5s_linear_infinite]"
+                )}
               >
                 {personal.name.split(" ").slice(1).join(" ")}
               </span>
@@ -146,9 +159,9 @@ export function Hero() {
           className="relative flex-1"
           style={{ animation: reduceMotion ? undefined : "float-card 6s ease-in-out infinite" }}
         >
-          {/* glow ring behind card */}
+          {/* glow ring — purple only in dark; omitted in light */}
           <div
-            className="absolute -inset-3 rounded-3xl opacity-30"
+            className="absolute -inset-3 hidden rounded-3xl opacity-30 dark:block"
             style={{
               background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(99,102,241,0.5), transparent 70%)",
               filter: "blur(16px)",
@@ -156,13 +169,23 @@ export function Hero() {
           />
 
           <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-card/90 p-6 shadow-xl backdrop-blur-md dark:bg-card/70">
-            {/* gradient tint */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/6 via-transparent to-violet-500/6" />
+            {/* inner tint: neutral in light, violet wash in dark */}
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-500/[0.07] via-transparent to-slate-600/[0.05] dark:from-primary/6 dark:via-transparent dark:to-violet-500/6" />
 
-            {/* top accent line */}
+            {/* top accent — slate in light, lavender in dark */}
             <div
-              className="absolute inset-x-0 top-0 h-px"
-              style={{ background: "linear-gradient(90deg, transparent, rgba(129,140,248,0.6) 40%, rgba(196,181,253,0.7) 60%, transparent)" }}
+              className="absolute inset-x-0 top-0 h-px dark:hidden"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent, rgba(71,85,105,0.35) 45%, rgba(100,116,139,0.45) 50%, rgba(71,85,105,0.35) 55%, transparent)",
+              }}
+            />
+            <div
+              className="absolute inset-x-0 top-0 hidden h-px dark:block"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent, rgba(129,140,248,0.6) 40%, rgba(196,181,253,0.7) 60%, transparent)",
+              }}
             />
 
             <div className="relative space-y-4 font-mono text-xs sm:text-sm">
@@ -177,9 +200,9 @@ export function Hero() {
               </div>
               <pre className="overflow-x-auto text-left">
                 <code>
-                  <span className="text-violet-400">const</span>
+                  <span className="text-indigo-800 dark:text-violet-400">const</span>
                   <span className="text-foreground/90"> engineer </span>
-                  <span className="text-violet-400">=</span>
+                  <span className="text-indigo-800 dark:text-violet-400">=</span>
                   <span className="text-foreground/90">{" {\n"}</span>
                   <span className="text-foreground/50">{"  "}</span>
                   <span className="text-sky-400">school</span>
@@ -217,7 +240,7 @@ export function Hero() {
             </div>
           </div>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }

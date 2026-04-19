@@ -52,10 +52,24 @@ export function About() {
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">About</p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+          <motion.p
+            className="font-mono text-xs uppercase tracking-[0.2em] text-primary"
+            initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+            whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          >
+            About
+          </motion.p>
+          <motion.h2
+            className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl"
+            initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+            whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.5, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
+          >
             Engineering background, product-minded execution
-          </h2>
+          </motion.h2>
         </div>
 
         {/* ── Animated stats row ── */}

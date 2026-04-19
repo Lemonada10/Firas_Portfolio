@@ -122,6 +122,28 @@
   body {
     background: transparent;
     @apply text-foreground antialiased;
+    scrollbar-gutter: stable;
+  }
+
+  html:not(.dark) ::selection {
+    background-color: color-mix(in oklch, var(--primary) 20%, oklch(0.94 0.03 275));
+    color: var(--foreground);
+  }
+  html.dark ::selection {
+    background-color: color-mix(in oklch, var(--primary) 36%, transparent);
+    color: var(--foreground);
+  }
+
+  @supports (scrollbar-color: auto) {
+    html {
+      scrollbar-width: thin;
+    }
+    html:not(.dark) {
+      scrollbar-color: color-mix(in oklch, var(--primary) 18%, oklch(0.88 0.02 265)) oklch(0.96 0.004 85);
+    }
+    html.dark {
+      scrollbar-color: color-mix(in oklch, var(--primary) 35%, transparent) transparent;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

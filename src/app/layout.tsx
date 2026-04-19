@@ -9,6 +9,8 @@ import { Footer } from "@/components/layout/footer";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AmbientBackground } from "@/components/ui/ambient-background";
+import { CursorGlow } from "@/components/ui/cursor-glow";
+import { SiteAtmosphere } from "@/components/ui/site-atmosphere";
 import { personal } from "@/lib/data";
 
 /* Canvas background — client only, no SSR → no hydration mismatch */
@@ -76,7 +78,7 @@ export default function RootLayout({
       className={`${inter.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen font-sans antialiased">
+      <body className="min-h-screen overflow-x-hidden font-sans antialiased [text-rendering:optimizeLegibility]">
         <ThemeProvider>
           <TooltipProvider>
             <a
@@ -93,6 +95,8 @@ export default function RootLayout({
 
             {/* 3: all site content above both background layers */}
             <div className="relative z-10 flex min-h-screen flex-col">
+              <CursorGlow />
+              <SiteAtmosphere />
               <Navbar />
               <main id="main-content" className="flex-1">
                 {children}
