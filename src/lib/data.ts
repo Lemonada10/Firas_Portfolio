@@ -8,8 +8,9 @@ export const personal: Personal = {
   phone: "+1 (514) 699-7445",
   location: "Montreal, QC",
   school: "Concordia University",
-  portfolioUrl: "https://your-portfolio-url.com",
+  portfolioUrl: "https://firas-portfolio-zhdz.vercel.app/",
   linkedInUrl: "https://www.linkedin.com/in/firas-al-haddad-207a26280/",
+  resumeUrl: "/CV/CV.pdf",
 };
 
 export const education: Education[] = [

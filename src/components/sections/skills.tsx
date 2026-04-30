@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import type { LucideIcon } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useInView, useReducedMotion, type Variants } from "framer-motion";
 import { BookOpen, Code2, Globe, Layers, Users, Wrench } from "lucide-react";
 import { AnimatedSection } from "@/components/ui/animated-section";
 import { skillGroups } from "@/lib/data";
@@ -14,14 +14,42 @@ const iconMap: Record<SkillGroup["icon"], LucideIcon> = {
   book: BookOpen, users: Users, globe: Globe,
 };
 
-function SkillCard({ group, index }: { group: SkillGroup; index: number }) {
+const tiltReset = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)";
+
+const skillCardVariants: Variants = {
+  hidden: { opacity: 0, y: 22 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+const skillGridContainerVariants: Variants = {
+  hidden: {},
+  show: {
+    transition: { staggerChildren: 0.07, delayChildren: 0.04 },
+  },
+};
+
+const reducedMotionCardVariants: Variants = {
+  hidden: { opacity: 1, y: 0 },
+  show: { opacity: 1, y: 0 },
+};
+
+const reducedMotionGridVariants: Variants = {
+  hidden: {},
+  show: {},
+};
+
+function SkillCard({ group }: { group: SkillGroup }) {
   const reduceMotion = useReducedMotion();
   const Icon = iconMap[group.icon];
-  const ref = React.useRef<HTMLDivElement>(null);
+  const tiltRef = React.useRef<HTMLDivElement>(null);
 
   const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (reduceMotion || !ref.current) return;
-    const el = ref.current;
+    if (reduceMotion || !tiltRef.current) return;
+    const el = tiltRef.current;
     const rect = el.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width;
     const y = (e.clientY - rect.top) / rect.height;
@@ -29,68 +57,84 @@ function SkillCard({ group, index }: { group: SkillGroup; index: number }) {
   };
 
   const onLeave = () => {
-    if (!ref.current) return;
-    ref.current.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)";
+    if (!tiltRef.current) return;
+    tiltRef.current.style.transform = tiltReset;
   };
 
   return (
     <motion.div
-      initial={reduceMotion ? false : { opacity: 0, y: 28 }}
-      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.5, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
+      variants={reduceMotion ? reducedMotionCardVariants : skillCardVariants}
+      className="h-full"
     >
-      <div
-        ref={ref}
-        onMouseMove={reduceMotion ? undefined : onMove}
-        onMouseLeave={reduceMotion ? undefined : onLeave}
-        style={{
-          transition: "transform 0.15s ease, box-shadow 0.15s ease",
-          transformStyle: "preserve-3d",
-          willChange: "transform",
-        }}
-        className="group rounded-2xl border border-border/80 bg-card/60 shadow-sm backdrop-blur-sm hover:shadow-[0_20px_50px_rgba(80,90,255,0.22)] dark:bg-card/40"
-      >
-        {/* content floats forward in Z */}
-        <div className="p-6" style={{ transform: "translateZ(28px)", transformStyle: "preserve-3d" }}>
-          <div className="mb-4 flex items-center gap-3">
-            <motion.span
-              className="inline-flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary"
-              whileHover={reduceMotion ? undefined : {
-                scale: 1.22,
-                rotate: [0, -12, 12, -6, 0],
-                transition: { duration: 0.45, ease: "easeInOut" },
-              }}
-            >
+      {/* No backdrop-blur / hover shadow transition — they recomposite and fight :hover on pills */}
+      <div className="group flex h-full flex-col rounded-2xl border border-border/80 bg-card/85 shadow-sm dark:bg-card/40 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_8px_28px_-8px_rgba(0,0,0,0.45)]">
+        <div
+          ref={tiltRef}
+          onMouseMove={reduceMotion ? undefined : onMove}
+          onMouseLeave={reduceMotion ? undefined : onLeave}
+          style={{
+            transform: tiltReset,
+            transition: "transform 0.15s ease",
+            transformStyle: "preserve-3d",
+          }}
+          className="px-6 pt-6"
+        >
+          <div
+            className="mb-4 flex items-center gap-3"
+            style={{ transform: "translateZ(20px)", transformStyle: "preserve-3d" }}
+          >
+            <span className="inline-flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary transition-transform duration-200 group-hover:scale-105">
               <Icon className="size-4" aria-hidden />
-            </motion.span>
+            </span>
             <h3 className="relative text-base font-semibold text-foreground">
               {group.title}
-              <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-primary transition-all duration-300 group-hover:w-full" />
+              <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-primary transition-[width] duration-300 ease-out group-hover:w-full" />
             </h3>
           </div>
+        </div>
 
+        <div className="px-6 pb-6 pt-1" style={{ contain: "layout paint" }}>
           <ul className="flex flex-wrap gap-2">
-            {group.items.map((item, j) => (
-              <motion.li
-                key={item}
-                initial={reduceMotion ? false : { opacity: 0, scale: 0.8 }}
-                whileInView={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.25, delay: index * 0.05 + j * 0.04, ease: "backOut" }}
-                whileHover={reduceMotion ? undefined : { y: -3 }}
-              >
-                <span className={cn(
-                  "inline-flex cursor-default items-center rounded-full border border-border/80 bg-background/80 px-3 py-1 font-mono text-xs text-foreground/90 shadow-sm",
-                  "transition-all duration-200 hover:border-primary/50 hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(99,102,241,0.20)]"
-                )}>
+            {group.items.map((item) => (
+              <li key={item}>
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  aria-label={item}
+                  className={cn(
+                    "inline-flex cursor-default select-none items-center rounded-full border border-border/80 bg-background/90 px-3 py-1 font-mono text-xs text-foreground/90",
+                    "outline-none transition-colors duration-150",
+                    "hover:border-primary/50 hover:bg-primary/10 hover:text-primary",
+                    "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  )}
+                >
                   {item}
-                </span>
-              </motion.li>
+                </button>
+              </li>
             ))}
           </ul>
         </div>
       </div>
+    </motion.div>
+  );
+}
+
+function SkillGrid() {
+  const reduceMotion = useReducedMotion();
+  const gridRef = React.useRef<HTMLDivElement>(null);
+  const inView = useInView(gridRef, { once: true, amount: 0.08, margin: "-80px" });
+
+  return (
+    <motion.div
+      ref={gridRef}
+      className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
+      variants={reduceMotion ? reducedMotionGridVariants : skillGridContainerVariants}
+      initial="hidden"
+      animate={reduceMotion || inView ? "show" : "hidden"}
+    >
+      {skillGroups.map((group) => (
+        <SkillCard key={group.id} group={group} />
+      ))}
     </motion.div>
   );
 }
@@ -129,15 +173,11 @@ export function Skills() {
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.1 }}
           >
-            Grouped for scanability — optimized for how recruiters and engineers skim portfolios.
+
           </motion.p>
         </div>
 
-        <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {skillGroups.map((group, i) => (
-            <SkillCard key={group.id} group={group} index={i} />
-          ))}
-        </div>
+        <SkillGrid />
       </div>
     </AnimatedSection>
   );

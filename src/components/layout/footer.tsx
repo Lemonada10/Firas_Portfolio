@@ -63,7 +63,7 @@ export function Footer() {
           transition={{ duration: 0.45, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
           className="text-xs text-muted-foreground sm:text-right"
         >
-          © {year} {personal.name.split(" ")[0]} Al Haddad. Built with Next.js.
+          © {year} {personal.name}.
         </motion.p>
       </div>
     </footer>

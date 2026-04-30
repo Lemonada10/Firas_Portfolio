@@ -52,4 +52,6 @@ export type Personal = {
   school: string;
   portfolioUrl: string;
   linkedInUrl: string;
+  /** Public URL path to the resume PDF (file lives under `public/`, e.g. `/CV/CV.pdf`). */
+  resumeUrl: string;
 };

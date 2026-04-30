@@ -34,7 +34,7 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-const siteUrl = "https://firas-portfolio.example.com";
+const siteUrl = "https://firas-portfolio-zhdz.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

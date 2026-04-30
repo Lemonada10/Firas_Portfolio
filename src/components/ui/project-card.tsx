@@ -18,35 +18,51 @@ type ProjectCardProps = {
   index: number;
 };
 
+const tiltReset = "perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)";
+
 export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
   const reduceMotion = useReducedMotion();
-  const cardRef = React.useRef<HTMLElement>(null);
+  const articleRef = React.useRef<HTMLElement>(null);
+  const tiltRef = React.useRef<HTMLDivElement>(null);
 
   const handleMouseMove = React.useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
-      const card = cardRef.current;
-      if (!card || reduceMotion) return;
-      const rect = card.getBoundingClientRect();
+      const article = articleRef.current;
+      const tiltEl = tiltRef.current;
+      if (!article || !tiltEl || reduceMotion) return;
+      const rect = article.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
       const y = (e.clientY - rect.top) / rect.height;
-      const rotY = (x - 0.5) * 10;
-      const rotX = -(y - 0.5) * 10;
-      card.style.transform = `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.015)`;
-      card.style.setProperty("--x", `${x * 100}%`);
-      card.style.setProperty("--y", `${y * 100}%`);
+      article.style.setProperty("--x", `${x * 100}%`);
+      article.style.setProperty("--y", `${y * 100}%`);
+
+      const imgRect = tiltEl.getBoundingClientRect();
+      const ix = e.clientX - imgRect.left;
+      const iy = e.clientY - imgRect.top;
+      const overImage =
+        ix >= 0 && ix <= imgRect.width && iy >= 0 && iy <= imgRect.height;
+      if (overImage) {
+        const nx = ix / imgRect.width;
+        const ny = iy / imgRect.height;
+        const rotY = (nx - 0.5) * 10;
+        const rotX = -(ny - 0.5) * 10;
+        tiltEl.style.transform = `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.015)`;
+      } else {
+        tiltEl.style.transform = tiltReset;
+      }
     },
     [reduceMotion]
   );
 
   const handleMouseLeave = React.useCallback(() => {
-    const card = cardRef.current;
-    if (!card) return;
-    card.style.transform = "perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)";
+    if (tiltRef.current) {
+      tiltRef.current.style.transform = tiltReset;
+    }
   }, []);
 
   return (
     <motion.article
-      ref={cardRef as React.Ref<HTMLElement>}
+      ref={articleRef as React.Ref<HTMLElement>}
       layout
       initial={reduceMotion ? false : { opacity: 0, y: 24 }}
       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
@@ -55,8 +71,7 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
       transition={{ duration: 0.5, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{ transformStyle: "preserve-3d", transition: "transform 0.18s ease, box-shadow 0.18s ease" }}
-      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-card/60 shadow-sm backdrop-blur-sm hover:border-primary/40 hover:shadow-[0_16px_48px_rgba(99,102,241,0.18)] dark:bg-card/40"
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-card/60 shadow-sm backdrop-blur-sm hover:border-primary/40 hover:shadow-[0_16px_48px_rgba(99,102,241,0.18)] dark:bg-card/40 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_8px_32px_-10px_rgba(0,0,0,0.45)]"
     >
       {/* cursor spotlight */}
       <div className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 group-hover:opacity-100">
@@ -68,7 +83,15 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
         className="text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         aria-label={`Open details for ${project.title}`}
       >
-        <div className="relative aspect-[16/10] w-full overflow-hidden bg-muted">
+        <div
+          ref={tiltRef}
+          className="relative aspect-[16/10] w-full overflow-hidden bg-muted"
+          style={{
+            transformStyle: "preserve-3d",
+            transition: "transform 0.18s ease",
+            transform: tiltReset,
+          }}
+        >
           <Image
             src={`https://placehold.co/800x500/1e1b4b/818cf8/png?text=${encodeURIComponent(
               project.title
@@ -90,7 +113,11 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
               <Badge
                 key={t}
                 variant="outline"
-                className="border-primary/20 font-mono text-[10px] text-foreground/90"
+                className={cn(
+                  "border-primary/20 font-mono text-[10px] text-foreground/90",
+                  "transition-[border-color,background-color,color,box-shadow] duration-200",
+                  "hover:border-primary/50 hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(99,102,241,0.18)]"
+                )}
               >
                 {t}
               </Badge>
@@ -159,7 +186,7 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
           className="text-xs font-medium text-primary underline-offset-4 hover:underline"
           onClick={(e) => e.stopPropagation()}
         >
-          Case study
+          Full page
         </Link>
       </div>
     </motion.article>

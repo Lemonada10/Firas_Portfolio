@@ -253,17 +253,21 @@ export function CanvasBackground() {
 
         if (breathe > 0.65) {
           const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r*5);
-          const haloA = isDark ? opacity * 0.3 : opacity * 0.12;
-          g.addColorStop(0, `rgba(129,140,248,${haloA})`);
+          const haloA = isDark ? opacity * 0.3 : opacity * 0.2;
+          g.addColorStop(
+            0,
+            isDark ? `rgba(129,140,248,${haloA})` : `rgba(99,102,241,${haloA})`
+          );
           g.addColorStop(1, "rgba(0,0,0,0)");
           ctx.fillStyle = g;
           ctx.beginPath(); ctx.arc(p.x, p.y, r*5, 0, Math.PI*2); ctx.fill();
         }
 
+        /* Light: indigo/violet to match hero surname gradient; dark: soft indigo-300 */
         ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI*2);
         ctx.fillStyle = isDark
           ? `rgba(165,180,252,${opacity})`
-          : `rgba(71,85,105,${0.22 + breathe * 0.38})`;
+          : `rgba(79,70,229,${0.26 + breathe * 0.44})`;
         ctx.fill();
       }
 

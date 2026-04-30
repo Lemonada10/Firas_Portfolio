@@ -179,25 +179,29 @@ function ExperienceCard({ job, index, reduceMotion }: { job: Job; index: number;
           </div>
         </div>
 
-        <ul className="mt-4 space-y-2 text-sm leading-relaxed text-muted-foreground">
+        <ul
+          className="mt-4 list-none space-y-2.5 text-sm leading-relaxed text-muted-foreground"
+          role="list"
+        >
           {job.bullets.map((b, bi) => (
             <motion.li
               key={b}
-              className="flex gap-2"
+              className="flex gap-3"
               initial={reduceMotion ? false : { opacity: 0, x: -12 }}
               whileInView={reduceMotion ? undefined : { opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.32, delay: index * 0.2 + bi * 0.07 + 0.4, ease: "easeOut" }}
             >
-              <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary/70" />
-              <span>{b}</span>
+              <span
+                className="mt-[0.35em] inline-flex h-[1.25em] w-5 shrink-0 items-start justify-center font-semibold leading-none text-primary"
+                aria-hidden
+              >
+                •
+              </span>
+              <span className="min-w-0 flex-1">{b}</span>
             </motion.li>
           ))}
         </ul>
-
-        {index === experience.length - 1 && (
-          <p className="mt-4 text-xs text-muted-foreground">References available upon request.</p>
-        )}
       </article>
     </motion.li>
   );

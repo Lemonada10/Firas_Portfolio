@@ -39,14 +39,14 @@ export function CursorGlow() {
 
   return (
     <motion.div
-      className="pointer-events-none fixed z-[5] h-[300px] w-[300px] rounded-[20px] mix-blend-multiply opacity-75 will-change-transform dark:mix-blend-screen dark:opacity-100"
+      className="pointer-events-none fixed z-[5] h-[300px] w-[300px] rounded-[20px] mix-blend-multiply opacity-[0.82] will-change-transform dark:mix-blend-screen dark:opacity-100"
       style={{
         left: x,
         top: y,
         x: "-50%",
         y: "-50%",
         background:
-          "radial-gradient(circle closest-side, rgba(129, 140, 248, 0.22) 0%, rgba(139, 92, 246, 0.12) 35%, transparent 70%)",
+          "radial-gradient(circle closest-side, rgba(129, 140, 248, 0.26) 0%, rgba(139, 92, 246, 0.15) 36%, transparent 72%)",
       }}
       aria-hidden
     />

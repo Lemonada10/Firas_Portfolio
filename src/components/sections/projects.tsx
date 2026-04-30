@@ -117,28 +117,10 @@ export function Projects() {
                 />
               ))}
             </AnimatePresence>
-
-            <div className="flex min-h-[280px] flex-col items-center justify-center rounded-2xl border border-dashed border-border/80 bg-muted/30 p-8 text-center">
-              <p className="text-sm font-medium text-foreground">
-                Slot reserved for your next build
-              </p>
-              <p className="mt-2 max-w-sm text-sm text-muted-foreground">
-                Add another entry in{" "}
-                <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
-                  src/lib/data.ts
-                </code>{" "}
-                — same shape, new slug.
-              </p>
-              <a
-                href="mailto:Firas.haddad.h@gmail.com?subject=Project%20idea"
-                className={cn(
-                  buttonVariants({ variant: "secondary" }),
-                  "mt-6"
-                )}
-              >
-                Collaborate
-              </a>
-            </div>
+            {/*
+              Extra project cards: add entries to `projects` in src/lib/data.ts
+              (same Project shape). They render in this grid automatically.
+            */}
           </motion.div>
         </div>
       </AnimatedSection>

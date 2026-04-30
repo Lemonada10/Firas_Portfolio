@@ -33,9 +33,9 @@ export function ProjectModal({
       {project ? (
       <DialogContent
         showCloseButton
-        className="max-h-[min(90vh,860px)] max-w-3xl overflow-y-auto p-0 sm:max-w-3xl"
+        className="flex max-h-[min(90vh,860px)] max-w-3xl flex-col gap-0 overflow-hidden p-0 sm:max-w-3xl"
       >
-        <div className="relative aspect-[21/9] w-full overflow-hidden bg-muted">
+        <div className="relative aspect-[21/9] w-full shrink-0 overflow-hidden bg-muted">
           <Image
             src={`https://placehold.co/1200x400/1e1b4b/818cf8/png?text=${encodeURIComponent(
               project.title
@@ -49,7 +49,8 @@ export function ProjectModal({
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
         </div>
 
-        <div className="space-y-6 px-6 pb-6 pt-2">
+        <div className="relative z-0 min-h-0 flex-1 overflow-y-auto bg-popover">
+          <div className="space-y-6 px-6 pb-6 pt-5">
           <DialogHeader className="text-left">
             <div className="flex flex-wrap gap-2">
               {project.tech.map((t) => (
@@ -58,12 +59,14 @@ export function ProjectModal({
                 </Badge>
               ))}
             </div>
-            <DialogTitle className="text-2xl font-bold tracking-tight">
-              {project.title}
-            </DialogTitle>
-            <DialogDescription className="text-base">
-              {project.tagline}
-            </DialogDescription>
+            <div className="min-w-0">
+              <DialogTitle className="text-2xl font-bold tracking-tight">
+                {project.title}
+              </DialogTitle>
+              <DialogDescription className="mt-2 text-base">
+                {project.tagline}
+              </DialogDescription>
+            </div>
           </DialogHeader>
 
           <div className="flex flex-wrap gap-2">
@@ -102,7 +105,7 @@ export function ProjectModal({
                 "text-primary"
               )}
             >
-              Full case study page
+              Full page
             </Link>
           </div>
 
@@ -175,6 +178,7 @@ export function ProjectModal({
               ))}
             </div>
           </section>
+          </div>
         </div>
       </DialogContent>
       ) : null}

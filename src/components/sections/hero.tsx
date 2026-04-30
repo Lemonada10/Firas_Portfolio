@@ -165,7 +165,7 @@ export function Hero() {
               <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden />
             </a>
             <a
-              href="/resume.pdf"
+              href={personal.resumeUrl}
               download
               className={cn(
                 buttonVariants({ variant: "outline", size: "lg" }),
@@ -261,6 +261,8 @@ export function Hero() {
                   <span className="text-emerald-400">&quot;FR&quot;</span>
                   <span className="text-foreground/70">{", "}</span>
                   <span className="text-emerald-400">&quot;EN&quot;</span>
+                  <span className="text-foreground/70">{", "}</span>
+                  <span className="text-emerald-400">&quot;AR&quot;</span>
                   <span className="text-foreground/70">{"],\n"}</span>
                   <span className="text-foreground/50">{"  "}</span>
                   <span className="text-sky-400">gpa</span>

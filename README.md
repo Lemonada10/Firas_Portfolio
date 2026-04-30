@@ -24,7 +24,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 - **Profile, skills, jobs, projects:** edit [`src/lib/data.ts`](src/lib/data.ts)
 - **Types:** [`src/types/index.ts`](src/types/index.ts)
-- **Resume download:** replace [`public/resume.pdf`](public/resume.pdf) with your real PDF (same filename), or change links in the navbar/hero
+- **Resume download:** replace [`public/CV/CV.pdf`](public/CV/CV.pdf) when you update your CV, or change `personal.resumeUrl` in [`src/lib/data.ts`](src/lib/data.ts)
 - **Site URL / SEO:** update `metadataBase` and `openGraph.url` in [`src/app/layout.tsx`](src/app/layout.tsx)
 
 ## Project structure

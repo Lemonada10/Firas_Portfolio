@@ -77,9 +77,9 @@ const contactRows = [
 ];
 
 const formFields = [
-  { id: "name",    label: "Name",    type: "text",  placeholder: "Alex Recruiter",   autoComplete: "name",  colSpan: 1 },
-  { id: "email",   label: "Email",   type: "email", placeholder: "you@company.com",  autoComplete: "email", colSpan: 1 },
-  { id: "message", label: "Message", type: "area",  placeholder: "Tell me about the team, stack, and timeline…", colSpan: 2 },
+  { id: "name", label: "Name", type: "text", autoComplete: "name", colSpan: 1 },
+  { id: "email", label: "Email", type: "email", autoComplete: "email", colSpan: 1 },
+  { id: "message", label: "Message", type: "area", colSpan: 2 },
 ];
 
 export function Contact() {
@@ -119,7 +119,7 @@ export function Contact() {
             viewport={{ once: true }}
             transition={{ duration: 0.45, delay: 0.07 }}
           >
-            Let&apos;s build something solid
+            Let&apos;s build something solid and creative
           </motion.h2>
           <motion.p
             className="mt-4 text-muted-foreground"
@@ -128,9 +128,7 @@ export function Contact() {
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.12 }}
           >
-            Recruiters: I&apos;m actively seeking{" "}
-            <strong className="text-foreground">2025–2026 internships</strong>{" "}
-            in software engineering, data engineering, and full-stack roles.
+            I&apos;m actively seeking oppportunities in software engineering, data engineering, and full-stack roles.
             Reach out — I usually respond within a day.
           </motion.p>
         </div>
@@ -163,7 +161,7 @@ export function Contact() {
               style={{ background: "linear-gradient(180deg, rgba(129,140,248,0.5), transparent 75%)" }}
             />
 
-            <h3 className="text-lg font-semibold text-foreground">Direct lines</h3>
+            <h3 className="text-lg font-semibold text-foreground">Contact Me</h3>
             <ul className="space-y-4 text-sm">
               {contactRows.map(({ Icon, label, content }, i) => (
                 <motion.li
@@ -221,7 +219,7 @@ export function Contact() {
 
             <form onSubmit={handleSubmit} noValidate>
               <div className="grid gap-5 sm:grid-cols-2">
-                {formFields.map(({ id, label, type, placeholder, autoComplete, colSpan }, fi) => (
+                {formFields.map(({ id, label, type, autoComplete, colSpan }, fi) => (
                   <motion.div
                     key={id}
                     className={`space-y-2 ${colSpan === 2 ? "sm:col-span-2" : "sm:col-span-1"}`}
@@ -233,13 +231,16 @@ export function Contact() {
                     <Label htmlFor={id}>{label}</Label>
                     {type === "area" ? (
                       <Textarea
-                        id={id} name={id} rows={5} placeholder={placeholder} required
+                        id={id} name={id} rows={5} required
                         className="transition-shadow duration-200 focus:shadow-[0_0_0_2px_rgba(99,102,241,0.30)]"
                       />
                     ) : (
                       <Input
-                        id={id} name={id} type={type} autoComplete={autoComplete}
-                        placeholder={placeholder} required
+                        id={id}
+                        name={id}
+                        type={type}
+                        autoComplete={autoComplete}
+                        required
                         className="transition-shadow duration-200 focus:shadow-[0_0_0_2px_rgba(99,102,241,0.30)]"
                       />
                     )}
@@ -296,14 +297,6 @@ export function Contact() {
                       transition={{ duration: 0.3 }}
                     >
                       Thanks — connect via email for a real reply.
-                    </motion.p>
-                  )}
-                  {status === "idle" && (
-                    <motion.p className="text-xs text-muted-foreground"
-                      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      Frontend demo — connect via email for a guaranteed response.
                     </motion.p>
                   )}
                 </AnimatePresence>

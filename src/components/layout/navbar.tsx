@@ -103,7 +103,7 @@ export function Navbar() {
 
         <div className="flex items-center gap-2">
           <a
-            href="/resume.pdf"
+            href={personal.resumeUrl}
             download
             className={cn(
               buttonVariants({ variant: "secondary", size: "sm" }),
@@ -135,7 +135,7 @@ export function Navbar() {
                   className="gap-0"
                 />
                 <a
-                  href="/resume.pdf"
+                  href={personal.resumeUrl}
                   download
                   onClick={() => setOpen(false)}
                   className={cn(buttonVariants({ variant: "default" }), "w-full text-center")}

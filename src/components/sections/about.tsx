@@ -68,9 +68,9 @@ function Counter({ to, suffix = "", decimals = 0 }: { to: number; suffix?: strin
 
 const STATS = [
   { value: 3.4, suffix: "", decimals: 1, label: "GPA", sub: "Concordia University" },
-  { value: 2,   suffix: "+", decimals: 0, label: "Internships", sub: "Industry experience" },
-  { value: 4,   suffix: "",  decimals: 0, label: "Projects", sub: "Built & shipped" },
-  { value: 2,   suffix: "",  decimals: 0, label: "Languages", sub: "French & English" },
+  { value: 3, suffix: "", decimals: 0, label: "Internships", sub: "Industry experience" },
+  { value: 4, suffix: "", decimals: 0, label: "Projects", sub: "Built & Ready" },
+  { value: 3, suffix: "", decimals: 0, label: "Languages", sub: "French & English & Arabic" },
 ];
 
 export function About() {
@@ -100,7 +100,7 @@ export function About() {
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.5, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
           >
-            Engineering background, product-minded execution
+            Engineering background
           </motion.h2>
         </div>
 
@@ -133,33 +133,21 @@ export function About() {
             <p>
               I&apos;m an undergraduate{" "}
               <strong className="font-medium text-foreground">Software Engineering Co-op</strong>{" "}
-              student at{" "}
+              4th year student at{" "}
               <strong className="font-medium text-foreground">Concordia University</strong>{" "}
-              (GPA{" "}
-              <strong
-                className="font-bold"
-                style={{
-                  background: "linear-gradient(135deg, #818cf8, #a78bfa)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
-              >
-                3.4
-              </strong>
-              ) with a foundation spanning software development, analytics, backend systems, and full-stack applications.
+              with interests in software development, artificial intelligence, data analytics, and full-stack applications.
             </p>
             <p>
-              My experience sits at the intersection of{" "}
-              <strong className="text-foreground">data engineering</strong>,{" "}
-              <strong className="text-foreground">dashboards</strong>, and{" "}
-              <strong className="text-foreground">communication-heavy backends</strong>
-              —from modular PySpark pipelines to BLE-backed tooling—plus AI-related projects that emphasize performance and usability in the browser.
+              My experience lies in {" "}
+              <strong className="text-foreground">full-stack app development</strong>,{" "}
+              <strong className="text-foreground">data engineering</strong>, and{" "}
+              <strong className="text-foreground">and data analytics </strong>
+              — from modular PySpark pipelines to BLE-backed tooling — plus AI-related projects that emphasize performance and usability in the browser.
             </p>
             <p>
-              I care most about{" "}
-              <strong className="text-foreground">clarity, reliability, and measurable impact</strong>
-              : software that teams can maintain and users can trust.
+              I&apos;m excited to apply my software engineering skills to build {" "}
+              <strong className="font-medium text-foreground">creative</strong>{" "} products and learn more about artificial intelligence. {" "}
+              
               <span className="mt-2 block text-sm text-muted-foreground">
                 Bilingual: <span className="text-foreground">French</span> &amp;{" "}
                 <span className="text-foreground">English</span>.
@@ -171,42 +159,42 @@ export function About() {
             initial={reduceMotion ? false : { opacity: 0, x: 20 }}
             whileInView={reduceMotion ? undefined : { opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.55, ease: [0.22,1,0.36,1] }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
             <Tilt3D className="rounded-xl">
-            <Card className="border-border/80">
-              <CardContent className="space-y-4 p-6">
-                {[
-                  { Icon: MapPin, label: "Location", text: personal.location },
-                  {
-                    Icon: GraduationCap,
-                    label: "Education",
-                    custom: (
-                      <ul className="mt-2 space-y-3 text-sm text-muted-foreground">
-                        {education.map((e) => (
-                          <li key={e.id}>
-                            <span className="font-medium text-foreground">{e.degree}</span><br />
-                            {e.school} · {e.start}–{e.end}{e.details ? ` · ${e.details}` : ""}
-                          </li>
-                        ))}
-                      </ul>
-                    ),
-                  },
-                  { Icon: Languages, label: "Languages", text: "French & English — professional proficiency" },
-                ].map(({ Icon, label, text, custom }) => (
-                  <div key={label} className="flex items-start gap-3">
-                    <span className="mt-0.5 inline-flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
-                      <Icon className="size-4" aria-hidden />
-                    </span>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{label}</p>
-                      {text && <p className="text-sm text-muted-foreground">{text}</p>}
-                      {custom}
+              <Card className="border-border/80">
+                <CardContent className="space-y-4 p-6">
+                  {[
+                    { Icon: MapPin, label: "Location", text: personal.location },
+                    {
+                      Icon: GraduationCap,
+                      label: "Education",
+                      custom: (
+                        <ul className="mt-2 space-y-3 text-sm text-muted-foreground">
+                          {education.map((e) => (
+                            <li key={e.id}>
+                              <span className="font-medium text-foreground">{e.degree}</span><br />
+                              {e.school} · {e.start}–{e.end}{e.details ? ` · ${e.details}` : ""}
+                            </li>
+                          ))}
+                        </ul>
+                      ),
+                    },
+                    { Icon: Languages, label: "Languages", text: "French & English — professional proficiency" },
+                  ].map(({ Icon, label, text, custom }) => (
+                    <div key={label} className="flex items-start gap-3">
+                      <span className="mt-0.5 inline-flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
+                        <Icon className="size-4" aria-hidden />
+                      </span>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{label}</p>
+                        {text && <p className="text-sm text-muted-foreground">{text}</p>}
+                        {custom}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
+                  ))}
+                </CardContent>
+              </Card>
             </Tilt3D>
           </motion.div>
         </div>
