@@ -41,6 +41,10 @@ export type Project = {
   githubUrl: string;
   demoUrl: string | null;
   imageAlt: string;
+  /** Optional real hero image path (relative to /public, e.g. /projects/makesoft/banner.png) */
+  image?: string;
+  /** Optional gallery screenshots (paths relative to /public) */
+  gallery?: { src: string; alt: string }[];
 };
 
 export type Personal = {

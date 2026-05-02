@@ -138,6 +138,60 @@ export const experience: Job[] = [
 
 export const projects: Project[] = [
   {
+    slug: "concordia-campus-guide",
+    title: "Concordia Campus Navigation App",
+    location: "Montreal, QC",
+    tagline:
+      "A full-featured Android/IOS campus guide with indoor/outdoor navigation, shuttle tracking, and Google Calendar class routing.",
+    description:
+      "Team-built Android app (MAKESOFT) that helps Concordia students navigate both SGW and Loyola campuses — indoors and outdoors — with real-time shuttle schedules and class-aware routing.",
+    tech: ["React Native", "Java", "Google Maps API", "Spring Boot", "PostgreSQL"],
+    highlights: [
+      "Indoor & outdoor directions",
+      "Concordia shuttle integration",
+      "Google Calendar class routing",
+    ],
+    image: "/projects/makesoft/banner.png",
+    gallery: [
+      { src: "/projects/makesoft/screen-sgw-map.png", alt: "SGW campus map with building markers" },
+      { src: "/projects/makesoft/screen-loyola-map.png", alt: "Loyola campus map with building markers" },
+      { src: "/projects/makesoft/screen-shuttle-route.png", alt: "Shuttle route from SGW to Loyola" },
+      { src: "/projects/makesoft/screen-shuttle-departures.png", alt: "Next shuttle departure times" },
+      { src: "/projects/makesoft/screen-directions.png", alt: "Outdoor turn-by-turn directions" },
+      { src: "/projects/makesoft/screen-indoor-nav.png", alt: "Indoor floor-level navigation" },
+      { src: "/projects/makesoft/screen-indoor-nav2.png", alt: "Indoor step-by-step navigation with room routing" },
+      { src: "/projects/makesoft/screen-onboarding.png", alt: "App onboarding screen" },
+      { src: "/projects/makesoft/screen-calendar.png", alt: "Google Calendar integration screen" },
+    ],
+    overview:
+      "MAKESOFT is a 9-person Agile team project built across four sprints for SOEN 390. The app covers the full navigation problem for Concordia students: finding buildings, getting outdoor walking/driving/transit directions, tracking the inter-campus shuttle service with live departure times, navigating indoors room-to-room across floors, and automatically routing to the next class by reading Google Calendar. The two campuses (SGW and Loyola) are fully supported with custom-styled building overlays on Google Maps.",
+    role:
+      "Mobile developer and backend contributor — implemented outdoor directions with the Google Directions API, integrated the Concordia shuttle schedule (time-aware and location-aware), connected Google Calendar for class-based routing, and contributed to the indoor navigation pathfinding module.",
+    keyFeatures: [
+      "Interactive SGW & Loyola campus maps with custom building shapes and info pop-ups.",
+      "Outdoor directions (walk, drive, transit) between any two campus buildings.",
+      "Concordia Shuttle integration: next departures, real-time countdown, and routing via shuttle.",
+      "Google Calendar sync — automatically generates directions to the user's next class.",
+      "Indoor room-to-room navigation with floor plans, accessibility routing, and POIs (washrooms, elevators).",
+      "Campus toggle for instant switching between SGW and Loyola views.",
+    ],
+    challenges: [
+      "Stitching indoor floor-plan graphs with outdoor Google Maps routing into a seamless path.",
+      "Making shuttle routing time-aware so it only suggests departures that are actually catchable.",
+      "Parsing and normalizing Google Calendar events to reliably extract building and room codes.",
+      "Coordinating a 9-person team across four 2-week Agile sprints with CI/CD and SonarQube gates.",
+    ],
+    learnings: [
+      "How to model indoor navigation as a weighted graph and integrate it with an external maps SDK.",
+      "Practical Agile at scale: sprint planning, burndown charts, retrospectives, and pull-request reviews.",
+      "Trade-offs between client-side and server-side data fetching for real-time transit information.",
+      "Accessibility-first design for users with mobility constraints in a navigation context.",
+    ],
+    githubUrl: "https://github.com/your-username/concordia-campus-guide",
+    demoUrl: null,
+    imageAlt: "MAKESOFT — Concordia Campus Navigation App banner",
+  },
+  {
     slug: "peer-review-web-app",
     title: "Peer Review Web Application",
     location: "Concordia, QC",

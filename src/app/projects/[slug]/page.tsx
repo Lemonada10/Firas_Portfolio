@@ -7,6 +7,7 @@ import { IconGithub } from "@/components/icons/social";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { GalleryLightbox } from "@/components/ui/gallery-lightbox";
 import { getProjectBySlug, personal, projects } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
@@ -44,9 +45,12 @@ export default function ProjectPage({ params }: Props) {
 
       <div className="relative mb-10 aspect-[21/9] w-full overflow-hidden rounded-2xl border border-border/80 bg-muted">
         <Image
-          src={`https://placehold.co/1200x400/1e1b4b/818cf8/png?text=${encodeURIComponent(
-            project.title
-          )}`}
+          src={
+            project.image ??
+            `https://placehold.co/1200x400/1e1b4b/818cf8/png?text=${encodeURIComponent(
+              project.title
+            )}`
+          }
           alt={project.imageAlt}
           fill
           className="object-cover"
@@ -135,25 +139,16 @@ export default function ProjectPage({ params }: Props) {
             ))}
           </ul>
         </section>
+        {(project.gallery ?? []).length > 0 && (
         <section>
           <h2 className="text-xl font-semibold text-foreground">Gallery</h2>
-          <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 not-prose">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="relative aspect-video overflow-hidden rounded-xl border border-border/80"
-              >
-                <Image
-                  src={`https://placehold.co/400x225/312e81/a5b4fc/png?text=Shot+${i}`}
-                  alt={`Screenshot ${i}`}
-                  fill
-                  className="object-cover"
-                  sizes="200px"
-                />
-              </div>
-            ))}
-          </div>
+          <GalleryLightbox
+            images={project.gallery!}
+            thumbAspect="9/16"
+            gridClassName="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4"
+          />
         </section>
+        )}
       </div>
     </article>
   );

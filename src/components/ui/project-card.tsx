@@ -3,7 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { IconGithub } from "@/components/icons/social";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +24,12 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
   const reduceMotion = useReducedMotion();
   const articleRef = React.useRef<HTMLElement>(null);
   const tiltRef = React.useRef<HTMLDivElement>(null);
+  const nudgeTimeoutRef = React.useRef<number | null>(null);
+  const suppressTiltUntilRef = React.useRef<number>(0);
+  const rawX = useMotionValue(0);
+  const rawY = useMotionValue(0);
+  const cardX = useSpring(rawX, { stiffness: 260, damping: 22, mass: 0.4 });
+  const cardY = useSpring(rawY, { stiffness: 260, damping: 22, mass: 0.4 });
 
   const handleMouseMove = React.useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
@@ -35,6 +41,12 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
       const y = (e.clientY - rect.top) / rect.height;
       article.style.setProperty("--x", `${x * 100}%`);
       article.style.setProperty("--y", `${y * 100}%`);
+      rawX.set((x - 0.5) * 12);
+      rawY.set((y - 0.5) * 12);
+      if (Date.now() < suppressTiltUntilRef.current) {
+        tiltEl.style.transform = tiltReset;
+        return;
+      }
 
       const imgRect = tiltEl.getBoundingClientRect();
       const ix = e.clientX - imgRect.left;
@@ -51,13 +63,44 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
         tiltEl.style.transform = tiltReset;
       }
     },
-    [reduceMotion]
+    [rawX, rawY, reduceMotion]
   );
 
   const handleMouseLeave = React.useCallback(() => {
+    rawX.set(0);
+    rawY.set(0);
     if (tiltRef.current) {
       tiltRef.current.style.transform = tiltReset;
     }
+  }, [rawX, rawY]);
+
+  const handleMouseDown = React.useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      if (reduceMotion) return;
+      const article = articleRef.current;
+      if (!article) return;
+      suppressTiltUntilRef.current = Date.now() + 180;
+      if (tiltRef.current) {
+        tiltRef.current.style.transform = tiltReset;
+      }
+      const rect = article.getBoundingClientRect();
+      const nx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      const ny = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+      rawX.set(nx * 10);
+      rawY.set(ny * 10);
+      if (nudgeTimeoutRef.current) window.clearTimeout(nudgeTimeoutRef.current);
+      nudgeTimeoutRef.current = window.setTimeout(() => {
+        rawX.set(0);
+        rawY.set(0);
+      }, 120);
+    },
+    [rawX, rawY, reduceMotion]
+  );
+
+  React.useEffect(() => {
+    return () => {
+      if (nudgeTimeoutRef.current) window.clearTimeout(nudgeTimeoutRef.current);
+    };
   }, []);
 
   return (
@@ -66,11 +109,22 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
       layout
       initial={reduceMotion ? false : { opacity: 0, y: 24 }}
       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+      whileHover={
+        reduceMotion
+          ? undefined
+          : {
+              y: -12,
+              scale: 1.02,
+              transition: { duration: 0.2, ease: "easeOut" },
+            }
+      }
       exit={reduceMotion ? undefined : { opacity: 0, scale: 0.98 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.5, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onMouseDown={handleMouseDown}
+      style={{ x: cardX, y: cardY }}
       className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-card/60 shadow-sm backdrop-blur-sm hover:border-primary/40 hover:shadow-[0_16px_48px_rgba(99,102,241,0.18)] dark:bg-card/40 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_8px_32px_-10px_rgba(0,0,0,0.45)]"
     >
       {/* cursor spotlight */}
@@ -93,9 +147,12 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
           }}
         >
           <Image
-            src={`https://placehold.co/800x500/1e1b4b/818cf8/png?text=${encodeURIComponent(
-              project.title
-            )}`}
+            src={
+              project.image ??
+              `https://placehold.co/800x500/1e1b4b/818cf8/png?text=${encodeURIComponent(
+                project.title
+              )}`
+            }
             alt={project.imageAlt}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"

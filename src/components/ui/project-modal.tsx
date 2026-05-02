@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { IconGithub } from "@/components/icons/social";
+import { GalleryLightbox } from "@/components/ui/gallery-lightbox";
 import {
   Dialog,
   DialogContent,
@@ -37,9 +38,12 @@ export function ProjectModal({
       >
         <div className="relative aspect-[21/9] w-full shrink-0 overflow-hidden bg-muted">
           <Image
-            src={`https://placehold.co/1200x400/1e1b4b/818cf8/png?text=${encodeURIComponent(
-              project.title
-            )}`}
+            src={
+              project.image ??
+              `https://placehold.co/1200x400/1e1b4b/818cf8/png?text=${encodeURIComponent(
+                project.title
+              )}`
+            }
             alt={project.imageAlt}
             fill
             className="object-cover"
@@ -159,25 +163,16 @@ export function ProjectModal({
             </ul>
           </section>
 
+          {(project.gallery ?? []).length > 0 && (
           <section>
             <h4 className="text-sm font-semibold text-foreground">Gallery</h4>
-            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {[1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  className="relative aspect-video overflow-hidden rounded-lg border border-border/80 bg-muted"
-                >
-                  <Image
-                    src={`https://placehold.co/400x225/312e81/a5b4fc/png?text=Screenshot+${i}`}
-                    alt={`${project.title} screenshot placeholder ${i}`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 50vw, 200px"
-                  />
-                </div>
-              ))}
-            </div>
+            <GalleryLightbox
+              images={project.gallery!}
+              thumbAspect="9/16"
+              gridClassName="mt-3 grid grid-cols-3 gap-3"
+            />
           </section>
+          )}
           </div>
         </div>
       </DialogContent>
