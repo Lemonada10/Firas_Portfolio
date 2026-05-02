@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -17,7 +16,6 @@ type GalleryLightboxProps = {
 
 export function GalleryLightbox({
   images,
-  thumbAspect = "9/16",
   gridClassName = "mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3",
 }: GalleryLightboxProps) {
   const [activeIdx, setActiveIdx] = React.useState<number | null>(null);
