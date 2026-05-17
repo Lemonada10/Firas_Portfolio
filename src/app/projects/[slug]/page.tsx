@@ -53,7 +53,7 @@ export default function ProjectPage({ params }: Props) {
           }
           alt={project.imageAlt}
           fill
-          className="object-cover"
+          className="object-contain"
           priority
           sizes="100vw"
         />
