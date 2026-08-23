@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, Mail, MapPin, Phone, Send } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Mail, MapPin, Phone, Send } from "lucide-react";
 import { IconLinkedIn } from "@/components/icons/social";
 import { AnimatedSection } from "@/components/ui/animated-section";
 import { Button } from "@/components/ui/button";
@@ -120,7 +120,7 @@ export function Contact() {
             06 · Contact
           </motion.p>
           <SplitHeading className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-            Let's build something solid and creative
+            {"Let's build something solid and creative"}
           </SplitHeading>
           <motion.p
             className="mt-4 text-muted-foreground"
