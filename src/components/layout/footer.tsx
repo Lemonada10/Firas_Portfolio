@@ -22,6 +22,9 @@ export function Footer() {
           <p className="text-sm text-muted-foreground">
             Software Engineering Co-op · {personal.school}
           </p>
+          <p className="mt-1 text-xs text-emerald-700 dark:text-emerald-400">
+            Open to full-time roles · Summer 2027
+          </p>
         </motion.div>
         <motion.div
           initial={reduceMotion ? false : { opacity: 0, y: 12 }}

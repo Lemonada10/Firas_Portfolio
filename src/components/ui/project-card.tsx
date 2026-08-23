@@ -9,6 +9,7 @@ import { IconGithub } from "@/components/icons/social";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { Magnetic } from "@/components/ui/magnetic-button";
 import type { Project } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -23,7 +24,7 @@ const tiltReset = "perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)";
 export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
   const reduceMotion = useReducedMotion();
   const articleRef = React.useRef<HTMLElement>(null);
-  const tiltRef = React.useRef<HTMLDivElement>(null);
+  const tiltRef = React.useRef<HTMLDivElement | null>(null);
   const nudgeTimeoutRef = React.useRef<number | null>(null);
   const suppressTiltUntilRef = React.useRef<number>(0);
   const rawX = useMotionValue(0);
@@ -133,16 +134,22 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
       </div>
       <button
         type="button"
+        data-cursor="Open"
         onClick={onOpen}
         className="text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         aria-label={`Open details for ${project.title}`}
       >
-        <div
+        <motion.div
           ref={tiltRef}
-          className="relative aspect-[16/10] w-full overflow-hidden bg-muted"
+          layoutId={`project-image-${project.slug}`}
+          className={cn(
+            "relative aspect-[16/10] w-full overflow-hidden bg-muted",
+            !reduceMotion &&
+              "[clip-path:inset(8%_8%_8%_8%_round_14px)] transition-[clip-path] duration-500 ease-out group-hover:[clip-path:inset(0_0_0_0_round_14px)]"
+          )}
           style={{
             transformStyle: "preserve-3d",
-            transition: "transform 0.18s ease",
+            transition: "transform 0.18s ease, clip-path 0.5s ease",
             transform: tiltReset,
           }}
         >
@@ -159,10 +166,20 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
             sizes="(max-width: 768px) 100vw, 50vw"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-80 transition-opacity group-hover:opacity-95" />
+          {project.featured && (
+            <span className="absolute left-3 top-3 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
+              Featured
+            </span>
+          )}
+          {project.extra && (
+            <span className="absolute left-3 top-3 rounded-full border border-border bg-background/85 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Also built
+            </span>
+          )}
           <span className="absolute bottom-3 left-3 rounded-full bg-background/80 px-2 py-0.5 font-mono text-[10px] text-muted-foreground backdrop-blur">
             {project.location}
           </span>
-        </div>
+        </motion.div>
 
         <div className="flex flex-1 flex-col gap-4 p-6">
           <div className="flex flex-wrap gap-2">
@@ -201,6 +218,7 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
 
       <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-border/60 bg-muted/30 px-6 py-4">
         <div className="flex gap-2">
+          {project.githubUrl ? (
           <Tooltip>
             <TooltipTrigger
               render={
@@ -221,6 +239,7 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
             </TooltipTrigger>
             <TooltipContent>View repository</TooltipContent>
           </Tooltip>
+          ) : null}
           {project.demoUrl ? (
             <a
               href={project.demoUrl}
@@ -238,13 +257,15 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
             </Button>
           )}
         </div>
-        <Link
-          href={`/projects/${project.slug}`}
-          className="text-xs font-medium text-primary underline-offset-4 hover:underline"
-          onClick={(e) => e.stopPropagation()}
-        >
-          Full page
-        </Link>
+        <Magnetic strength={0.14}>
+          <Link
+            href={`/projects/${project.slug}`}
+            className="text-xs font-medium text-primary underline-offset-4 hover:underline"
+            onClick={(e) => e.stopPropagation()}
+          >
+            Full page
+          </Link>
+        </Magnetic>
       </div>
     </motion.article>
   );

@@ -39,7 +39,7 @@ export function CanvasBackground() {
     const pulses: Pulse[]       = [];
     const ripples: Ripple[]     = [];
     const MAX_DIST = 170;
-    const COUNT    = 65;
+    const COUNT    = 48;
     const MAX_SPEED = 4.5;
 
     // ── Resize ──────────────────────────────────────────────────
@@ -52,8 +52,8 @@ export function CanvasBackground() {
 
     // ── Init particles ───────────────────────────────────────────
     for (let i = 0; i < COUNT; i++) {
-      const bvx = (Math.random() - 0.5) * 0.45;
-      const bvy = (Math.random() - 0.5) * 0.45;
+      const bvx = 0.18 + Math.random() * 0.35;
+      const bvy = (Math.random() - 0.5) * 0.28;
       particles.push({
         x: Math.random() * W, y: Math.random() * H,
         vx: bvx, vy: bvy,
@@ -65,6 +65,10 @@ export function CanvasBackground() {
 
     // ── Click → repulse + ripple ─────────────────────────────────
     const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target?.closest("a, button, input, textarea, select, [role='dialog'], [role='menu']")) {
+        return;
+      }
       const cx = e.clientX;
       const cy_screen = e.clientY; // canvas is fixed → use viewport coords
 
@@ -126,7 +130,7 @@ export function CanvasBackground() {
         document.documentElement.classList.contains("dark");
 
       // — base background (must track theme — light text sits on this layer) —
-      ctx.fillStyle = isDark ? "#09090f" : "#fafaf9";
+      ctx.fillStyle = isDark ? "#09090f" : "#b4b9c9";
       ctx.fillRect(0, 0, W, H);
 
       // — aurora layer 1: top-left indigo —
@@ -134,7 +138,7 @@ export function CanvasBackground() {
         const g = ctx.createRadialGradient(W*0.15, H*0.22, 0, W*0.15, H*0.22, W*0.55);
         const a = isDark
           ? 0.18 + Math.sin(t * 0.6) * 0.05
-          : 0.05 + Math.sin(t * 0.6) * 0.016;
+          : 0.07 + Math.sin(t * 0.6) * 0.02;
         g.addColorStop(0, `rgba(99,102,241,${a})`);
         g.addColorStop(1, "rgba(99,102,241,0)");
         ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);

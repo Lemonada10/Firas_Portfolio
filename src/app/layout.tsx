@@ -10,7 +10,10 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AmbientBackground } from "@/components/ui/ambient-background";
 import { CursorGlow } from "@/components/ui/cursor-glow";
+import { BootLine } from "@/components/ui/boot-line";
+import { MotionRoot } from "@/components/ui/motion-root";
 import { SiteAtmosphere } from "@/components/ui/site-atmosphere";
+import { CommandPalette } from "@/components/ui/command-palette";
 import { personal } from "@/lib/data";
 
 /* Canvas background — client only, no SSR → no hydration mismatch */
@@ -45,7 +48,8 @@ export const metadata: Metadata = {
   description: `${personal.headline} Based in ${personal.location}.`,
   keywords: [
     "Firas Al Haddad", "Software Engineering", "Concordia University",
-    "Montreal", "internship", "full-stack", "data engineering",
+    "Montreal", "data engineering", "Pratt & Whitney", "Databricks", "PySpark",
+    "internship", "full-stack",
   ],
   authors: [{ name: personal.name }],
   openGraph: {
@@ -62,9 +66,22 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: personal.name,
+  jobTitle: "Software Engineering Co-op · Data Engineering Intern",
+  email: personal.email,
+  telephone: personal.phone,
+  address: { "@type": "PostalAddress", addressLocality: "Montreal", addressRegion: "QC", addressCountry: "CA" },
+  alumniOf: personal.school,
+  url: siteUrl,
+  sameAs: [personal.linkedInUrl, personal.portfolioUrl].filter(Boolean),
+};
+
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fafaf9" },
+    { media: "(prefers-color-scheme: light)", color: "#b4b9c9" },
     { media: "(prefers-color-scheme: dark)", color: "#09090f" },
   ],
 };
@@ -79,6 +96,10 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-screen overflow-x-hidden font-sans antialiased [text-rendering:optimizeLegibility]">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
         <ThemeProvider>
           <TooltipProvider>
             <a
@@ -96,11 +117,15 @@ export default function RootLayout({
             {/* 3: all site content above both background layers */}
             <div className="relative z-10 flex min-h-screen flex-col">
               <CursorGlow />
+              <BootLine />
               <SiteAtmosphere />
               <Navbar />
-              <main id="main-content" className="flex-1">
-                {children}
-              </main>
+              <CommandPalette />
+              <MotionRoot>
+                <main id="main-content" className="flex-1">
+                  {children}
+                </main>
+              </MotionRoot>
               <Footer />
             </div>
           </TooltipProvider>

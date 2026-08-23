@@ -2,182 +2,175 @@
 
 import * as React from "react";
 import type { LucideIcon } from "lucide-react";
-import { motion, useInView, useReducedMotion, type Variants } from "framer-motion";
-import { BookOpen, Code2, Globe, Layers, Users, Wrench } from "lucide-react";
+import { AnimatePresence, motion, useInView, useReducedMotion, type Variants } from "framer-motion";
+import { Cloud, Code2, Layers, Monitor } from "lucide-react";
 import { AnimatedSection } from "@/components/ui/animated-section";
-import { skillGroups } from "@/lib/data";
-import type { SkillGroup } from "@/types";
+import { jobLabel, projectLabel, skillGroups } from "@/lib/data";
+import type { SkillGroup, SkillRelated } from "@/types";
 import { cn } from "@/lib/utils";
+import { SplitHeading } from "@/components/ui/text-split";
 
 const iconMap: Record<SkillGroup["icon"], LucideIcon> = {
-  code: Code2, layers: Layers, wrench: Wrench,
-  book: BookOpen, users: Users, globe: Globe,
+  code: Code2,
+  layers: Layers,
+  wrench: Code2,
+  book: Code2,
+  users: Code2,
+  globe: Code2,
+  cloud: Cloud,
+  monitor: Monitor,
 };
-
-const tiltReset = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)";
 
 const skillCardVariants: Variants = {
   hidden: { opacity: 0, y: 22 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
-  },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
 };
 
 const skillGridContainerVariants: Variants = {
   hidden: {},
-  show: {
-    transition: { staggerChildren: 0.07, delayChildren: 0.04 },
-  },
+  show: { transition: { staggerChildren: 0.07, delayChildren: 0.04 } },
 };
 
-const reducedMotionCardVariants: Variants = {
-  hidden: { opacity: 1, y: 0 },
-  show: { opacity: 1, y: 0 },
-};
-
-const reducedMotionGridVariants: Variants = {
-  hidden: {},
-  show: {},
-};
-
-function SkillCard({ group }: { group: SkillGroup }) {
-  const reduceMotion = useReducedMotion();
-  const Icon = iconMap[group.icon];
-  const tiltRef = React.useRef<HTMLDivElement>(null);
-
-  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (reduceMotion || !tiltRef.current) return;
-    const el = tiltRef.current;
-    const rect = el.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
-    el.style.transform = `perspective(1000px) rotateX(${(0.5 - y) * 12}deg) rotateY(${(x - 0.5) * 12}deg) scale3d(1.03,1.03,1.03)`;
-  };
-
-  const onLeave = () => {
-    if (!tiltRef.current) return;
-    tiltRef.current.style.transform = tiltReset;
-  };
-
-  return (
-    <motion.div
-      variants={reduceMotion ? reducedMotionCardVariants : skillCardVariants}
-      className="h-full"
-    >
-      {/* No backdrop-blur / hover shadow transition — they recomposite and fight :hover on pills */}
-      <div className="group flex h-full flex-col rounded-2xl border border-border/80 bg-card/85 shadow-sm dark:bg-card/40 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_8px_28px_-8px_rgba(0,0,0,0.45)]">
-        <div
-          ref={tiltRef}
-          onMouseMove={reduceMotion ? undefined : onMove}
-          onMouseLeave={reduceMotion ? undefined : onLeave}
-          style={{
-            transform: tiltReset,
-            transition: "transform 0.15s ease",
-            transformStyle: "preserve-3d",
-          }}
-          className="px-6 pt-6"
-        >
-          <div
-            className="mb-4 flex items-center gap-3"
-            style={{ transform: "translateZ(20px)", transformStyle: "preserve-3d" }}
-          >
-            <span className="inline-flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary transition-transform duration-200 group-hover:scale-105">
-              <Icon className="size-4" aria-hidden />
-            </span>
-            <h3 className="relative text-base font-semibold text-foreground">
-              {group.title}
-              <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-primary transition-[width] duration-300 ease-out group-hover:w-full" />
-            </h3>
-          </div>
-        </div>
-
-        <div className="px-6 pb-6 pt-1" style={{ contain: "layout paint" }}>
-          <ul className="flex flex-wrap gap-2">
-            {group.items.map((item) => (
-              <li key={item}>
-                <button
-                  type="button"
-                  tabIndex={-1}
-                  aria-label={item}
-                  className={cn(
-                    "inline-flex cursor-default select-none items-center rounded-full border border-border/80 bg-background/90 px-3 py-1 font-mono text-xs text-foreground/90",
-                    "outline-none transition-colors duration-150",
-                    "hover:border-primary/50 hover:bg-primary/10 hover:text-primary",
-                    "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                  )}
-                >
-                  {item}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-function SkillGrid() {
-  const reduceMotion = useReducedMotion();
-  const gridRef = React.useRef<HTMLDivElement>(null);
-  const inView = useInView(gridRef, { once: true, amount: 0.08, margin: "-80px" });
-
-  return (
-    <motion.div
-      ref={gridRef}
-      className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
-      variants={reduceMotion ? reducedMotionGridVariants : skillGridContainerVariants}
-      initial="hidden"
-      animate={reduceMotion || inView ? "show" : "hidden"}
-    >
-      {skillGroups.map((group) => (
-        <SkillCard key={group.id} group={group} />
-      ))}
-    </motion.div>
-  );
+function relatedKey(r: SkillRelated | null | undefined) {
+  if (!r) return "";
+  return `${(r.jobs ?? []).join(",")}|${(r.projects ?? []).join(",")}`;
 }
 
 export function Skills() {
   const reduceMotion = useReducedMotion();
+  const gridRef = React.useRef<HTMLDivElement>(null);
+  const inView = useInView(gridRef, { once: true, amount: 0.08, margin: "-80px" });
+  const [active, setActive] = React.useState<SkillRelated | null>(null);
+  const [pinned, setPinned] = React.useState(false);
+
+  const highlightedJobs = new Set(active?.jobs ?? []);
+  const highlightedProjects = new Set(active?.projects ?? []);
+  const hasLinks = highlightedJobs.size > 0 || highlightedProjects.size > 0;
+
+  const select = (related: SkillRelated | undefined, pin: boolean) => {
+    if (!related || relatedKey(related) === "") {
+      if (pin) {
+        setActive(null);
+        setPinned(false);
+      }
+      return;
+    }
+    if (pin) {
+      const same = pinned && relatedKey(active) === relatedKey(related);
+      if (same) {
+        setPinned(false);
+        setActive(null);
+        return;
+      }
+      setActive(related);
+      setPinned(true);
+      return;
+    }
+    if (!pinned) setActive(related);
+  };
 
   return (
     <AnimatedSection id="skills" aria-label="Skills" className="py-20 sm:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-
-        {/* heading */}
         <div className="mx-auto max-w-2xl text-center">
-          <motion.p
-            className="font-mono text-xs uppercase tracking-[0.2em] text-primary"
-            initial={reduceMotion ? false : { opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-          >
-            Skills
+          <motion.p className="font-mono text-xs uppercase tracking-[0.2em] text-primary" initial={reduceMotion ? false : { opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4 }}>
+            03 · Skills
           </motion.p>
-          <motion.h2
-            className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl"
-            initial={reduceMotion ? false : { opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.45, delay: 0.06 }}
-          >
-            Tools I reach for in real projects
-          </motion.h2>
-          <motion.p
-            className="mt-4 text-muted-foreground"
-            initial={reduceMotion ? false : { opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-          >
-
+          <SplitHeading className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+            Tools from internships and shipped projects
+          </SplitHeading>
+          <motion.p className="mt-4 text-muted-foreground" initial={reduceMotion ? false : { opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: 0.1 }}>
+            Hover or tap a skill to see where it showed up in production work.
           </motion.p>
         </div>
 
-        <SkillGrid />
+        <div className="mt-8 flex min-h-[2.25rem] flex-wrap items-center justify-center gap-2" aria-live="polite">
+          <AnimatePresence mode="popLayout" initial={false}>
+            {hasLinks ? (
+              <>
+                {Array.from(highlightedJobs).map((id) => (
+                  <motion.span key={`j-${id}`} layout initial={reduceMotion ? false : { opacity: 0, y: 6, scale: 0.92 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, scale: 0.92 }} className="rounded-full border border-primary/35 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                    {jobLabel[id] ?? id}
+                  </motion.span>
+                ))}
+                {Array.from(highlightedProjects).map((id) => (
+                  <motion.span key={`p-${id}`} layout initial={reduceMotion ? false : { opacity: 0, y: 6, scale: 0.92 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, scale: 0.92 }} className="rounded-full border border-violet-400/35 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-800 dark:text-violet-300">
+                    {projectLabel[id] ?? id}
+                  </motion.span>
+                ))}
+              </>
+            ) : (
+              <motion.span key="idle" className="text-xs text-muted-foreground" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                Linked work appears here
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </div>
+
+        <motion.div
+          ref={gridRef}
+          className="mt-6 grid gap-8 sm:grid-cols-2"
+          variants={reduceMotion ? undefined : skillGridContainerVariants}
+          initial="hidden"
+          animate={reduceMotion || inView ? "show" : "hidden"}
+        >
+          {skillGroups.map((group) => {
+            const Icon = iconMap[group.icon];
+            return (
+              <motion.div key={group.id} variants={reduceMotion ? undefined : skillCardVariants} className="rounded-2xl border border-border/80 bg-card/85 p-6 shadow-sm dark:bg-card/40">
+                <div className="mb-4 flex items-center gap-3">
+                  <span className="inline-flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <Icon className="size-4" aria-hidden />
+                  </span>
+                  <h3 className="text-base font-semibold text-foreground">{group.title}</h3>
+                </div>
+                <ul className="flex flex-wrap gap-2">
+                  {group.items.map((item, i) => {
+                    const lit = Boolean(active) && relatedKey(item.related) === relatedKey(active);
+                    const dimmed =
+                      Boolean(active) &&
+                      !lit &&
+                      ((item.related?.jobs?.some((j) => highlightedJobs.has(j)) ?? false) ||
+                        (item.related?.projects?.some((p) => highlightedProjects.has(p)) ?? false));
+                    return (
+                      <li key={item.name}>
+                        <motion.button
+                          type="button"
+                          initial={reduceMotion ? false : { opacity: 0, scale: 0.88 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: i * 0.03, type: "spring", stiffness: 380, damping: 22 }}
+                          whileHover={reduceMotion ? undefined : { y: -2, scale: 1.04 }}
+                          whileTap={reduceMotion ? undefined : { scale: 0.96 }}
+                          onMouseEnter={() => select(item.related, false)}
+                          onMouseLeave={() => {
+                            if (!pinned) setActive(null);
+                          }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            select(item.related, true);
+                          }}
+                          aria-pressed={lit}
+                          className={cn(
+                            "inline-flex cursor-pointer items-center rounded-full border px-3 py-1 font-mono text-xs outline-none transition-colors",
+                            "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                            lit
+                              ? "border-primary/50 bg-primary/15 text-primary"
+                              : dimmed
+                                ? "border-primary/30 bg-primary/8 text-primary/90"
+                                : "border-border/80 bg-background/90 text-foreground/90 hover:border-primary/40"
+                          )}
+                        >
+                          {item.name}
+                        </motion.button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </motion.div>
+            );
+          })}
+        </motion.div>
       </div>
     </AnimatedSection>
   );

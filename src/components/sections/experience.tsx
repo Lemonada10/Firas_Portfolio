@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Briefcase } from "lucide-react";
 import { AnimatedSection } from "@/components/ui/animated-section";
 import { experience } from "@/lib/data";
+import { SplitHeading } from "@/components/ui/text-split";
 
 /* mouse-tracking tilt shared hook */
 function useTilt(strength = 8) {
@@ -52,17 +53,11 @@ export function Experience() {
             viewport={{ once: true }}
             transition={{ duration: 0.4 }}
           >
-            Experience
+            04 · Experience
           </motion.p>
-          <motion.h2
-            className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl"
-            initial={reduceMotion ? false : { opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.45, delay: 0.07 }}
-          >
+          <SplitHeading className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
             Internships with measurable impact
-          </motion.h2>
+          </SplitHeading>
         </div>
 
         <div className="relative mx-auto mt-16 max-w-3xl">
@@ -178,6 +173,16 @@ function ExperienceCard({ job, index, reduceMotion }: { job: Job; index: number;
             <p>{job.location}</p>
           </div>
         </div>
+
+        {job.tech && job.tech.length > 0 && (
+          <ul className="mt-3 flex flex-wrap gap-1.5">
+            {job.tech.map((t) => (
+              <li key={t} className="rounded-full border border-primary/20 bg-primary/8 px-2 py-0.5 font-mono text-[10px] text-foreground/80">
+                {t}
+              </li>
+            ))}
+          </ul>
+        )}
 
         <ul
           className="mt-4 list-none space-y-2.5 text-sm leading-relaxed text-muted-foreground"

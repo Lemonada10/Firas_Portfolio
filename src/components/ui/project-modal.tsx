@@ -74,6 +74,7 @@ export function ProjectModal({
           </DialogHeader>
 
           <div className="flex flex-wrap gap-2">
+            {project.githubUrl ? (
             <a
               href={project.githubUrl}
               target="_blank"
@@ -83,6 +84,7 @@ export function ProjectModal({
               <IconGithub className="size-4" />
               GitHub
             </a>
+            ) : null}
             {project.demoUrl ? (
               <a
                 href={project.demoUrl}

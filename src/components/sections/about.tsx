@@ -2,10 +2,11 @@
 
 import * as React from "react";
 import { motion, useReducedMotion, useInView } from "framer-motion";
-import { GraduationCap, Languages, MapPin } from "lucide-react";
+import { Award, GraduationCap, Languages, MapPin } from "lucide-react";
 import { AnimatedSection } from "@/components/ui/animated-section";
 import { Card, CardContent } from "@/components/ui/card";
-import { education, personal } from "@/lib/data";
+import { certifications, education, personal } from "@/lib/data";
+import { SplitHeading } from "@/components/ui/text-split";
 
 /* ── 3-D tilt wrapper ──────────────────────────────────────────── */
 function Tilt3D({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -67,10 +68,10 @@ function Counter({ to, suffix = "", decimals = 0 }: { to: number; suffix?: strin
 }
 
 const STATS = [
-  { value: 3.4, suffix: "", decimals: 1, label: "GPA", sub: "Concordia University" },
+  { value: 3.47, suffix: "", decimals: 2, label: "GPA", sub: "Concordia University" },
   { value: 3, suffix: "", decimals: 0, label: "Internships", sub: "Industry experience" },
-  { value: 4, suffix: "", decimals: 0, label: "Projects", sub: "Built & Ready" },
-  { value: 3, suffix: "", decimals: 0, label: "Languages", sub: "French & English & Arabic" },
+  { value: 3, suffix: "", decimals: 0, label: "Projects", sub: "Shipped & documented" },
+  { value: 2, suffix: "", decimals: 0, label: "Languages", sub: "English & French" },
 ];
 
 export function About() {
@@ -91,17 +92,11 @@ export function About() {
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           >
-            About
+            01 · About
           </motion.p>
-          <motion.h2
-            className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl"
-            initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-            whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.5, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
-          >
+          <SplitHeading className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
             Engineering background
-          </motion.h2>
+          </SplitHeading>
         </div>
 
         {/* ── Animated stats row ── */}
@@ -131,26 +126,19 @@ export function About() {
         <div className="mt-14 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
           <div className="space-y-5 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
             <p>
-              I&apos;m an undergraduate{" "}
+              I&apos;m a{" "}
               <strong className="font-medium text-foreground">Software Engineering Co-op</strong>{" "}
-              4th year student at{" "}
+              student at{" "}
               <strong className="font-medium text-foreground">Concordia University</strong>{" "}
-              with interests in software development, artificial intelligence, data analytics, and full-stack applications.
+              (expected May 2027). I build Python medallion pipelines, BLE backends, and browser ML that stays fast and usable.
             </p>
             <p>
-              My experience lies in {" "}
-              <strong className="text-foreground">full-stack app development</strong>,{" "}
-              <strong className="text-foreground">data engineering</strong>, and{" "}
-              <strong className="text-foreground">and data analytics </strong>
-              — from modular PySpark pipelines to BLE-backed tooling — plus AI-related projects that emphasize performance and usability in the browser.
+              Current work at Pratt & Whitney Canada: ingesting finance and metals data, validating it, publishing Parquet, and modeling 10 years of pricing in Power BI. Before that: a GATT/BLE desktop stack at Fonex and modular PySpark on Databricks.
             </p>
             <p>
-              I&apos;m excited to apply my software engineering skills to build {" "}
-              <strong className="font-medium text-foreground">creative</strong>{" "} products and learn more about artificial intelligence. {" "}
-              
               <span className="mt-2 block text-sm text-muted-foreground">
-                Bilingual: <span className="text-foreground">French</span> &amp;{" "}
-                <span className="text-foreground">English</span>.
+                Bilingual: <span className="text-foreground">English</span> &amp;{" "}
+                <span className="text-foreground">French</span>.
               </span>
             </p>
           </div>
@@ -180,7 +168,12 @@ export function About() {
                         </ul>
                       ),
                     },
-                    { Icon: Languages, label: "Languages", text: "French & English — professional proficiency" },
+                    { Icon: Languages, label: "Languages", text: "English & French — professional proficiency" },
+                    {
+                      Icon: Award,
+                      label: "Certification",
+                      text: `${certifications[0].name} · ${certifications[0].status} · ${certifications[0].expected}`,
+                    },
                   ].map(({ Icon, label, text, custom }) => (
                     <div key={label} className="flex items-start gap-3">
                       <span className="mt-0.5 inline-flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">

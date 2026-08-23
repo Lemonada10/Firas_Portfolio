@@ -5,6 +5,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 import { heroRotatingRoles, personal } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
@@ -107,7 +108,7 @@ export function Hero() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
               </span>
-              Open to internship opportunities
+              Open to full-time positions starting Summer 2027
             </Badge>
             <Badge variant="outline" className="gap-1.5 rounded-full text-muted-foreground">
               <Sparkles className="size-3.5" aria-hidden />
@@ -154,26 +155,26 @@ export function Hero() {
             transition={{ duration: 0.5, delay: 0.14 }}
             className="flex flex-wrap gap-3"
           >
-            <a
+            <MagneticButton
               href="#projects"
               className={cn(
                 buttonVariants({ size: "lg" }),
-                "group gap-2 shadow-[0_0_22px_rgba(99,102,241,0.40)] transition-all duration-300 hover:shadow-[0_0_38px_rgba(99,102,241,0.65)] hover:scale-[1.02]"
+                "group gap-2 shadow-[0_0_22px_rgba(99,102,241,0.40)] transition-all duration-300 hover:shadow-[0_0_38px_rgba(99,102,241,0.65)]"
               )}
             >
               View featured work
               <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden />
-            </a>
-            <a
+            </MagneticButton>
+            <MagneticButton
               href={personal.resumeUrl}
               download
               className={cn(
                 buttonVariants({ variant: "outline", size: "lg" }),
-                "transition-all duration-300 hover:scale-[1.02]"
+                "transition-all duration-300"
               )}
             >
               Download resume
-            </a>
+            </MagneticButton>
           </motion.div>
         </div>
 
@@ -235,7 +236,7 @@ export function Hero() {
                 <span className="text-[11px] text-muted-foreground/60">focus.ts</span>
                 <span className="rounded bg-muted px-2 py-0.5 text-[10px] uppercase tracking-wider">portfolio</span>
               </div>
-              <pre className="overflow-x-auto text-left">
+              <pre className="hero-code overflow-x-auto text-left">
                 <code>
                   <span className="text-indigo-800 dark:text-violet-400">const</span>
                   <span className="text-foreground/90"> engineer </span>
@@ -258,21 +259,19 @@ export function Hero() {
                   <span className="text-foreground/50">{"  "}</span>
                   <span className="text-sky-400">languages</span>
                   <span className="text-foreground/70">{": ["}</span>
-                  <span className="text-emerald-400">&quot;FR&quot;</span>
-                  <span className="text-foreground/70">{", "}</span>
                   <span className="text-emerald-400">&quot;EN&quot;</span>
                   <span className="text-foreground/70">{", "}</span>
-                  <span className="text-emerald-400">&quot;AR&quot;</span>
+                  <span className="text-emerald-400">&quot;FR&quot;</span>
                   <span className="text-foreground/70">{"],\n"}</span>
                   <span className="text-foreground/50">{"  "}</span>
                   <span className="text-sky-400">gpa</span>
                   <span className="text-foreground/70">{": "}</span>
-                  <span className="text-orange-400">3.4</span>
+                  <span className="text-orange-400">3.47</span>
                   <span className="text-foreground/70">{",\n"}</span>
                   <span className="text-foreground/50">{"  "}</span>
                   <span className="text-sky-400">goal</span>
                   <span className="text-foreground/70">{": "}</span>
-                  <span className="text-emerald-400">&quot;Ship reliable software that scales&quot;</span>
+                  <span className="text-emerald-400">&quot;Ship reliable data systems&quot;</span>
                   <span className="text-foreground/70">{",\n}"}</span>
                 </code>
               </pre>

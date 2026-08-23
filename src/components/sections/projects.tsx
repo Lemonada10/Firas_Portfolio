@@ -9,9 +9,34 @@ import { ProjectCard } from "@/components/ui/project-card";
 import { ProjectModal } from "@/components/ui/project-modal";
 import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { projects } from "@/lib/data";
+import { personal, projects } from "@/lib/data";
 import type { Project } from "@/types";
 import { cn } from "@/lib/utils";
+import { SplitHeading } from "@/components/ui/text-split";
+
+function TechMarquee() {
+  const names = React.useMemo(() => {
+    const set = new Set<string>();
+    projects.forEach((p) => p.tech.forEach((t) => set.add(t)));
+    return Array.from(set);
+  }, []);
+  const loop = [...names, ...names];
+
+  return (
+    <div className="group mt-5 hidden overflow-hidden sm:block" aria-hidden>
+      <div className="flex w-max gap-3 motion-safe:animate-[tech-marquee_28s_linear_infinite] motion-safe:group-hover:[animation-play-state:paused] motion-reduce:animate-none">
+        {loop.map((t, i) => (
+          <span
+            key={`${t}-${i}`}
+            className="rounded-full border border-border/70 bg-background/60 px-3 py-1 font-mono text-[11px] text-muted-foreground"
+          >
+            {t}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function Projects() {
   const [selected, setSelected] = React.useState<Project | null>(null);
@@ -45,18 +70,19 @@ export function Projects() {
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
               <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
-                Featured work
+                05 · Featured work
               </p>
-              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+              <SplitHeading className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
                 Projects that show how I build
-              </h2>
+              </SplitHeading>
               <p className="mt-4 text-muted-foreground">
-                Deep dives on architecture, constraints, and outcomes — not
-                just tech stacks. Tap a card for the full story.
+                Campus Guide and Focus Tracker from the CV, plus Peer Review as additional shipped work.
               </p>
+              <TechMarquee />
             </div>
+            {personal.githubUrl ? (
             <Link
-              href="https://github.com/"
+              href={personal.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
               className={cn(
@@ -67,6 +93,7 @@ export function Projects() {
               <FolderGit2 className="size-4" aria-hidden />
               More on GitHub
             </Link>
+            ) : null}
           </div>
 
           <motion.div

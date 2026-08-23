@@ -13,7 +13,7 @@ const NOISE_SVG =
 export function SiteAtmosphere() {
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-[11] opacity-[0.022] mix-blend-multiply dark:opacity-[0.055] dark:mix-blend-overlay"
+      className="pointer-events-none fixed inset-0 z-[11] opacity-[0.04] mix-blend-multiply dark:opacity-[0.055] dark:mix-blend-overlay"
       aria-hidden
       style={{
         backgroundImage: `url("${NOISE_SVG}")`,

@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { personal } from "@/lib/data";
+import { Magnetic } from "@/components/ui/magnetic-button";
+import { SplitHeading } from "@/components/ui/text-split";
 
 /* reusable mouse-tilt hook */
 function useTilt(maxDeg = 7) {
@@ -83,18 +85,23 @@ const formFields = [
 ];
 
 export function Contact() {
-  const [status, setStatus] = React.useState<"idle" | "sending" | "sent">("idle");
+  const [status, setStatus] = React.useState<"idle" | "opened" | "copied">("idle");
   const reduceMotion = useReducedMotion();
   const leftTilt  = useTilt(6);
   const rightTilt = useTilt(6);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setStatus("sending");
-    window.setTimeout(() => {
-      setStatus("sent");
-      window.setTimeout(() => setStatus("idle"), 4000);
-    }, 900);
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const name = String(data.get("name") ?? "");
+    const email = String(data.get("email") ?? "");
+    const message = String(data.get("message") ?? "");
+    const subject = encodeURIComponent(`Portfolio note from ${name}`);
+    const body = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
+    window.location.href = `mailto:${personal.email}?subject=${subject}&body=${body}`;
+    setStatus("opened");
+    window.setTimeout(() => setStatus("idle"), 4000);
   }
 
   return (
@@ -110,17 +117,11 @@ export function Contact() {
             viewport={{ once: true }}
             transition={{ duration: 0.4 }}
           >
-            Contact
+            06 · Contact
           </motion.p>
-          <motion.h2
-            className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl"
-            initial={reduceMotion ? false : { opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.45, delay: 0.07 }}
-          >
-            Let&apos;s build something solid and creative
-          </motion.h2>
+          <SplitHeading className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+            Let's build something solid and creative
+          </SplitHeading>
           <motion.p
             className="mt-4 text-muted-foreground"
             initial={reduceMotion ? false : { opacity: 0, y: 10 }}
@@ -128,7 +129,7 @@ export function Contact() {
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.12 }}
           >
-            I&apos;m actively seeking oppportunities in software engineering, data engineering, and full-stack roles.
+            I&apos;m actively seeking opportunities in software engineering, data engineering, and full-stack roles.
             Reach out — I usually respond within a day.
           </motion.p>
         </div>
@@ -249,57 +250,19 @@ export function Contact() {
               </div>
 
               <div className="mt-6 flex flex-wrap items-center gap-4">
-                <motion.div whileTap={reduceMotion ? undefined : { scale: 0.95 }}>
-                  <Button type="submit" className="group relative gap-2 overflow-hidden" disabled={status !== "idle"}>
-                    <AnimatePresence mode="wait" initial={false}>
-                      {status === "idle" && (
-                        <motion.span key="idle" className="flex items-center gap-2"
-                          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <motion.span
-                            whileHover={reduceMotion ? undefined : { x: 3, y: -3, rotate: -30 }}
-                            transition={{ type: "spring", stiffness: 400, damping: 12 }}
-                          >
-                            <Send className="size-4" aria-hidden />
-                          </motion.span>
-                          Send message
-                        </motion.span>
-                      )}
-                      {status === "sending" && (
-                        <motion.span key="sending" className="flex items-center gap-2"
-                          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <motion.span animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }} className="inline-block">
-                            <Send className="size-4" aria-hidden />
-                          </motion.span>
-                          Sending…
-                        </motion.span>
-                      )}
-                      {status === "sent" && (
-                        <motion.span key="sent" className="flex items-center gap-2"
-                          initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
-                          transition={{ duration: 0.3, type: "spring", stiffness: 260 }}
-                        >
-                          <CheckCircle2 className="size-4" aria-hidden />
-                          Sent!
-                        </motion.span>
-                      )}
-                    </AnimatePresence>
+                <Magnetic strength={0.16}>
+                  <Button type="submit" className="group relative gap-2 overflow-hidden">
+                    <span className="flex items-center gap-2">
+                      <Send className="size-4" aria-hidden />
+                      Open in email
+                    </span>
                   </Button>
-                </motion.div>
-
-                <AnimatePresence>
-                  {status === "sent" && (
-                    <motion.p className="text-sm text-emerald-600 dark:text-emerald-400" role="status"
-                      initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 8 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      Thanks — connect via email for a real reply.
-                    </motion.p>
-                  )}
-                </AnimatePresence>
+                </Magnetic>
+                {status !== "idle" && (
+                  <p className="text-sm text-emerald-600 dark:text-emerald-400" role="status">
+                    Email client opened if one is available.
+                  </p>
+                )}
               </div>
             </form>
           </motion.div>

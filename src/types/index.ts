@@ -1,8 +1,13 @@
+export type SkillRelated = {
+  jobs?: string[];
+  projects?: string[];
+};
+
 export type SkillGroup = {
   id: string;
   title: string;
-  icon: "code" | "layers" | "wrench" | "book" | "users" | "globe";
-  items: string[];
+  icon: "code" | "layers" | "wrench" | "book" | "users" | "globe" | "cloud" | "monitor";
+  items: { name: string; related?: SkillRelated }[];
 };
 
 export type Education = {
@@ -15,6 +20,13 @@ export type Education = {
   details?: string;
 };
 
+export type Certification = {
+  id: string;
+  name: string;
+  status: string;
+  expected?: string;
+};
+
 export type Job = {
   id: string;
   title: string;
@@ -23,6 +35,7 @@ export type Job = {
   period: string;
   current?: boolean;
   bullets: string[];
+  tech?: string[];
 };
 
 export type Project = {
@@ -38,12 +51,12 @@ export type Project = {
   keyFeatures: string[];
   challenges: string[];
   learnings: string[];
-  githubUrl: string;
+  githubUrl: string | null;
   demoUrl: string | null;
   imageAlt: string;
-  /** Optional real hero image path (relative to /public, e.g. /projects/makesoft/banner.png) */
+  featured?: boolean;
+  extra?: boolean;
   image?: string;
-  /** Optional gallery screenshots (paths relative to /public) */
   gallery?: { src: string; alt: string }[];
 };
 
@@ -56,6 +69,6 @@ export type Personal = {
   school: string;
   portfolioUrl: string;
   linkedInUrl: string;
-  /** Public URL path to the resume PDF (file lives under `public/`, e.g. `/CV/CV.pdf`). */
+  githubUrl?: string;
   resumeUrl: string;
 };

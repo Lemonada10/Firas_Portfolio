@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
 export function ThemeToggle() {
@@ -36,11 +37,19 @@ export function ThemeToggle() {
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       onClick={() => setTheme(isDark ? "light" : "dark")}
     >
-      {isDark ? (
-        <Sun className="size-4 text-amber-400" />
-      ) : (
-        <Moon className="size-4 text-slate-600" />
-      )}
+      <motion.span
+        key={isDark ? "sun" : "moon"}
+        initial={{ rotate: -90, opacity: 0, scale: 0.6 }}
+        animate={{ rotate: 0, opacity: 1, scale: 1 }}
+        transition={{ type: "spring", stiffness: 320, damping: 18 }}
+        className="inline-flex"
+      >
+        {isDark ? (
+          <Sun className="size-4 text-amber-400" />
+        ) : (
+          <Moon className="size-4 text-slate-600" />
+        )}
+      </motion.span>
     </Button>
   );
 }
