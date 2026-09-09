@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu } from "lucide-react";
+import { Download, FileText, Menu } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Sheet,
@@ -13,6 +13,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { LanguageToggle } from "@/components/layout/language-toggle";
 import { useActiveSection } from "@/hooks/use-active-section";
 import { personal } from "@/lib/data";
 import { motion, useReducedMotion } from "framer-motion";
@@ -20,18 +21,21 @@ import { cn } from "@/lib/utils";
 import { CommandHint } from "@/components/ui/command-palette";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { Magnetic } from "@/components/ui/magnetic-button";
+import { useI18n } from "@/components/providers/language-provider";
 
-const NAV = [
-  { id: "home", label: "Home" },
-  { id: "about", label: "About" },
-  { id: "pipeline", label: "Pipeline" },
-  { id: "skills", label: "Skills" },
-  { id: "experience", label: "Experience" },
-  { id: "projects", label: "Projects" },
-  { id: "contact", label: "Contact" },
+const NAV_IDS = [
+  "home",
+  "about",
+  "pipeline",
+  "skills",
+  "experience",
+  "projects",
+  "contact",
 ] as const;
 
-const SECTION_IDS = NAV.map((n) => n.id);
+type NavId = (typeof NAV_IDS)[number];
+
+const SECTION_IDS: string[] = [...NAV_IDS];
 
 function scrollToId(id: string) {
   const el = document.getElementById(id);
@@ -41,7 +45,8 @@ function scrollToId(id: string) {
 }
 
 function NavLinkItem({
-  item,
+  id,
+  label,
   i,
   active,
   showLayoutIndicator,
@@ -49,7 +54,8 @@ function NavLinkItem({
   onHome,
   onNavigate,
 }: {
-  item: (typeof NAV)[number];
+  id: NavId;
+  label: string;
   i: number;
   active: boolean;
   showLayoutIndicator: boolean;
@@ -61,7 +67,7 @@ function NavLinkItem({
 
   return (
     <motion.a
-      href={`/#${item.id}`}
+      href={`/#${id}`}
       initial={reduceMotion ? false : { opacity: 0, y: -6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: i * 0.04, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
@@ -71,10 +77,10 @@ function NavLinkItem({
         e.preventDefault();
         onNavigate?.();
         if (onHome) {
-          scrollToId(item.id);
-          history.replaceState(null, "", `/#${item.id}`);
+          scrollToId(id);
+          history.replaceState(null, "", `/#${id}`);
         } else {
-          router.push(`/#${item.id}`);
+          router.push(`/#${id}`);
         }
       }}
       className={cn(
@@ -91,7 +97,7 @@ function NavLinkItem({
           transition={{ type: "spring", stiffness: 400, damping: 34 }}
         />
       )}
-      <span className="relative z-10">{item.label}</span>
+      <span className="relative z-10">{label}</span>
     </motion.a>
   );
 }
@@ -109,6 +115,7 @@ function NavLinks({
 }) {
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
+  const { t } = useI18n();
   const onHome = pathname === "/";
 
   return (
@@ -117,14 +124,15 @@ function NavLinks({
         "flex flex-col gap-1 md:flex-row md:items-center md:gap-1",
         className
       )}
-      aria-label="Primary"
+      aria-label={t.nav.primary}
     >
-      {NAV.map((item, i) => (
+      {NAV_IDS.map((id, i) => (
         <NavLinkItem
-          key={item.id}
-          item={item}
+          key={id}
+          id={id}
+          label={t.nav[id]}
           i={i}
-          active={onHome && activeId === item.id}
+          active={onHome && activeId === id}
           showLayoutIndicator={showLayoutIndicator}
           reduceMotion={reduceMotion}
           onHome={onHome}
@@ -140,6 +148,7 @@ export function Navbar() {
   const [open, setOpen] = React.useState(false);
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
+  const { t } = useI18n();
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border/60 bg-background/85 shadow-[inset_0_1px_0_0_rgba(15,23,42,0.05)] backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-background/70 dark:border-white/[0.06] dark:bg-background/80 dark:shadow-[0_1px_0_0_rgba(255,255,255,0.03)_inset] dark:supports-[backdrop-filter]:bg-background/60">
@@ -172,14 +181,17 @@ export function Navbar() {
           <Magnetic strength={0.14} className="hidden sm:inline-flex">
             <motion.a
               href={personal.resumeUrl}
-              download
+              target="_blank"
+              rel="noopener noreferrer"
               whileHover={reduceMotion ? undefined : { y: -1 }}
               whileTap={reduceMotion ? undefined : { scale: 0.96 }}
-              className={buttonVariants({ variant: "secondary", size: "sm" })}
+              className={cn(buttonVariants({ variant: "secondary", size: "sm" }), "gap-1.5")}
             >
-              Resume
+              <FileText className="size-3.5" aria-hidden />
+              {t.nav.resume}
             </motion.a>
           </Magnetic>
+          <LanguageToggle />
           <CommandHint />
           <ThemeToggle />
 
@@ -189,13 +201,13 @@ export function Navbar() {
                 buttonVariants({ variant: "outline", size: "icon" }),
                 "md:hidden"
               )}
-              aria-label="Open menu"
+              aria-label={t.nav.openMenu}
             >
               <Menu className="size-4" />
             </SheetTrigger>
             <SheetContent side="right" className="w-[min(100%,20rem)]">
               <SheetHeader>
-                <SheetTitle className="text-left">Menu</SheetTitle>
+                <SheetTitle className="text-left">{t.nav.menu}</SheetTitle>
               </SheetHeader>
               <div className="mt-6 flex flex-col gap-4">
                 <NavLinks
@@ -205,11 +217,22 @@ export function Navbar() {
                 />
                 <a
                   href={personal.resumeUrl}
-                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={() => setOpen(false)}
-                  className={cn(buttonVariants({ variant: "default" }), "w-full text-center")}
+                  className={cn(buttonVariants({ variant: "default" }), "w-full gap-2")}
                 >
-                  Download resume
+                  <FileText className="size-4" aria-hidden />
+                  {t.nav.resume}
+                </a>
+                <a
+                  href={personal.resumeUrl}
+                  download="Firas_Al_Haddad_CV.pdf"
+                  onClick={() => setOpen(false)}
+                  className={cn(buttonVariants({ variant: "outline" }), "w-full gap-2")}
+                >
+                  <Download className="size-4" aria-hidden />
+                  {t.nav.downloadResume}
                 </a>
               </div>
             </SheetContent>

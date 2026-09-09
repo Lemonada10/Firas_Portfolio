@@ -4,58 +4,52 @@ import * as React from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { AnimatedSection } from "@/components/ui/animated-section";
 import { SplitHeading } from "@/components/ui/text-split";
+import { useI18n } from "@/components/providers/language-provider";
 
 const PATH = "M40 140 C 140 140, 180 40, 280 80 S 420 220, 520 140 H 600";
 
+/** Visual identity of each medallion layer; the copy comes from the dictionary. */
 const LAYERS = [
   {
     id: "bronze",
-    name: "Bronze",
     tone: "from-amber-800/80 to-amber-600/50",
     ring: "border-amber-700/40",
     stages: [0, 1],
-    copy: "Ingest raw finance, supplier, parts, and commodity sources — 10+ datasets landing in reusable bronze tables.",
   },
   {
     id: "silver",
-    name: "Silver",
     tone: "from-slate-400/70 to-zinc-300/40",
     ring: "border-slate-400/50",
     stages: [2],
-    copy: "Validate, deduplicate, and standardize units, prices, and mappings from market-data APIs.",
   },
   {
     id: "gold",
-    name: "Gold",
     tone: "from-yellow-500/80 to-amber-300/50",
     ring: "border-yellow-500/40",
     stages: [3, 4],
-    copy: "Publish Parquet models and Power BI views — 10 years of metals pricing, alloy costs, and cost drivers.",
   },
 ] as const;
 
-const STAGES = ["Ingest", "Validate", "Model", "Parquet", "Power BI"];
-
 export function Pipeline() {
   const reduceMotion = useReducedMotion();
+  const { t } = useI18n();
   const [active, setActive] = React.useState<(typeof LAYERS)[number]["id"]>("gold");
   const detail = LAYERS.find((l) => l.id === active) ?? LAYERS[2];
+  const STAGES = t.pipeline.stages;
 
   return (
     <AnimatedSection
       id="pipeline"
-      aria-label="Medallion data pipeline"
+      aria-label={t.pipeline.aria}
       className="overflow-hidden py-20 sm:py-24"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">02 · Signature</p>
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">{t.pipeline.eyebrow}</p>
           <SplitHeading className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-            Medallion pipeline
+            {t.pipeline.heading}
           </SplitHeading>
-          <p className="mt-4 text-muted-foreground">
-            How I think about production data at Pratt & Whitney — hover Bronze, Silver, or Gold to see each layer.
-          </p>
+          <p className="mt-4 text-muted-foreground">{t.pipeline.subtitle}</p>
         </div>
 
         <div className="mt-14 grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
@@ -129,6 +123,7 @@ export function Pipeline() {
           <div className="space-y-3">
             {LAYERS.map((layer) => {
               const on = active === layer.id;
+              const text = t.pipeline.layers[layer.id];
               return (
                 <button
                   key={layer.id}
@@ -139,7 +134,9 @@ export function Pipeline() {
                     on ? "scale-[1.015] border-primary/40 shadow-[0_12px_40px_rgba(99,102,241,0.18)]" : "opacity-80 hover:opacity-100"
                   }`}
                 >
-                  <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-foreground/80">{layer.name} layer</p>
+                  <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-foreground/80">
+                    {text.name} {t.pipeline.layerSuffix}
+                  </p>
                   <AnimatePresence initial={false}>
                     {on && (
                       <motion.p
@@ -149,7 +146,7 @@ export function Pipeline() {
                         exit={{ height: 0, opacity: 0 }}
                         className="mt-2 overflow-hidden text-sm leading-relaxed text-foreground"
                       >
-                        {layer.copy}
+                        {text.copy}
                       </motion.p>
                     )}
                   </AnimatePresence>

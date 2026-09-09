@@ -26,7 +26,7 @@ export const personal: Personal = {
   school: "Concordia University",
   portfolioUrl: "https://firas-portfolio-zhdz.vercel.app/",
   linkedInUrl: "https://www.linkedin.com/in/firas-al-haddad-207a26280/",
-  resumeUrl: "/CV/CV.pdf",
+  resumeUrl: "/CV/CV.pdf?v=20260908",
 };
 
 export const education: Education[] = [

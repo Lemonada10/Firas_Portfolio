@@ -53,11 +53,15 @@ export function MagneticButton({
   className,
   href,
   download,
+  target,
+  onClick,
 }: {
   children: React.ReactNode;
   className?: string;
   href: string;
-  download?: boolean;
+  download?: boolean | string;
+  target?: React.HTMLAttributeAnchorTarget;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 }) {
   const { ref, onMove, onLeave } = useMagnetic<HTMLAnchorElement>(0.15);
 
@@ -66,7 +70,10 @@ export function MagneticButton({
       ref={ref}
       href={href}
       download={download}
+      target={target}
+      rel={target === "_blank" ? "noopener noreferrer" : undefined}
       data-magnetic
+      onClick={onClick}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
       className={cn("inline-flex transition-transform duration-150 ease-out", className)}

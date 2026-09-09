@@ -2,11 +2,13 @@
 
 import * as React from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useI18n } from "@/components/providers/language-provider";
 
 const KEY = "firas-boot-line";
 
 export function BootLine() {
   const reduceMotion = useReducedMotion();
+  const { t } = useI18n();
   const [show, setShow] = React.useState(false);
 
   React.useEffect(() => {
@@ -41,7 +43,7 @@ export function BootLine() {
               animate={{ x: "0%" }}
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             >
-              Loading graph…
+              {t.boot.line}
             </motion.span>
           </p>
         </motion.div>

@@ -5,8 +5,9 @@ import { motion, useReducedMotion, useInView } from "framer-motion";
 import { Award, GraduationCap, Languages, MapPin } from "lucide-react";
 import { AnimatedSection } from "@/components/ui/animated-section";
 import { Card, CardContent } from "@/components/ui/card";
-import { certifications, education, personal } from "@/lib/data";
 import { SplitHeading } from "@/components/ui/text-split";
+import { useI18n } from "@/components/providers/language-provider";
+import { useContent } from "@/hooks/use-content";
 
 /* ── 3-D tilt wrapper ──────────────────────────────────────────── */
 function Tilt3D({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -41,7 +42,17 @@ function Tilt3D({ children, className }: { children: React.ReactNode; className?
 }
 
 /* ── Animated counter ─────────────────────────────────────────── */
-function Counter({ to, suffix = "", decimals = 0 }: { to: number; suffix?: string; decimals?: number }) {
+function Counter({
+  to,
+  suffix = "",
+  decimals = 0,
+  locale,
+}: {
+  to: number;
+  suffix?: string;
+  decimals?: number;
+  locale: string;
+}) {
   const ref = React.useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const [value, setValue] = React.useState(0);
@@ -62,25 +73,31 @@ function Counter({ to, suffix = "", decimals = 0 }: { to: number; suffix?: strin
 
   return (
     <span ref={ref}>
-      {value.toFixed(decimals)}{suffix}
+      {value.toLocaleString(locale, {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      })}
+      {suffix}
     </span>
   );
 }
 
-const STATS = [
-  { value: 3.47, suffix: "", decimals: 2, label: "GPA", sub: "Concordia University" },
-  { value: 3, suffix: "", decimals: 0, label: "Internships", sub: "Industry experience" },
-  { value: 3, suffix: "", decimals: 0, label: "Projects", sub: "Shipped & documented" },
-  { value: 2, suffix: "", decimals: 0, label: "Languages", sub: "English & French" },
-];
-
 export function About() {
   const reduceMotion = useReducedMotion();
+  const { t, locale } = useI18n();
+  const { personal, education, certifications } = useContent();
+
+  const stats = [
+    { value: 3.47, decimals: 2, ...t.about.stats.gpa },
+    { value: 3, decimals: 0, ...t.about.stats.internships },
+    { value: 3, decimals: 0, ...t.about.stats.projects },
+    { value: 2, decimals: 0, ...t.about.stats.languages },
+  ];
 
   return (
     <AnimatedSection
       id="about"
-      aria-label="About"
+      aria-label={t.nav.about}
       className="bg-muted/10 py-20 sm:py-24"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -92,16 +109,16 @@ export function About() {
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           >
-            01 · About
+            {t.about.eyebrow}
           </motion.p>
           <SplitHeading className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-            Engineering background
+            {t.about.heading}
           </SplitHeading>
         </div>
 
         {/* ── Animated stats row ── */}
         <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {STATS.map((s, i) => (
+          {stats.map((s, i) => (
             <motion.div
               key={s.label}
               initial={reduceMotion ? false : { opacity: 0, y: 20 }}
@@ -114,7 +131,7 @@ export function About() {
                   style={{ background: "radial-gradient(ellipse 70% 60% at 50% 0%, rgba(99,102,241,0.10), transparent)" }}
                 />
                 <p className="relative z-20 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                  <Counter to={s.value} suffix={s.suffix} decimals={s.decimals} />
+                  <Counter to={s.value} decimals={s.decimals} locale={locale} />
                 </p>
                 <p className="relative z-20 mt-1 text-sm font-semibold text-primary">{s.label}</p>
                 <p className="relative z-20 mt-0.5 text-xs text-muted-foreground">{s.sub}</p>
@@ -125,20 +142,31 @@ export function About() {
 
         <div className="mt-14 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
           <div className="space-y-5 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-            <p>
-              I&apos;m a{" "}
-              <strong className="font-medium text-foreground">Software Engineering Co-op</strong>{" "}
-              student at{" "}
-              <strong className="font-medium text-foreground">Concordia University</strong>{" "}
-              (expected May 2027). I build Python medallion pipelines, BLE backends, and browser ML that stays fast and usable.
-            </p>
-            <p>
-              Current work at Pratt & Whitney Canada: ingesting finance and metals data, validating it, publishing Parquet, and modeling 10 years of pricing in Power BI. Before that: a GATT/BLE desktop stack at Fonex and modular PySpark on Databricks.
-            </p>
+            <motion.p
+              initial={reduceMotion ? false : { opacity: 0.35 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, amount: 0.7 }}
+              transition={{ duration: 0.6 }}
+            >
+              {t.about.bioLead}{" "}
+              <strong className="font-medium text-foreground">{t.about.bioRole}</strong>{" "}
+              {t.about.bioMiddle}{" "}
+              <strong className="font-medium text-foreground">{t.about.bioSchool}</strong>{" "}
+              {t.about.bioTail}
+            </motion.p>
+            <motion.p
+              initial={reduceMotion ? false : { opacity: 0.35 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, amount: 0.7 }}
+              transition={{ duration: 0.6, delay: 0.08 }}
+            >
+              {t.about.bioSecond}
+            </motion.p>
             <p>
               <span className="mt-2 block text-sm text-muted-foreground">
-                Bilingual: <span className="text-foreground">English</span> &amp;{" "}
-                <span className="text-foreground">French</span>.
+                {t.about.bilingualLabel}{" "}
+                <span className="text-foreground">{t.about.bilingualEnglish}</span> &amp;{" "}
+                <span className="text-foreground">{t.about.bilingualFrench}</span>.
               </span>
             </p>
           </div>
@@ -153,10 +181,10 @@ export function About() {
               <Card className="border-border/80">
                 <CardContent className="space-y-4 p-6">
                   {[
-                    { Icon: MapPin, label: "Location", text: personal.location },
+                    { Icon: MapPin, label: t.about.cards.location, text: personal.location },
                     {
                       Icon: GraduationCap,
-                      label: "Education",
+                      label: t.about.cards.education,
                       custom: (
                         <ul className="mt-2 space-y-3 text-sm text-muted-foreground">
                           {education.map((e) => (
@@ -168,10 +196,10 @@ export function About() {
                         </ul>
                       ),
                     },
-                    { Icon: Languages, label: "Languages", text: "English & French — professional proficiency" },
+                    { Icon: Languages, label: t.about.cards.languages, text: t.about.languagesText },
                     {
                       Icon: Award,
-                      label: "Certification",
+                      label: t.about.cards.certification,
                       text: `${certifications[0].name} · ${certifications[0].status} · ${certifications[0].expected}`,
                     },
                   ].map(({ Icon, label, text, custom }) => (

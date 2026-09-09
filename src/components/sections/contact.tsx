@@ -2,16 +2,18 @@
 
 import * as React from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { Mail, MapPin, Phone, Send } from "lucide-react";
+import { Copy, Mail, MapPin, Phone, Send } from "lucide-react";
 import { IconLinkedIn } from "@/components/icons/social";
 import { AnimatedSection } from "@/components/ui/animated-section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { personal } from "@/lib/data";
 import { Magnetic } from "@/components/ui/magnetic-button";
 import { SplitHeading } from "@/components/ui/text-split";
+import { useI18n } from "@/components/providers/language-provider";
+import { useContent } from "@/hooks/use-content";
+import { copyText } from "@/components/ui/toast";
 
 /* reusable mouse-tilt hook */
 function useTilt(maxDeg = 7) {
@@ -47,48 +49,72 @@ const depthStyle: React.CSSProperties = {
   boxShadow: "0 8px 0 0 rgba(99,102,241,0.08), 0 12px 48px -10px rgba(0,0,0,0.28)",
 };
 
-const contactRows = [
-  {
-    Icon: Mail, label: "Email",
-    content: (
-      <a href={`mailto:${personal.email}`} className="break-all text-muted-foreground underline-offset-4 hover:text-primary hover:underline">
-        {personal.email}
-      </a>
-    ),
-  },
-  {
-    Icon: Phone, label: "Phone",
-    content: (
-      <a href={`tel:${personal.phone.replace(/\s/g, "")}`} className="text-muted-foreground underline-offset-4 hover:text-primary hover:underline">
-        {personal.phone}
-      </a>
-    ),
-  },
-  {
-    Icon: IconLinkedIn, label: "LinkedIn",
-    content: (
-      <a href={personal.linkedInUrl} target="_blank" rel="noopener noreferrer" className="break-all text-muted-foreground underline-offset-4 hover:text-primary hover:underline">
-        {personal.linkedInUrl}
-      </a>
-    ),
-  },
-  {
-    Icon: MapPin, label: "Location",
-    content: <span className="text-muted-foreground">{personal.location}</span>,
-  },
-];
-
-const formFields = [
-  { id: "name", label: "Name", type: "text", autoComplete: "name", colSpan: 1 },
-  { id: "email", label: "Email", type: "email", autoComplete: "email", colSpan: 1 },
-  { id: "message", label: "Message", type: "area", colSpan: 2 },
-];
-
 export function Contact() {
   const [status, setStatus] = React.useState<"idle" | "opened" | "copied">("idle");
   const reduceMotion = useReducedMotion();
+  const { t } = useI18n();
+  const { personal } = useContent();
   const leftTilt  = useTilt(6);
   const rightTilt = useTilt(6);
+
+  const contactRows = [
+    {
+      Icon: Mail, label: t.contact.labels.email,
+      content: (
+        <span className="flex flex-wrap items-center gap-2">
+          <a href={`mailto:${personal.email}`} className="break-all text-muted-foreground underline-offset-4 hover:text-primary hover:underline">
+            {personal.email}
+          </a>
+          <button
+            type="button"
+            onClick={() => copyText(personal.email, t.extras.emailCopied)}
+            className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] text-muted-foreground hover:bg-primary/10 hover:text-primary"
+            aria-label={`${t.contact.copyValue} ${t.contact.labels.email}`}
+          >
+            <Copy className="size-3" aria-hidden />
+            {t.contact.copyValue}
+          </button>
+        </span>
+      ),
+    },
+    {
+      Icon: Phone, label: t.contact.labels.phone,
+      content: (
+        <span className="flex flex-wrap items-center gap-2">
+          <a href={`tel:${personal.phone.replace(/\s/g, "")}`} className="text-muted-foreground underline-offset-4 hover:text-primary hover:underline">
+            {personal.phone}
+          </a>
+          <button
+            type="button"
+            onClick={() => copyText(personal.phone, t.extras.phoneCopied)}
+            className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] text-muted-foreground hover:bg-primary/10 hover:text-primary"
+            aria-label={`${t.contact.copyValue} ${t.contact.labels.phone}`}
+          >
+            <Copy className="size-3" aria-hidden />
+            {t.contact.copyValue}
+          </button>
+        </span>
+      ),
+    },
+    {
+      Icon: IconLinkedIn, label: t.contact.labels.linkedin,
+      content: (
+        <a href={personal.linkedInUrl} target="_blank" rel="noopener noreferrer" className="text-muted-foreground underline-offset-4 hover:text-primary hover:underline">
+          {t.contact.linkedinProfile}
+        </a>
+      ),
+    },
+    {
+      Icon: MapPin, label: t.contact.labels.location,
+      content: <span className="text-muted-foreground">{personal.location}</span>,
+    },
+  ];
+
+  const formFields = [
+    { id: "name", label: t.contact.form.name, type: "text", autoComplete: "name", colSpan: 1 },
+    { id: "email", label: t.contact.form.email, type: "email", autoComplete: "email", colSpan: 1 },
+    { id: "message", label: t.contact.form.message, type: "area", colSpan: 2 },
+  ];
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -97,7 +123,7 @@ export function Contact() {
     const name = String(data.get("name") ?? "");
     const email = String(data.get("email") ?? "");
     const message = String(data.get("message") ?? "");
-    const subject = encodeURIComponent(`Portfolio note from ${name}`);
+    const subject = encodeURIComponent(`${t.contact.form.subject} ${name}`);
     const body = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
     window.location.href = `mailto:${personal.email}?subject=${subject}&body=${body}`;
     setStatus("opened");
@@ -105,7 +131,7 @@ export function Contact() {
   }
 
   return (
-    <AnimatedSection id="contact" aria-label="Contact" className="py-24 sm:py-32">
+    <AnimatedSection id="contact" aria-label={t.nav.contact} className="py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
 
         {/* heading */}
@@ -117,10 +143,10 @@ export function Contact() {
             viewport={{ once: true }}
             transition={{ duration: 0.4 }}
           >
-            06 · Contact
+            {t.contact.eyebrow}
           </motion.p>
           <SplitHeading className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-            {"Let's build something solid and creative"}
+            {t.contact.heading}
           </SplitHeading>
           <motion.p
             className="mt-4 text-muted-foreground"
@@ -129,8 +155,7 @@ export function Contact() {
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.12 }}
           >
-            I&apos;m actively seeking opportunities in software engineering, data engineering, and full-stack roles.
-            Reach out — I usually respond within a day.
+            {t.contact.subtitle}
           </motion.p>
         </div>
 
@@ -162,7 +187,7 @@ export function Contact() {
               style={{ background: "linear-gradient(180deg, rgba(129,140,248,0.5), transparent 75%)" }}
             />
 
-            <h3 className="text-lg font-semibold text-foreground">Contact Me</h3>
+            <h3 className="text-lg font-semibold text-foreground">{t.contact.contactMe}</h3>
             <ul className="space-y-4 text-sm">
               {contactRows.map(({ Icon, label, content }, i) => (
                 <motion.li
@@ -254,13 +279,13 @@ export function Contact() {
                   <Button type="submit" className="group relative gap-2 overflow-hidden">
                     <span className="flex items-center gap-2">
                       <Send className="size-4" aria-hidden />
-                      Open in email
+                      {t.contact.form.submit}
                     </span>
                   </Button>
                 </Magnetic>
                 {status !== "idle" && (
                   <p className="text-sm text-emerald-600 dark:text-emerald-400" role="status">
-                    Email client opened if one is available.
+                    {t.contact.form.status}
                   </p>
                 )}
               </div>

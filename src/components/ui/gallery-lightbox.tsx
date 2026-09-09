@@ -3,6 +3,7 @@
 import * as React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { useI18n } from "@/components/providers/language-provider";
 
 type GalleryImage = { src: string; alt: string };
 
@@ -19,6 +20,7 @@ export function GalleryLightbox({
   gridClassName = "mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3",
 }: GalleryLightboxProps) {
   const [activeIdx, setActiveIdx] = React.useState<number | null>(null);
+  const { t } = useI18n();
 
   const open = activeIdx !== null;
   const current = open ? images[activeIdx!] : null;
@@ -53,7 +55,7 @@ export function GalleryLightbox({
             type="button"
             onClick={() => setActiveIdx(i)}
             className="group relative overflow-hidden rounded-xl border border-border/80 bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            aria-label={`View ${img.alt}`}
+            aria-label={`${t.gallery.view} — ${img.alt}`}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -87,7 +89,7 @@ export function GalleryLightbox({
               type="button"
               onClick={close}
               className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/25"
-              aria-label="Close"
+              aria-label={t.gallery.close}
             >
               <X className="size-5" />
             </button>
@@ -98,7 +100,7 @@ export function GalleryLightbox({
                 type="button"
                 onClick={(e) => { e.stopPropagation(); prev(); }}
                 className="absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/25"
-                aria-label="Previous image"
+                aria-label={t.gallery.previous}
               >
                 <ChevronLeft className="size-6" />
               </button>
@@ -130,7 +132,7 @@ export function GalleryLightbox({
                 type="button"
                 onClick={(e) => { e.stopPropagation(); next(); }}
                 className="absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/25"
-                aria-label="Next image"
+                aria-label={t.gallery.next}
               >
                 <ChevronRight className="size-6" />
               </button>

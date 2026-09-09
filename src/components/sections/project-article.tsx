@@ -11,11 +11,17 @@ import { Separator } from "@/components/ui/separator";
 import { GalleryLightbox } from "@/components/ui/gallery-lightbox";
 import type { Project } from "@/types";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/providers/language-provider";
+import { useContent } from "@/hooks/use-content";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-export function ProjectArticle({ project }: { project: Project }) {
+export function ProjectArticle({ project: base }: { project: Project }) {
   const reduceMotion = useReducedMotion();
+  const { t } = useI18n();
+  const { getProjectBySlug } = useContent();
+  // The page passes the English record; re-resolve it in the active language.
+  const project = getProjectBySlug(base.slug) ?? base;
 
   const fade = (delay: number) =>
     reduceMotion
@@ -37,7 +43,7 @@ export function ProjectArticle({ project }: { project: Project }) {
           )}
         >
           <ArrowLeft className="size-4" aria-hidden />
-          Back to projects
+          {t.project.backToProjects}
         </Link>
       </motion.div>
 
@@ -63,9 +69,9 @@ export function ProjectArticle({ project }: { project: Project }) {
 
       <motion.header className="space-y-4" {...fade(0.12)}>
         <div className="flex flex-wrap gap-2">
-          {project.tech.map((t) => (
-            <Badge key={t} variant="secondary" className="font-mono text-[11px]">
-              {t}
+          {project.tech.map((tech) => (
+            <Badge key={tech} variant="secondary" className="font-mono text-[11px]">
+              {tech}
             </Badge>
           ))}
         </div>
@@ -85,7 +91,7 @@ export function ProjectArticle({ project }: { project: Project }) {
             className={cn(buttonVariants({ size: "sm" }), "gap-2")}
           >
             <IconGithub className="size-4" />
-            GitHub
+            {t.project.github}
           </a>
         ) : null}
         {project.demoUrl ? (
@@ -99,7 +105,7 @@ export function ProjectArticle({ project }: { project: Project }) {
             )}
           >
             <ExternalLink className="size-4" aria-hidden />
-            Demo
+            {t.project.liveDemo}
           </a>
         ) : null}
       </motion.div>
@@ -108,16 +114,16 @@ export function ProjectArticle({ project }: { project: Project }) {
 
       <div className="max-w-none space-y-10">
         <motion.section {...fade(0.22)}>
-          <h2 className="text-xl font-semibold text-foreground">Overview</h2>
+          <h2 className="text-xl font-semibold text-foreground">{t.project.overview}</h2>
           <p className="mt-3 text-muted-foreground">{project.overview}</p>
         </motion.section>
         <motion.section {...fade(0.28)}>
-          <h2 className="text-xl font-semibold text-foreground">My role</h2>
+          <h2 className="text-xl font-semibold text-foreground">{t.project.myRole}</h2>
           <p className="mt-3 text-muted-foreground">{project.role}</p>
         </motion.section>
         <motion.section className="grid gap-8 sm:grid-cols-2" {...fade(0.34)}>
           <div>
-            <h2 className="text-xl font-semibold text-foreground">Key features</h2>
+            <h2 className="text-xl font-semibold text-foreground">{t.project.keyFeatures}</h2>
             <ul className="mt-3 list-disc space-y-2 pl-5 text-muted-foreground marker:text-primary">
               {project.keyFeatures.map((f) => (
                 <li key={f}>{f}</li>
@@ -125,7 +131,7 @@ export function ProjectArticle({ project }: { project: Project }) {
             </ul>
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-foreground">Challenges</h2>
+            <h2 className="text-xl font-semibold text-foreground">{t.project.challenges}</h2>
             <ul className="mt-3 list-disc space-y-2 pl-5 text-muted-foreground marker:text-primary">
               {project.challenges.map((c) => (
                 <li key={c}>{c}</li>
@@ -135,7 +141,7 @@ export function ProjectArticle({ project }: { project: Project }) {
         </motion.section>
         <motion.section {...fade(0.4)}>
           <h2 className="text-xl font-semibold text-foreground">
-            What I learned
+            {t.project.whatILearned}
           </h2>
           <ul className="mt-3 list-disc space-y-2 pl-5 text-muted-foreground marker:text-primary">
             {project.learnings.map((l) => (
@@ -145,7 +151,7 @@ export function ProjectArticle({ project }: { project: Project }) {
         </motion.section>
         {(project.gallery ?? []).length > 0 && (
           <motion.section {...fade(0.46)}>
-            <h2 className="text-xl font-semibold text-foreground">Gallery</h2>
+            <h2 className="text-xl font-semibold text-foreground">{t.project.gallery}</h2>
             <GalleryLightbox
               images={project.gallery!}
               thumbAspect="9/16"

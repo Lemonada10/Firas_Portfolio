@@ -17,6 +17,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import type { Project } from "@/types";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/providers/language-provider";
 
 type ProjectModalProps = {
   project: Project | null;
@@ -29,6 +30,8 @@ export function ProjectModal({
   open,
   onOpenChange,
 }: ProjectModalProps) {
+  const { t } = useI18n();
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {project ? (
@@ -82,7 +85,7 @@ export function ProjectModal({
               className={cn(buttonVariants({ variant: "default", size: "sm" }), "gap-2")}
             >
               <IconGithub className="size-4" />
-              GitHub
+              {t.project.github}
             </a>
             ) : null}
             {project.demoUrl ? (
@@ -96,12 +99,12 @@ export function ProjectModal({
                 )}
               >
                 <ExternalLink className="size-4" aria-hidden />
-                Live demo
+                {t.project.liveDemo}
               </a>
             ) : (
               <Button variant="outline" size="sm" disabled className="gap-2">
                 <ExternalLink className="size-4" aria-hidden />
-                Demo (soon)
+                {t.project.demoSoon}
               </Button>
             )}
             <Link
@@ -111,21 +114,21 @@ export function ProjectModal({
                 "text-primary"
               )}
             >
-              Full page
+              {t.project.fullPage}
             </Link>
           </div>
 
           <Separator />
 
           <section>
-            <h4 className="text-sm font-semibold text-foreground">Overview</h4>
+            <h4 className="text-sm font-semibold text-foreground">{t.project.overview}</h4>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               {project.overview}
             </p>
           </section>
 
           <section>
-            <h4 className="text-sm font-semibold text-foreground">My role</h4>
+            <h4 className="text-sm font-semibold text-foreground">{t.project.myRole}</h4>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               {project.role}
             </p>
@@ -134,7 +137,7 @@ export function ProjectModal({
           <div className="grid gap-6 sm:grid-cols-2">
             <section>
               <h4 className="text-sm font-semibold text-foreground">
-                Key features
+                {t.project.keyFeatures}
               </h4>
               <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-muted-foreground marker:text-primary">
                 {project.keyFeatures.map((f) => (
@@ -144,7 +147,7 @@ export function ProjectModal({
             </section>
             <section>
               <h4 className="text-sm font-semibold text-foreground">
-                Challenges
+                {t.project.challenges}
               </h4>
               <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-muted-foreground marker:text-primary">
                 {project.challenges.map((c) => (
@@ -156,7 +159,7 @@ export function ProjectModal({
 
           <section>
             <h4 className="text-sm font-semibold text-foreground">
-              What I learned
+              {t.project.whatILearned}
             </h4>
             <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-muted-foreground marker:text-primary">
               {project.learnings.map((l) => (
@@ -167,7 +170,7 @@ export function ProjectModal({
 
           {(project.gallery ?? []).length > 0 && (
           <section>
-            <h4 className="text-sm font-semibold text-foreground">Gallery</h4>
+            <h4 className="text-sm font-semibold text-foreground">{t.project.gallery}</h4>
             <GalleryLightbox
               images={project.gallery!}
               thumbAspect="9/16"

@@ -5,10 +5,12 @@ import type { LucideIcon } from "lucide-react";
 import { AnimatePresence, motion, useInView, useReducedMotion, type Variants } from "framer-motion";
 import { Cloud, Code2, Layers, Monitor } from "lucide-react";
 import { AnimatedSection } from "@/components/ui/animated-section";
-import { jobLabel, projectLabel, skillGroups } from "@/lib/data";
+import { projectLabel } from "@/lib/data";
 import type { SkillGroup, SkillRelated } from "@/types";
 import { cn } from "@/lib/utils";
 import { SplitHeading } from "@/components/ui/text-split";
+import { useI18n } from "@/components/providers/language-provider";
+import { useContent } from "@/hooks/use-content";
 
 const iconMap: Record<SkillGroup["icon"], LucideIcon> = {
   code: Code2,
@@ -38,6 +40,8 @@ function relatedKey(r: SkillRelated | null | undefined) {
 
 export function Skills() {
   const reduceMotion = useReducedMotion();
+  const { t } = useI18n();
+  const { skillGroups, jobLabel } = useContent();
   const gridRef = React.useRef<HTMLDivElement>(null);
   const inView = useInView(gridRef, { once: true, amount: 0.08, margin: "-80px" });
   const [active, setActive] = React.useState<SkillRelated | null>(null);
@@ -70,17 +74,17 @@ export function Skills() {
   };
 
   return (
-    <AnimatedSection id="skills" aria-label="Skills" className="py-20 sm:py-24">
+    <AnimatedSection id="skills" aria-label={t.nav.skills} className="py-20 sm:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
           <motion.p className="font-mono text-xs uppercase tracking-[0.2em] text-primary" initial={reduceMotion ? false : { opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4 }}>
-            03 · Skills
+            {t.skills.eyebrow}
           </motion.p>
           <SplitHeading className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-            Tools from internships and shipped projects
+            {t.skills.heading}
           </SplitHeading>
           <motion.p className="mt-4 text-muted-foreground" initial={reduceMotion ? false : { opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: 0.1 }}>
-            Hover or tap a skill to see where it showed up in production work.
+            {t.skills.subtitle}
           </motion.p>
         </div>
 
@@ -101,7 +105,7 @@ export function Skills() {
               </>
             ) : (
               <motion.span key="idle" className="text-xs text-muted-foreground" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                Linked work appears here
+                {t.skills.idle}
               </motion.span>
             )}
           </AnimatePresence>

@@ -3,11 +3,14 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Globe, Mail } from "lucide-react";
 import { IconLinkedIn } from "@/components/icons/social";
-import { personal } from "@/lib/data";
+import { useI18n } from "@/components/providers/language-provider";
+import { useContent } from "@/hooks/use-content";
 
 export function Footer() {
   const year = new Date().getFullYear();
   const reduceMotion = useReducedMotion();
+  const { t } = useI18n();
+  const { personal } = useContent();
 
   return (
     <footer className="relative border-t border-border/70 bg-muted/40 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-primary/18 before:to-transparent dark:border-white/[0.07] dark:bg-black/20 dark:before:via-primary/35">
@@ -20,10 +23,10 @@ export function Footer() {
         >
           <p className="font-semibold text-foreground">{personal.name}</p>
           <p className="text-sm text-muted-foreground">
-            Software Engineering Co-op · {personal.school}
+            {t.footer.role} · {personal.school}
           </p>
           <p className="mt-1 text-xs text-emerald-700 dark:text-emerald-400">
-            Open to full-time roles · Summer 2027
+            {t.footer.openTo}
           </p>
         </motion.div>
         <motion.div
@@ -38,7 +41,7 @@ export function Footer() {
             className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <Mail className="size-4" aria-hidden />
-            Email
+            {t.footer.email}
           </a>
           <a
             href={personal.linkedInUrl}
@@ -47,7 +50,7 @@ export function Footer() {
             className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <IconLinkedIn className="size-4" />
-            LinkedIn
+            {t.footer.linkedin}
           </a>
           <a
             href={personal.portfolioUrl}
@@ -56,7 +59,7 @@ export function Footer() {
             className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <Globe className="size-4" aria-hidden />
-            Portfolio
+            {t.footer.portfolio}
           </a>
         </motion.div>
         <motion.p

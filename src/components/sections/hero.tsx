@@ -2,14 +2,15 @@
 
 import * as React from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, ChevronDown, FileText, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { MagneticButton } from "@/components/ui/magnetic-button";
-import { heroRotatingRoles, personal } from "@/lib/data";
+import { MontrealClock } from "@/components/ui/montreal-clock";
+import { useI18n } from "@/components/providers/language-provider";
+import { useContent } from "@/hooks/use-content";
 import { cn } from "@/lib/utils";
 
-/* ── CSS-based 3-D tilt hook ─────────────────────────────────── */
 function useTilt3D(maxDeg = 10) {
   const ref = React.useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
@@ -67,6 +68,8 @@ function useTypewriter(words: string[], typingMs = 55, pauseMs = 2000) {
 
 export function Hero() {
   const reduceMotion = useReducedMotion();
+  const { t } = useI18n();
+  const { personal, heroRotatingRoles } = useContent();
   const typed = useTypewriter(heroRotatingRoles);
   const word = reduceMotion ? heroRotatingRoles[0] : typed;
   const heroRef = React.useRef<HTMLElement>(null);
@@ -77,12 +80,13 @@ export function Hero() {
   });
   const scrollOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0.6]);
   const scrollTranslateY = useTransform(scrollYProgress, [0, 0.6], [0, -30]);
+  const cueOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
 
   return (
     <section
       ref={heroRef}
       id="home"
-      aria-label="Introduction"
+      aria-label={t.hero.intro}
       className="relative isolate overflow-hidden pt-28 pb-20 sm:pt-32 sm:pb-28"
     >
       <motion.div
@@ -108,12 +112,13 @@ export function Hero() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
               </span>
-              Open to full-time positions starting Summer 2027
+              {t.hero.openTo}
             </Badge>
             <Badge variant="outline" className="gap-1.5 rounded-full text-muted-foreground">
               <Sparkles className="size-3.5" aria-hidden />
-              Montreal, QC
+              {personal.location}
             </Badge>
+            <MontrealClock />
           </motion.div>
 
           <motion.div
@@ -143,7 +148,7 @@ export function Hero() {
             </p>
 
             <p className="font-mono text-sm text-primary sm:text-base" aria-live="polite">
-              <span className="text-muted-foreground">Currently: </span>
+              <span className="text-muted-foreground">{t.hero.currently} </span>
               <span className="font-semibold text-foreground">{word}</span>
               <span className="ml-0.5 inline-block h-[1em] w-[2px] translate-y-[2px] animate-pulse rounded-sm bg-primary" aria-hidden />
             </p>
@@ -157,28 +162,48 @@ export function Hero() {
           >
             <MagneticButton
               href="#projects"
+              onClick={(e) => {
+                e.preventDefault();
+                const el = document.getElementById("projects");
+                if (!el) return;
+                window.scrollTo({
+                  top: el.getBoundingClientRect().top + window.scrollY - 80,
+                  behavior: "smooth",
+                });
+              }}
               className={cn(
                 buttonVariants({ size: "lg" }),
                 "group gap-2 shadow-[0_0_22px_rgba(99,102,241,0.40)] transition-all duration-300 hover:shadow-[0_0_38px_rgba(99,102,241,0.65)]"
               )}
             >
-              View featured work
+              {t.hero.viewWork}
               <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden />
             </MagneticButton>
             <MagneticButton
               href={personal.resumeUrl}
-              download
+              target="_blank"
               className={cn(
                 buttonVariants({ variant: "outline", size: "lg" }),
-                "transition-all duration-300"
+                "gap-2 transition-all duration-300"
               )}
             >
-              Download resume
+              <FileText className="size-4" aria-hidden />
+              {t.hero.openResume}
+            </MagneticButton>
+            <MagneticButton
+              href={personal.resumeUrl}
+              download="Firas_Al_Haddad_CV.pdf"
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "lg" }),
+                "text-muted-foreground transition-all duration-300 hover:text-foreground"
+              )}
+            >
+              {t.hero.downloadResume}
             </MagneticButton>
           </motion.div>
         </div>
 
-        {/* ── RIGHT: floating code card ── */}
+        {/* ── RIGHT: code card ── */}
         <motion.div
           initial={reduceMotion ? false : { opacity: 0, scale: 0.96, x: 24 }}
           animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -186,7 +211,6 @@ export function Hero() {
           className="relative flex-1"
           style={{ animation: reduceMotion ? undefined : "float-card 6s ease-in-out infinite" }}
         >
-          {/* glow ring — purple only in dark; omitted in light */}
           <div
             className="absolute -inset-3 hidden rounded-3xl opacity-30 dark:block"
             style={{
@@ -206,10 +230,7 @@ export function Hero() {
             }}
             className="relative overflow-hidden rounded-2xl border border-border/80 bg-card/90 shadow-xl backdrop-blur-md hover:shadow-[0_20px_50px_rgba(80,90,255,0.30)] dark:bg-card/70"
           >
-            {/* inner tint: neutral in light, violet wash in dark */}
             <div className="absolute inset-0 bg-gradient-to-br from-slate-500/[0.07] via-transparent to-slate-600/[0.05] dark:from-primary/6 dark:via-transparent dark:to-violet-500/6" />
-
-            {/* top accent — slate in light, lavender in dark */}
             <div
               className="absolute inset-x-0 top-0 h-px dark:hidden"
               style={{
@@ -226,60 +247,92 @@ export function Hero() {
             />
 
             <div className="p-6" style={{ transform: "translateZ(28px)", transformStyle: "preserve-3d" }}>
-            <div className="space-y-4 font-mono text-xs sm:text-sm">
-              <div className="flex items-center justify-between text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <span className="size-2.5 rounded-full bg-red-400/80" />
-                  <span className="size-2.5 rounded-full bg-yellow-400/80" />
-                  <span className="size-2.5 rounded-full bg-green-400/80" />
+              <div className="space-y-4 font-mono text-xs sm:text-sm">
+                <div className="flex items-center justify-between text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <span className="size-2.5 rounded-full bg-red-400/80" />
+                    <span className="size-2.5 rounded-full bg-yellow-400/80" />
+                    <span className="size-2.5 rounded-full bg-green-400/80" />
+                  </div>
+                  <span className="text-[11px] text-muted-foreground/60">engineer.ts</span>
+                  <span className="rounded bg-muted px-2 py-0.5 text-[10px] uppercase tracking-wider">portfolio</span>
                 </div>
-                <span className="text-[11px] text-muted-foreground/60">focus.ts</span>
-                <span className="rounded bg-muted px-2 py-0.5 text-[10px] uppercase tracking-wider">portfolio</span>
+                <pre className="hero-code overflow-x-auto text-left">
+                  <code>
+                    <span className="text-indigo-800 dark:text-violet-400">const</span>
+                    <span className="text-foreground/90"> engineer </span>
+                    <span className="text-indigo-800 dark:text-violet-400">=</span>
+                    <span className="text-foreground/90">{" {\n"}</span>
+                    <span className="text-foreground/50">{"  "}</span>
+                    <span className="text-sky-400">school</span>
+                    <span className="text-foreground/70">{": "}</span>
+                    <span className="text-emerald-400">&quot;{t.hero.code.school}&quot;</span>
+                    <span className="text-foreground/70">{",\n"}</span>
+                    <span className="text-foreground/50">{"  "}</span>
+                    <span className="text-sky-400">strengths</span>
+                    <span className="text-foreground/70">{": ["}</span>
+                    {t.hero.code.strengths.map((s, i) => (
+                      <span key={s}>
+                        <span className="text-emerald-400">&quot;{s}&quot;</span>
+                        {i < t.hero.code.strengths.length - 1 && (
+                          <span className="text-foreground/70">{", "}</span>
+                        )}
+                      </span>
+                    ))}
+                    <span className="text-foreground/70">{"],\n"}</span>
+                    <span className="text-foreground/50">{"  "}</span>
+                    <span className="text-sky-400">languages</span>
+                    <span className="text-foreground/70">{": ["}</span>
+                    <span className="text-emerald-400">&quot;EN&quot;</span>
+                    <span className="text-foreground/70">{", "}</span>
+                    <span className="text-emerald-400">&quot;FR&quot;</span>
+                    <span className="text-foreground/70">{"],\n"}</span>
+                    <span className="text-foreground/50">{"  "}</span>
+                    <span className="text-sky-400">gpa</span>
+                    <span className="text-foreground/70">{": "}</span>
+                    <span className="text-orange-400">3.47</span>
+                    <span className="text-foreground/70">{",\n"}</span>
+                    <span className="text-foreground/50">{"  "}</span>
+                    <span className="text-sky-400">goal</span>
+                    <span className="text-foreground/70">{": "}</span>
+                    <span className="text-emerald-400">&quot;{t.hero.code.goal}&quot;</span>
+                    <span className="text-foreground/70">{",\n}"}</span>
+                  </code>
+                </pre>
               </div>
-              <pre className="hero-code overflow-x-auto text-left">
-                <code>
-                  <span className="text-indigo-800 dark:text-violet-400">const</span>
-                  <span className="text-foreground/90"> engineer </span>
-                  <span className="text-indigo-800 dark:text-violet-400">=</span>
-                  <span className="text-foreground/90">{" {\n"}</span>
-                  <span className="text-foreground/50">{"  "}</span>
-                  <span className="text-sky-400">school</span>
-                  <span className="text-foreground/70">{": "}</span>
-                  <span className="text-emerald-400">&quot;Concordia · Software Eng (Co-op)&quot;</span>
-                  <span className="text-foreground/70">{",\n"}</span>
-                  <span className="text-foreground/50">{"  "}</span>
-                  <span className="text-sky-400">strengths</span>
-                  <span className="text-foreground/70">{": ["}</span>
-                  <span className="text-emerald-400">&quot;data&quot;</span>
-                  <span className="text-foreground/70">{", "}</span>
-                  <span className="text-emerald-400">&quot;backend&quot;</span>
-                  <span className="text-foreground/70">{", "}</span>
-                  <span className="text-emerald-400">&quot;full-stack&quot;</span>
-                  <span className="text-foreground/70">{"],\n"}</span>
-                  <span className="text-foreground/50">{"  "}</span>
-                  <span className="text-sky-400">languages</span>
-                  <span className="text-foreground/70">{": ["}</span>
-                  <span className="text-emerald-400">&quot;EN&quot;</span>
-                  <span className="text-foreground/70">{", "}</span>
-                  <span className="text-emerald-400">&quot;FR&quot;</span>
-                  <span className="text-foreground/70">{"],\n"}</span>
-                  <span className="text-foreground/50">{"  "}</span>
-                  <span className="text-sky-400">gpa</span>
-                  <span className="text-foreground/70">{": "}</span>
-                  <span className="text-orange-400">3.47</span>
-                  <span className="text-foreground/70">{",\n"}</span>
-                  <span className="text-foreground/50">{"  "}</span>
-                  <span className="text-sky-400">goal</span>
-                  <span className="text-foreground/70">{": "}</span>
-                  <span className="text-emerald-400">&quot;Ship reliable data systems&quot;</span>
-                  <span className="text-foreground/70">{",\n}"}</span>
-                </code>
-              </pre>
-            </div>
             </div>
           </div>
         </motion.div>
       </motion.div>
+
+      {/* scroll cue — fades out as soon as the visitor starts moving */}
+      {!reduceMotion && (
+        <motion.a
+          href="#about"
+          onClick={(e) => {
+            e.preventDefault();
+            const el = document.getElementById("about");
+            if (!el) return;
+            window.scrollTo({
+              top: el.getBoundingClientRect().top + window.scrollY - 80,
+              behavior: "smooth",
+            });
+          }}
+          style={{ opacity: cueOpacity }}
+          className="absolute inset-x-0 bottom-6 mx-auto hidden w-fit flex-col items-center gap-1 text-muted-foreground transition-colors hover:text-foreground lg:flex"
+          aria-label={t.hero.scrollCue}
+        >
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em]">
+            {t.hero.scrollCue}
+          </span>
+          <motion.span
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ChevronDown className="size-4" aria-hidden />
+          </motion.span>
+        </motion.a>
+      )}
     </section>
   );
 }

@@ -4,8 +4,10 @@ import * as React from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Briefcase } from "lucide-react";
 import { AnimatedSection } from "@/components/ui/animated-section";
-import { experience } from "@/lib/data";
 import { SplitHeading } from "@/components/ui/text-split";
+import { useI18n } from "@/components/providers/language-provider";
+import { useContent } from "@/hooks/use-content";
+import type { Job } from "@/types";
 
 /* mouse-tracking tilt shared hook */
 function useTilt(strength = 8) {
@@ -36,11 +38,13 @@ function useTilt(strength = 8) {
 
 export function Experience() {
   const reduceMotion = useReducedMotion();
+  const { t } = useI18n();
+  const { experience } = useContent();
 
   return (
     <AnimatedSection
       id="experience"
-      aria-label="Experience"
+      aria-label={t.nav.experience}
       className="bg-muted/10 py-20 sm:py-24"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -53,10 +57,10 @@ export function Experience() {
             viewport={{ once: true }}
             transition={{ duration: 0.4 }}
           >
-            04 · Experience
+            {t.experience.eyebrow}
           </motion.p>
           <SplitHeading className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-            Internships with measurable impact
+            {t.experience.heading}
           </SplitHeading>
         </div>
 
@@ -83,10 +87,9 @@ export function Experience() {
   );
 }
 
-type Job = (typeof experience)[number];
-
 function ExperienceCard({ job, index, reduceMotion }: { job: Job; index: number; reduceMotion: boolean }) {
   const { ref, onMove, onLeave } = useTilt(6);
+  const { t } = useI18n();
 
   return (
     <motion.li
@@ -146,7 +149,7 @@ function ExperienceCard({ job, index, reduceMotion }: { job: Job; index: number;
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
                     <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
                   </span>
-                  Current
+                  {t.experience.current}
                 </span>
               )}
             </div>

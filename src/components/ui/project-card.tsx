@@ -12,6 +12,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Magnetic } from "@/components/ui/magnetic-button";
 import type { Project } from "@/types";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/providers/language-provider";
 
 type ProjectCardProps = {
   project: Project;
@@ -23,6 +24,7 @@ const tiltReset = "perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)";
 
 export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
   const reduceMotion = useReducedMotion();
+  const { t } = useI18n();
   const articleRef = React.useRef<HTMLElement>(null);
   const tiltRef = React.useRef<HTMLDivElement | null>(null);
   const nudgeTimeoutRef = React.useRef<number | null>(null);
@@ -134,10 +136,10 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
       </div>
       <button
         type="button"
-        data-cursor="Open"
+        data-cursor={t.projects.cursorOpen}
         onClick={onOpen}
         className="text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        aria-label={`Open details for ${project.title}`}
+        aria-label={`${t.projects.openDetails} ${project.title}`}
       >
         <motion.div
           ref={tiltRef}
@@ -168,12 +170,12 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-80 transition-opacity group-hover:opacity-95" />
           {project.featured && (
             <span className="absolute left-3 top-3 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
-              Featured
+              {t.projects.featured}
             </span>
           )}
           {project.extra && (
             <span className="absolute left-3 top-3 rounded-full border border-border bg-background/85 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-              Also built
+              {t.projects.alsoBuilt}
             </span>
           )}
           <span className="absolute bottom-3 left-3 rounded-full bg-background/80 px-2 py-0.5 font-mono text-[10px] text-muted-foreground backdrop-blur">
@@ -183,9 +185,9 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
 
         <div className="flex flex-1 flex-col gap-4 p-6">
           <div className="flex flex-wrap gap-2">
-            {project.tech.slice(0, 4).map((t) => (
+            {project.tech.slice(0, 4).map((tech) => (
               <Badge
-                key={t}
+                key={tech}
                 variant="outline"
                 className={cn(
                   "border-primary/20 font-mono text-[10px] text-foreground/90",
@@ -193,7 +195,7 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
                   "hover:border-primary/50 hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(99,102,241,0.18)]"
                 )}
               >
-                {t}
+                {tech}
               </Badge>
             ))}
           </div>
@@ -235,9 +237,9 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
               }
             >
               <IconGithub className="size-3.5" />
-              Repo
+              {t.projects.repo}
             </TooltipTrigger>
-            <TooltipContent>View repository</TooltipContent>
+            <TooltipContent>{t.projects.viewRepository}</TooltipContent>
           </Tooltip>
           ) : null}
           {project.demoUrl ? (
@@ -248,12 +250,12 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
               onClick={(e) => e.stopPropagation()}
               className={cn(buttonVariants({ size: "sm" }), "gap-1.5")}
             >
-              Demo
+              {t.projects.demo}
               <ArrowUpRight className="size-3.5" aria-hidden />
             </a>
           ) : (
             <Button size="sm" variant="secondary" disabled>
-              Demo soon
+              {t.projects.demoSoon}
             </Button>
           )}
         </div>
@@ -263,7 +265,7 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
             className="text-xs font-medium text-primary underline-offset-4 hover:underline"
             onClick={(e) => e.stopPropagation()}
           >
-            Full page
+            {t.projects.fullPage}
           </Link>
         </Magnetic>
       </div>

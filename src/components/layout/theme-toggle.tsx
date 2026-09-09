@@ -5,9 +5,11 @@ import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/components/providers/language-provider";
 
 export function ThemeToggle() {
   const { setTheme, resolvedTheme } = useTheme();
+  const { t } = useI18n();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => setMounted(true), []);
@@ -18,7 +20,7 @@ export function ThemeToggle() {
         variant="outline"
         size="icon"
         className="size-9 rounded-full border-border/80 bg-background/60"
-        aria-label="Toggle theme"
+        aria-label={t.theme.toggle}
         disabled
       >
         <Sun className="size-4 opacity-50" />
@@ -34,7 +36,7 @@ export function ThemeToggle() {
       variant="outline"
       size="icon"
       className="size-9 rounded-full border-border/80 bg-background/60 shadow-sm backdrop-blur-sm"
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label={`${t.theme.toggle} — ${isDark ? t.theme.light : t.theme.dark}`}
       onClick={() => setTheme(isDark ? "light" : "dark")}
     >
       <motion.span

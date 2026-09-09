@@ -7,13 +7,20 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { LanguageProvider } from "@/components/providers/language-provider";
+import { SkipLink } from "@/components/layout/skip-link";
+import { ResumeDialog } from "@/components/ui/resume-dialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AmbientBackground } from "@/components/ui/ambient-background";
 import { CursorGlow } from "@/components/ui/cursor-glow";
-import { BootLine } from "@/components/ui/boot-line";
 import { MotionRoot } from "@/components/ui/motion-root";
+import { LocaleFade } from "@/components/ui/locale-fade";
 import { SiteAtmosphere } from "@/components/ui/site-atmosphere";
 import { CommandPalette } from "@/components/ui/command-palette";
+import { ToastHost } from "@/components/ui/toast";
+import { RecruiterDock } from "@/components/ui/recruiter-dock";
+import { SectionRail } from "@/components/ui/section-rail";
+import { ShortcutOverlay } from "@/components/ui/shortcut-overlay";
 import { personal } from "@/lib/data";
 
 /* Canvas background — client only, no SSR → no hydration mismatch */
@@ -101,34 +108,35 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
         <ThemeProvider>
-          <TooltipProvider>
-            <a
-              href="#home"
-              className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:shadow-lg"
-            >
-              Skip to content
-            </a>
+          <LanguageProvider>
+            <TooltipProvider>
+              <SkipLink />
 
-            {/* 1: canvas animation fills the whole page (client-only) */}
-            <CanvasBackground />
-            {/* 2: CSS dot-grid + vignette on top of canvas */}
-            <AmbientBackground />
+              {/* 1: canvas animation fills the whole page (client-only) */}
+              <CanvasBackground />
+              {/* 2: CSS dot-grid + vignette on top of canvas */}
+              <AmbientBackground />
 
-            {/* 3: all site content above both background layers */}
-            <div className="relative z-10 flex min-h-screen flex-col">
-              <CursorGlow />
-              <BootLine />
-              <SiteAtmosphere />
-              <Navbar />
-              <CommandPalette />
-              <MotionRoot>
-                <main id="main-content" className="flex-1">
-                  {children}
-                </main>
-              </MotionRoot>
-              <Footer />
-            </div>
-          </TooltipProvider>
+              {/* 3: all site content above both background layers */}
+              <div className="relative z-10 flex min-h-screen flex-col">
+                <CursorGlow />
+                <SiteAtmosphere />
+                <Navbar />
+                <SectionRail />
+                <CommandPalette />
+                <ResumeDialog />
+                <RecruiterDock />
+                <ShortcutOverlay />
+                <ToastHost />
+                <MotionRoot>
+                  <main id="main-content" className="flex-1">
+                    <LocaleFade>{children}</LocaleFade>
+                  </main>
+                </MotionRoot>
+                <Footer />
+              </div>
+            </TooltipProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

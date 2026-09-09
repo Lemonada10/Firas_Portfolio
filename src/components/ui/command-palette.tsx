@@ -6,10 +6,13 @@ import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   Briefcase,
+  Check,
   Copy,
   Download,
+  FileText,
   FolderGit2,
   Home,
+  Languages,
   Mail,
   Moon,
   Phone,
@@ -19,16 +22,19 @@ import {
   Workflow,
 } from "lucide-react";
 import { personal } from "@/lib/data";
+import { useI18n } from "@/components/providers/language-provider";
+import { openResumePreview } from "@/components/ui/resume-dialog";
+import { toast } from "@/components/ui/toast";
 
 const SECTIONS = [
-  { id: "home", label: "Home", icon: Home },
-  { id: "about", label: "About", icon: User },
-  { id: "pipeline", label: "Pipeline", icon: Workflow },
-  { id: "skills", label: "Skills", icon: Sparkles },
-  { id: "experience", label: "Experience", icon: Briefcase },
-  { id: "projects", label: "Projects", icon: FolderGit2 },
-  { id: "contact", label: "Contact", icon: Mail },
-];
+  { id: "home", icon: Home },
+  { id: "about", icon: User },
+  { id: "pipeline", icon: Workflow },
+  { id: "skills", icon: Sparkles },
+  { id: "experience", icon: Briefcase },
+  { id: "projects", icon: FolderGit2 },
+  { id: "contact", icon: Mail },
+] as const;
 
 export function CommandPalette() {
   const [open, setOpen] = React.useState(false);
@@ -39,6 +45,7 @@ export function CommandPalette() {
   const router = useRouter();
   const reduceMotion = useReducedMotion();
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const { t, toggleLocale } = useI18n();
 
   React.useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -64,14 +71,15 @@ export function CommandPalette() {
     }
   }, [open]);
 
-  const copy = async (value: string, label: string) => {
+  const copy = async (value: string, id: string, message: string) => {
     try {
       await navigator.clipboard.writeText(value);
-      setCopied(label);
-      window.setTimeout(() => setCopied(null), 1600);
     } catch {
-      /* ignore */
+      /* still confirm so the click never feels dead */
     }
+    setCopied(id);
+    toast(message);
+    window.setTimeout(() => setCopied(null), 2000);
   };
 
   const go = (id: string) => {
@@ -89,7 +97,9 @@ export function CommandPalette() {
   };
 
   const q = query.toLowerCase();
-  const sectionHits = SECTIONS.filter((s) => s.label.toLowerCase().includes(q));
+  const sectionHits = SECTIONS.map((s) => ({ ...s, label: t.nav[s.id] })).filter((s) =>
+    s.label.toLowerCase().includes(q)
+  );
 
   return (
     <AnimatePresence>
@@ -103,7 +113,7 @@ export function CommandPalette() {
         >
           <motion.div
             role="dialog"
-            aria-label="Command palette"
+            aria-label={t.palette.aria}
             className="w-full max-w-lg overflow-hidden rounded-2xl border border-border/80 bg-card shadow-2xl"
             initial={reduceMotion ? false : { opacity: 0, y: 12, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -114,38 +124,77 @@ export function CommandPalette() {
               ref={inputRef}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Jump, copy, or toggle…"
+              placeholder={t.palette.placeholder}
               className="w-full border-b border-border/70 bg-transparent px-4 py-3 text-sm outline-none"
             />
-            <div className="max-h-[min(60vh,22rem)] overflow-y-auto p-2">
-              <p className="px-2 py-1.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Navigate</p>
+            <div className="max-h-[min(70vh,32rem)] overflow-y-auto p-2">
+              <p className="px-2 py-1.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{t.palette.navigate}</p>
               {sectionHits.map((s) => (
                 <button key={s.id} type="button" onClick={() => go(s.id)} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-foreground hover:bg-primary/10">
                   <s.icon className="size-4 text-primary" aria-hidden />
                   {s.label}
                 </button>
               ))}
-              <p className="mt-2 px-2 py-1.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Actions</p>
-              <button type="button" onClick={() => copy(personal.email, "Email")} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-primary/10">
-                <Copy className="size-4 text-primary" aria-hidden /> Copy email
+              <p className="mt-2 px-2 py-1.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{t.palette.actions}</p>
+              <button type="button" onClick={() => copy(personal.email, "email", t.extras.emailCopied)} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-primary/10">
+                <Copy className="size-4 text-primary" aria-hidden /> {t.palette.copyEmail}
+                {copied === "email" && (
+                  <span className="ml-auto inline-flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400">
+                    <Check className="size-3.5" aria-hidden /> {t.palette.copied}
+                  </span>
+                )}
               </button>
-              <button type="button" onClick={() => copy(personal.phone, "Phone")} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-primary/10">
-                <Phone className="size-4 text-primary" aria-hidden /> Copy phone
+              <button type="button" onClick={() => copy(personal.phone, "phone", t.extras.phoneCopied)} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-primary/10">
+                <Phone className="size-4 text-primary" aria-hidden /> {t.palette.copyPhone}
+                {copied === "phone" && (
+                  <span className="ml-auto inline-flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400">
+                    <Check className="size-3.5" aria-hidden /> {t.palette.copied}
+                  </span>
+                )}
               </button>
-              <a href={personal.resumeUrl} download onClick={() => setOpen(false)} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-primary/10">
-                <Download className="size-4 text-primary" aria-hidden /> Download resume
+              <a
+                href={personal.resumeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-primary/10"
+              >
+                <FileText className="size-4 text-primary" aria-hidden /> {t.hero.openResume}
               </a>
+              <a
+                href={personal.resumeUrl}
+                download="Firas_Al_Haddad_CV.pdf"
+                onClick={() => setOpen(false)}
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-primary/10"
+              >
+                <Download className="size-4 text-primary" aria-hidden /> {t.palette.downloadResume}
+              </a>
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  openResumePreview();
+                }}
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-primary/10"
+              >
+                <FileText className="size-4 text-primary" aria-hidden /> {t.palette.previewResume}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  toggleLocale();
+                  setOpen(false);
+                }}
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-primary/10"
+              >
+                <Languages className="size-4 text-primary" aria-hidden /> {t.palette.switchLanguage}
+              </button>
               <button type="button" onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-primary/10">
                 {resolvedTheme === "dark" ? <Sun className="size-4 text-primary" aria-hidden /> : <Moon className="size-4 text-primary" aria-hidden />}
-                Toggle theme
+                {t.palette.toggleTheme}
               </button>
-              {copied && (
-                <p className="px-3 py-2 text-xs text-emerald-600 dark:text-emerald-400" role="status">
-                  Copied {copied}
-                </p>
-              )}
             </div>
-            <p className="border-t border-border/70 px-4 py-2 text-[11px] text-muted-foreground">Esc to close · ⌘K / Ctrl+K to toggle</p>
+            <p className="border-t border-border/70 px-4 py-2 text-[11px] text-muted-foreground">{t.palette.hint}</p>
           </motion.div>
         </motion.div>
       )}
@@ -154,12 +203,14 @@ export function CommandPalette() {
 }
 
 export function CommandHint() {
+  const { t } = useI18n();
+
   return (
     <button
       type="button"
       onClick={() => window.dispatchEvent(new Event("open-command-palette"))}
       className="hidden items-center gap-1 rounded-md border border-border/70 px-2 py-1 font-mono text-[10px] text-muted-foreground lg:inline-flex"
-      aria-label="Open command palette"
+      aria-label={t.palette.open}
     >
       <kbd>⌘K</kbd>
     </button>
