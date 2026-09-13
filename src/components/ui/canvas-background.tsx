@@ -222,7 +222,7 @@ export function CanvasBackground() {
           for (let j = 0; j <= SEGS; j++) {
             const lon = (j / SEGS) * Math.PI * 2;
             const [sx, sy] = proj(rLat * Math.cos(lon), zLat, rLat * Math.sin(lon));
-            j === 0 ? ctx.moveTo(sx, sy) : ctx.lineTo(sx, sy);
+            if (j === 0) { ctx.moveTo(sx, sy); } else { ctx.lineTo(sx, sy); }
           }
           ctx.stroke();
         }
@@ -242,7 +242,7 @@ export function CanvasBackground() {
             const rLat = Math.cos(lat) * R;
             const zLat = Math.sin(lat) * R;
             const [sx, sy] = proj(rLat * Math.cos(lon), zLat, rLat * Math.sin(lon));
-            i === 0 ? ctx.moveTo(sx, sy) : ctx.lineTo(sx, sy);
+            if (i === 0) { ctx.moveTo(sx, sy); } else { ctx.lineTo(sx, sy); }
           }
           ctx.stroke();
         }
