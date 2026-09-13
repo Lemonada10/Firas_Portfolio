@@ -53,7 +53,7 @@ export const certifications: Certification[] = [
   {
     id: "aws-dea",
     name: "AWS Certified Data Engineer – Associate",
-    status: "Planned",
+    status: "Expected",
     expected: "Feb 2027",
   },
 ];
