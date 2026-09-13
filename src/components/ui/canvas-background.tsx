@@ -42,6 +42,11 @@ export function CanvasBackground() {
     const COUNT    = 48;
     const MAX_SPEED = 4.5;
 
+    // ── 3-D sphere state ────────────────────────────────────────
+    let sphRY = 0, sphRX = 0.35; // auto-rotate angles
+    let sphMX = 0, sphMZ = 0;    // mouse-tilt lerp targets
+    let mouseX = 0, mouseY = 0;
+
     // ── Resize ──────────────────────────────────────────────────
     const resize = () => {
       W = canvas.width  = window.innerWidth;
@@ -49,6 +54,10 @@ export function CanvasBackground() {
     };
     resize();
     window.addEventListener("resize", resize);
+
+    // ── Mouse tracking for sphere tilt ──────────────────────────
+    const onMouseMove = (e: MouseEvent) => { mouseX = e.clientX; mouseY = e.clientY; };
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
 
     // ── Init particles ───────────────────────────────────────────
     for (let i = 0; i < COUNT; i++) {
@@ -162,6 +171,83 @@ export function CanvasBackground() {
         g.addColorStop(0, `rgba(59,130,246,${a})`);
         g.addColorStop(1, "rgba(59,130,246,0)");
         ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      }
+
+      // ── 3-D wireframe sphere ──────────────────────────────────
+      {
+        // advance rotation
+        sphRY += 0.0010;
+        sphRX += 0.00045;
+
+        // mouse-tilt (lerp toward target)
+        const tX = ((mouseY / (H || 1)) - 0.5) * 0.35;
+        const tZ = ((mouseX / (W || 1)) - 0.5) * 0.35;
+        sphMX += (tX - sphMX) * 0.018;
+        sphMZ += (tZ - sphMZ) * 0.018;
+
+        const rx = sphRX + sphMX;
+        const ry = sphRY + sphMZ;
+        const R   = Math.min(W, H) * 0.40;
+        const CX  = W * 0.74;
+        const CY  = H * 0.46;
+        const FOV = 950;
+        const LATS = 10, LONS = 14, SEGS = 52;
+
+        // inline perspective project
+        const proj = (px: number, py: number, pz: number): [number, number, number] => {
+          const x2 =  px * Math.cos(ry) + pz * Math.sin(ry);
+          const z2 = -px * Math.sin(ry) + pz * Math.cos(ry);
+          const y3 =  py * Math.cos(rx) - z2 * Math.sin(rx);
+          const z3 =  py * Math.sin(rx) + z2 * Math.cos(rx);
+          const s  = FOV / (FOV + z3);
+          return [CX + x2 * s, CY + y3 * s, z3];
+        };
+
+        const baseA = isDark ? 0.10 : 0.14;
+        ctx.save();
+        ctx.lineWidth = isDark ? 0.9 : 1.6;
+
+        // latitude rings
+        for (let i = 1; i < LATS; i++) {
+          const lat  = ((i / LATS) - 0.5) * Math.PI;
+          const rLat = Math.cos(lat) * R;
+          const zLat = Math.sin(lat) * R;
+          // sample depth at lon=0 to tint near/far sides
+          const [,, d0] = proj(rLat, zLat, 0);
+          const depthA  = baseA * (0.45 + 0.6 * ((d0 + R) / (2 * R)));
+          ctx.strokeStyle = isDark
+            ? `rgba(129,140,248,${depthA.toFixed(3)})`
+            : `rgba(90,60,210,${depthA.toFixed(3)})`;
+          ctx.beginPath();
+          for (let j = 0; j <= SEGS; j++) {
+            const lon = (j / SEGS) * Math.PI * 2;
+            const [sx, sy] = proj(rLat * Math.cos(lon), zLat, rLat * Math.sin(lon));
+            j === 0 ? ctx.moveTo(sx, sy) : ctx.lineTo(sx, sy);
+          }
+          ctx.stroke();
+        }
+
+        // longitude arcs
+        for (let j = 0; j < LONS; j++) {
+          const lon = (j / LONS) * Math.PI * 2;
+          // sample depth at equator to tint
+          const [,, d0] = proj(R * Math.cos(lon), 0, R * Math.sin(lon));
+          const depthA  = baseA * (0.45 + 0.6 * ((d0 + R) / (2 * R)));
+          ctx.strokeStyle = isDark
+            ? `rgba(167,139,250,${depthA.toFixed(3)})`
+            : `rgba(105,65,215,${depthA.toFixed(3)})`;
+          ctx.beginPath();
+          for (let i = 0; i <= SEGS; i++) {
+            const lat  = ((i / SEGS) - 0.5) * Math.PI;
+            const rLat = Math.cos(lat) * R;
+            const zLat = Math.sin(lat) * R;
+            const [sx, sy] = proj(rLat * Math.cos(lon), zLat, rLat * Math.sin(lon));
+            i === 0 ? ctx.moveTo(sx, sy) : ctx.lineTo(sx, sy);
+          }
+          ctx.stroke();
+        }
+
+        ctx.restore();
       }
 
       // — move & damp particles —
@@ -346,6 +432,7 @@ export function CanvasBackground() {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
       window.removeEventListener("click", handleClick);
+      window.removeEventListener("mousemove", onMouseMove);
     };
   }, []);
 

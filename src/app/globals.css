@@ -58,6 +58,11 @@
   }
 
   :root {
+    --card-shadow:
+      0 1px 0 rgba(255,255,255,0.55) inset,
+      0 5px 0 rgba(0,0,0,0.055),
+      0 10px 30px rgba(0,0,0,0.11),
+      0 2px 8px rgba(0,0,0,0.07);
     --background: #b4b9c9;
     --foreground: #16192a;
     --card: #e8ebf4;
@@ -90,6 +95,7 @@
   }
 
   .dark {
+    --card-shadow: 0 8px 0 0 rgba(99,102,241,0.10), 0 10px 40px -8px rgba(0,0,0,0.25);
     --background: #09090f;
     --foreground: oklch(0.97 0.01 85);
     --card: #111118;
@@ -125,6 +131,12 @@
   /* Light-only contrast — dark keeps original component classes */
   html:not(.dark) [data-slot="card"] {
     --tw-ring-color: var(--border);
+  }
+
+  /* ── 3-D card lift — light mode only ───────────────────────── */
+  html:not(.dark) [data-slot="card"],
+  html:not(.dark) :is(.bg-card\/90, .bg-card\/85, .bg-card\/70, .bg-card\/60, .bg-card\/50):is(.rounded-2xl, .rounded-xl, .rounded-3xl) {
+    box-shadow: var(--card-shadow);
   }
   html:not(.dark) :is(.border-border\/80, .border-border\/70, .border-border\/60) {
     border-color: var(--border);

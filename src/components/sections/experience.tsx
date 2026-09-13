@@ -128,8 +128,7 @@ function ExperienceCard({ job, index, reduceMotion }: { job: Job; index: number;
         style={{
           transition: "transform 0.18s ease, box-shadow 0.18s ease",
           transformStyle: "preserve-3d",
-          /* thick bottom shadow = "resting on a surface" depth */
-          boxShadow: "0 8px 0 0 rgba(99,102,241,0.10), 0 10px 40px -8px rgba(0,0,0,0.25)",
+          boxShadow: "var(--card-shadow)",
         }}
         className="rounded-2xl border border-border/80 bg-card/70 p-6 dark:bg-card/50"
       >
@@ -171,7 +170,7 @@ function ExperienceCard({ job, index, reduceMotion }: { job: Job; index: number;
               {job.company}
             </motion.p>
           </div>
-          <div className="text-left text-xs text-muted-foreground sm:text-right">
+          <div className="text-left text-xs text-foreground/60 sm:text-right">
             <p className="font-mono">{job.period}</p>
             <p>{job.location}</p>
           </div>
@@ -180,7 +179,7 @@ function ExperienceCard({ job, index, reduceMotion }: { job: Job; index: number;
         {job.tech && job.tech.length > 0 && (
           <ul className="mt-3 flex flex-wrap gap-1.5">
             {job.tech.map((t) => (
-              <li key={t} className="rounded-full border border-primary/20 bg-primary/8 px-2 py-0.5 font-mono text-[10px] text-foreground/80">
+              <li key={t} className="rounded-full border border-primary/25 bg-primary/8 px-2.5 py-1 font-mono text-xs text-foreground/85">
                 {t}
               </li>
             ))}
@@ -188,7 +187,7 @@ function ExperienceCard({ job, index, reduceMotion }: { job: Job; index: number;
         )}
 
         <ul
-          className="mt-4 list-none space-y-2.5 text-sm leading-relaxed text-muted-foreground"
+          className="mt-4 list-none space-y-3 text-[0.95rem] leading-relaxed text-foreground/65"
           role="list"
         >
           {job.bullets.map((b, bi) => (

@@ -73,28 +73,36 @@ const en = {
     eyebrow: "02 · Signature",
     heading: "Medallion pipeline",
     subtitle:
-      "How I think about production data at Pratt & Whitney — hover Bronze, Silver, or Gold to see each layer.",
+      "How I think about production data at Pratt & Whitney — hover a layer to explore the pipeline.",
     aria: "Medallion data pipeline",
     layerSuffix: "layer",
-    stages: ["Ingest", "Validate", "Model", "Parquet", "Power BI"],
+    stages: ["Ingest", "Land", "Parquet", "Cleanse", "Calc", "Product", "Power BI"],
     layers: {
+      landing: {
+        name: "Landing",
+        copy: "Raw ingestion from APIs, SharePoint uploads, or manual sources — JSON, Excel, and CSV files land here as-is before any processing begins.",
+      },
       bronze: {
         name: "Bronze",
-        copy: "Ingest raw finance, supplier, parts, and commodity sources — 10+ datasets landing in reusable bronze tables.",
+        copy: "Convert raw JSON and Excel files into Parquet format — structured, schema-enforced, and ready for efficient Databricks reads downstream.",
       },
       silver: {
         name: "Silver",
-        copy: "Validate, deduplicate, and standardize units, prices, and mappings from market-data APIs.",
+        copy: "Clean and transform the Parquet data — resolve nulls, normalize units, deduplicate records, and apply standardization rules.",
       },
       gold: {
         name: "Gold",
-        copy: "Publish Parquet models and Power BI views — 10 years of metals pricing, alloy costs, and cost drivers.",
+        copy: "Apply business logic — domain-specific aggregations, derived column calculations, and metric definitions tailored to analytics needs.",
+      },
+      platinum: {
+        name: "Platinum",
+        copy: "Final product-specific transformations — SIO metal indices, alloy cost breakdowns, and KPI views. The output table imports directly into Power BI.",
       },
     },
   },
   skills: {
     eyebrow: "03 · Skills",
-    heading: "Tools from internships and shipped projects",
+    heading: "Tools from internships and projects",
     subtitle: "Hover or tap a skill to see where it showed up in production work.",
     idle: "Linked work appears here",
     groups: {
@@ -106,14 +114,13 @@ const en = {
   },
   experience: {
     eyebrow: "04 · Experience",
-    heading: "Internships with measurable impact",
+    heading: "Internships",
     current: "Current",
   },
   projects: {
     eyebrow: "05 · Featured work",
-    heading: "Projects that show how I build",
-    subtitle:
-      "Campus Guide and Focus Tracker from the CV, plus Peer Review as additional shipped work.",
+    heading: "Projects",
+    subtitle: "Campus Guide – Focus Tracker – Peer Review",
     all: "All",
     shown: "shown",
     moreOnGithub: "More on GitHub",
@@ -144,7 +151,7 @@ const en = {
     eyebrow: "06 · Contact",
     heading: "Let's build something solid and creative",
     subtitle:
-      "I'm actively seeking opportunities in software engineering, data engineering, and full-stack roles. Reach out — I usually respond within a day.",
+      "I'm actively seeking opportunities in software engineering, data engineering, and full-stack roles. Reach out.",
     contactMe: "Contact Me",
     labels: {
       email: "Email",
@@ -324,28 +331,36 @@ const fr: Dictionary = {
     eyebrow: "02 · Signature",
     heading: "Pipeline médaillon",
     subtitle:
-      "Ma façon d'aborder les données en production chez Pratt & Whitney — survolez Bronze, Argent ou Or pour voir chaque couche.",
+      "Ma façon d'aborder les données en production chez Pratt & Whitney — survolez une couche pour explorer le pipeline.",
     aria: "Pipeline de données médaillon",
     layerSuffix: "couche",
-    stages: ["Ingestion", "Validation", "Modélisation", "Parquet", "Power BI"],
+    stages: ["Ingestion", "Dépôt", "Parquet", "Nettoyage", "Calcul", "Produit", "Power BI"],
     layers: {
+      landing: {
+        name: "Zone d'atterrissage",
+        copy: "Ingestion brute depuis des API, SharePoint ou des sources manuelles — fichiers JSON, Excel et CSV déposés tels quels avant tout traitement.",
+      },
       bronze: {
         name: "Bronze",
-        copy: "Ingestion des sources brutes — finance, fournisseurs, pièces et matières premières : plus de 10 jeux de données déposés dans des tables bronze réutilisables.",
+        copy: "Conversion des fichiers JSON et Excel bruts en Parquet — structuré, avec schéma enforced, prêt pour une lecture Databricks efficace en aval.",
       },
       silver: {
         name: "Argent",
-        copy: "Validation, déduplication et normalisation des unités, des prix et des correspondances issus des API de données de marché.",
+        copy: "Nettoyage et transformation des données Parquet — résolution des nulls, normalisation des unités, déduplication et règles de standardisation.",
       },
       gold: {
         name: "Or",
-        copy: "Publication de modèles Parquet et de vues Power BI — 10 ans de prix des métaux, de coûts d'alliages et d'inducteurs de coûts.",
+        copy: "Application de la logique métier — agrégations spécifiques au domaine, calculs de colonnes dérivées et définitions de métriques pour l'analytique.",
+      },
+      platinum: {
+        name: "Platine",
+        copy: "Transformations finales propres aux produits — indices de métaux SIO, ventilations des coûts d'alliages et vues KPI. La table de sortie s'importe directement dans Power BI.",
       },
     },
   },
   skills: {
     eyebrow: "03 · Compétences",
-    heading: "Des outils issus de stages et de projets livrés",
+    heading: "Des outils issus de stages et de projets",
     subtitle:
       "Survolez ou touchez une compétence pour voir où elle a servi en production.",
     idle: "Les travaux liés s'affichent ici",
@@ -358,14 +373,13 @@ const fr: Dictionary = {
   },
   experience: {
     eyebrow: "04 · Expérience",
-    heading: "Des stages à impact mesurable",
+    heading: "Stages",
     current: "En cours",
   },
   projects: {
     eyebrow: "05 · Projets phares",
-    heading: "Des projets qui montrent ma façon de construire",
-    subtitle:
-      "Campus Guide et Focus Tracker tirés du CV, plus Peer Review comme réalisation supplémentaire.",
+    heading: "Projets",
+    subtitle: "Campus Guide – Focus Tracker – Peer Review",
     all: "Tous",
     shown: "affichés",
     moreOnGithub: "Plus sur GitHub",

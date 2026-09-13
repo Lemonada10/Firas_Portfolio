@@ -147,7 +147,7 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
           className={cn(
             "relative aspect-[16/10] w-full overflow-hidden bg-muted",
             !reduceMotion &&
-              "[clip-path:inset(8%_8%_8%_8%_round_14px)] transition-[clip-path] duration-500 ease-out group-hover:[clip-path:inset(0_0_0_0_round_14px)]"
+              "transition-transform duration-500 ease-out"
           )}
           style={{
             transformStyle: "preserve-3d",
@@ -190,7 +190,7 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
                 key={tech}
                 variant="outline"
                 className={cn(
-                  "border-primary/20 font-mono text-[10px] text-foreground/90",
+                  "border-primary/20 font-mono text-xs text-foreground/90",
                   "transition-[border-color,background-color,color,box-shadow] duration-200",
                   "hover:border-primary/50 hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(99,102,241,0.18)]"
                 )}
@@ -203,11 +203,11 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
             <h3 className="text-xl font-semibold tracking-tight text-foreground group-hover:text-primary">
               {project.title}
             </h3>
-            <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
+            <p className="mt-2 line-clamp-2 text-base text-muted-foreground">
               {project.description}
             </p>
           </div>
-          <ul className="space-y-1.5 text-xs text-muted-foreground">
+          <ul className="space-y-1.5 text-sm text-muted-foreground">
             {project.highlights.map((h) => (
               <li key={h} className="flex gap-2">
                 <span className="mt-1.5 size-1 shrink-0 rounded-full bg-primary/80" />
