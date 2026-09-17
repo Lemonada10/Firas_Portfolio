@@ -1,23 +1,28 @@
 "use client";
 
 import * as React from "react";
-import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+} from "framer-motion";
+
+type Mode = "idle" | "hover" | "text";
 
 export function CursorGlow() {
   const reduceMotion = useReducedMotion();
   const [coarsePointer, setCoarsePointer] = React.useState(true);
-  const [hovering, setHovering] = React.useState(false);
+  const [mode, setMode] = React.useState<Mode>("idle");
   const [label, setLabel] = React.useState<string | null>(null);
-  const [dot, setDot] = React.useState({ x: -9999, y: -9999 });
-  const [ring, setRing] = React.useState({ x: -9999, y: -9999 });
+  const [pressed, setPressed] = React.useState(false);
+  const [onPage, setOnPage] = React.useState(false);
 
-  const glowX = useMotionValue(-9999);
-  const glowY = useMotionValue(-9999);
-  const gx = useSpring(glowX, { stiffness: 180, damping: 28, mass: 0.4 });
-  const gy = useSpring(glowY, { stiffness: 180, damping: 28, mass: 0.4 });
-
-  const target = React.useRef({ x: -9999, y: -9999 });
-  const ringPos = React.useRef({ x: -9999, y: -9999 });
+  const mx = useMotionValue(-200);
+  const my = useMotionValue(-200);
+  const rx = useSpring(mx, { stiffness: 420, damping: 28, mass: 0.35 });
+  const ry = useSpring(my, { stiffness: 420, damping: 28, mass: 0.35 });
 
   React.useEffect(() => {
     const mq = window.matchMedia("(pointer: coarse)");
@@ -27,88 +32,134 @@ export function CursorGlow() {
     return () => mq.removeEventListener("change", sync);
   }, []);
 
+  const enabled = !coarsePointer && !reduceMotion;
+
   React.useEffect(() => {
-    if (coarsePointer || reduceMotion) return;
-    let raf = 0;
-    const tick = () => {
-      const t = target.current;
-      const r = ringPos.current;
-      r.x += (t.x - r.x) * 0.15;
-      r.y += (t.y - r.y) * 0.15;
-      setRing({ x: r.x, y: r.y });
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
+    const root = document.documentElement;
+    if (enabled) root.classList.add("has-custom-cursor");
+    else root.classList.remove("has-custom-cursor");
+    return () => root.classList.remove("has-custom-cursor");
+  }, [enabled]);
+
+  React.useEffect(() => {
+    if (!enabled) return;
 
     const onMove = (e: MouseEvent) => {
-      target.current = { x: e.clientX, y: e.clientY };
-      setDot({ x: e.clientX, y: e.clientY });
-      glowX.set(e.clientX);
-      glowY.set(e.clientY);
-      const el = (e.target as HTMLElement | null)?.closest?.(
-        "a, button, [data-magnetic], [data-cursor]"
+      mx.set(e.clientX);
+      my.set(e.clientY);
+      setOnPage(true);
+      const node = e.target as HTMLElement | null;
+      if (node?.closest?.("input, textarea, select, [contenteditable='true']")) {
+        setMode("text");
+        setLabel(null);
+        return;
+      }
+      const el = node?.closest?.(
+        "a, button, [data-magnetic], [data-cursor], [role='button']"
       ) as HTMLElement | null;
       if (el) {
-        setHovering(true);
+        setMode("hover");
         setLabel(el.getAttribute("data-cursor"));
       } else {
-        setHovering(false);
+        setMode("idle");
         setLabel(null);
       }
     };
-    window.addEventListener("mousemove", onMove, { passive: true });
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("mousemove", onMove);
-    };
-  }, [coarsePointer, reduceMotion, glowX, glowY]);
+    const onLeave = () => setOnPage(false);
+    const onDown = () => setPressed(true);
+    const onUp = () => setPressed(false);
 
-  if (coarsePointer || reduceMotion) return null;
+    window.addEventListener("mousemove", onMove, { passive: true });
+    document.addEventListener("mouseleave", onLeave);
+    window.addEventListener("mousedown", onDown);
+    window.addEventListener("mouseup", onUp);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseleave", onLeave);
+      window.removeEventListener("mousedown", onDown);
+      window.removeEventListener("mouseup", onUp);
+    };
+  }, [enabled, mx, my]);
+
+  if (!enabled) return null;
+
+  const hover = mode === "hover";
+  const show = onPage && mode !== "text";
 
   return (
-    <>
+    <div
+      className="pointer-events-none fixed inset-0 z-[90] transition-opacity duration-150"
+      style={{ opacity: show ? 1 : 0 }}
+      aria-hidden
+    >
+      {/* Inverted plus — always opposite the pixels under it, never a circle */}
       <motion.div
-        className="pointer-events-none fixed z-[5] h-[300px] w-[300px] rounded-[20px] mix-blend-multiply opacity-[0.82] will-change-transform dark:mix-blend-screen dark:opacity-100"
+        className="absolute left-0 top-0 will-change-transform"
         style={{
-          left: gx,
-          top: gy,
-          x: "-50%",
-          y: "-50%",
-          background:
-            "radial-gradient(circle closest-side, rgba(129, 140, 248, 0.26) 0%, rgba(139, 92, 246, 0.15) 36%, transparent 72%)",
+          x: rx,
+          y: ry,
+          translateX: "-50%",
+          translateY: "-50%",
+          mixBlendMode: "difference",
         }}
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none fixed z-[90] mix-blend-difference"
-        style={{
-          left: ring.x,
-          top: ring.y,
-          transform: "translate(-50%, -50%)",
-        }}
-        aria-hidden
       >
-        <div
-          className={`flex items-center justify-center rounded-full border border-white transition-[width,height] duration-200 ${
-            hovering ? "h-12 w-12" : "h-8 w-8"
-          }`}
+        <motion.div
+          className="relative"
+          animate={{
+            rotate: hover ? 45 : 0,
+            scale: pressed ? 0.78 : 1,
+          }}
+          transition={{ type: "spring", stiffness: 480, damping: 26 }}
         >
-          {label ? (
-            <span className="font-mono text-[8px] uppercase tracking-wider text-white">
-              {label}
-            </span>
-          ) : null}
-        </div>
-      </div>
-      <div
-        className="pointer-events-none fixed z-[91] size-1.5 rounded-full bg-white mix-blend-difference"
-        style={{
-          left: dot.x,
-          top: dot.y,
-          transform: "translate(-50%, -50%)",
-        }}
-        aria-hidden
-      />
-    </>
+          <motion.span
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white"
+            animate={{
+              width: hover ? 34 : 20,
+              height: 4,
+            }}
+            transition={{ type: "spring", stiffness: 420, damping: 24 }}
+          />
+          <motion.span
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white"
+            animate={{
+              width: 4,
+              height: hover ? 34 : 20,
+            }}
+            transition={{ type: "spring", stiffness: 420, damping: 24 }}
+          />
+        </motion.div>
+      </motion.div>
+
+      {/* Lime hotspot — color that does not exist on the page */}
+      <motion.div
+        className="absolute left-0 top-0 will-change-transform"
+        style={{ x: mx, y: my, translateX: "-50%", translateY: "-50%" }}
+        animate={{ scale: pressed ? 0.7 : hover ? 1.15 : 1 }}
+        transition={{ type: "spring", stiffness: 520, damping: 28 }}
+      >
+        <span
+          className="block h-[7px] w-[7px]"
+          style={{
+            background: "#123A8C",
+            boxShadow: "0 0 0 2px #ffffff, 0 0 10px rgba(18,58,140,0.55)",
+          }}
+        />
+      </motion.div>
+
+      <AnimatePresence>
+        {label ? (
+          <motion.span
+            key={label}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="absolute whitespace-nowrap rounded-sm bg-[#0b0b12] px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-[#D4FF00] shadow-[0_0_0_1px_#D4FF00]"
+            style={{ x: rx, y: ry, translateX: "-50%", translateY: "22px" }}
+          >
+            {label}
+          </motion.span>
+        ) : null}
+      </AnimatePresence>
+    </div>
   );
 }
