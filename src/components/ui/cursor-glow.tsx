@@ -1,12 +1,12 @@
 "use client";
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 import {
   AnimatePresence,
   motion,
   useMotionValue,
   useReducedMotion,
-  useSpring,
 } from "framer-motion";
 
 type Mode = "idle" | "hover" | "text";
@@ -21,8 +21,6 @@ export function CursorGlow() {
 
   const mx = useMotionValue(-200);
   const my = useMotionValue(-200);
-  const rx = useSpring(mx, { stiffness: 420, damping: 28, mass: 0.35 });
-  const ry = useSpring(my, { stiffness: 420, damping: 28, mass: 0.35 });
 
   React.useEffect(() => {
     const mq = window.matchMedia("(pointer: coarse)");
@@ -86,9 +84,9 @@ export function CursorGlow() {
   const hover = mode === "hover";
   const show = onPage && mode !== "text";
 
-  return (
+  return createPortal(
     <div
-      className="pointer-events-none fixed inset-0 z-[90] transition-opacity duration-150"
+      className="pointer-events-none fixed inset-0 z-[2147483647] transition-opacity duration-150"
       style={{ opacity: show ? 1 : 0 }}
       aria-hidden
     >
@@ -96,8 +94,8 @@ export function CursorGlow() {
       <motion.div
         className="absolute left-0 top-0 will-change-transform"
         style={{
-          x: rx,
-          y: ry,
+          x: mx,
+          y: my,
           translateX: "-50%",
           translateY: "-50%",
           mixBlendMode: "difference",
@@ -154,12 +152,13 @@ export function CursorGlow() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             className="absolute whitespace-nowrap rounded-sm bg-[#0b0b12] px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-[#D4FF00] shadow-[0_0_0_1px_#D4FF00]"
-            style={{ x: rx, y: ry, translateX: "-50%", translateY: "22px" }}
+            style={{ x: mx, y: my, translateX: "-50%", translateY: "22px" }}
           >
             {label}
           </motion.span>
         ) : null}
       </AnimatePresence>
-    </div>
+    </div>,
+    document.body
   );
 }
