@@ -8,7 +8,7 @@ import { ArrowUpRight } from "lucide-react";
 import { IconGithub } from "@/components/icons/social";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Magnetic } from "@/components/ui/magnetic-button";
 import type { Project } from "@/types";
 import { cn } from "@/lib/utils";
@@ -253,11 +253,7 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
               {t.projects.demo}
               <ArrowUpRight className="size-3.5" aria-hidden />
             </a>
-          ) : (
-            <Button size="sm" variant="secondary" disabled>
-              {t.projects.demoSoon}
-            </Button>
-          )}
+          ) : null}
         </div>
         <Magnetic strength={0.14}>
           <Link

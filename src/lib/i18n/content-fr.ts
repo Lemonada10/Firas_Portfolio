@@ -52,14 +52,16 @@ export const frCertifications: Record<string, { name: string; status: string; ex
 
 export const frExperience: Record<string, JobOverride> = {
   "pwc-2026": {
-    title: "Stagiaire en ingénierie de données",
+    title: "Stagiaire en analytique de données – volet ingénierie de données",
     location: "Longueuil, QC",
     period: "Mai 2026 – aujourd'hui",
     bullets: [
-      "Conception et mise en œuvre de pipelines à architecture médaillon (bronze/argent/or) pour déposer, nettoyer et modéliser les données opérationnelles à grande échelle.",
-      "Intégration d'API REST de données de marché dans des tâches d'ingestion automatisées afin que les flux de matières premières et de métaux restent à jour pour l'analytique en aval.",
-      "Persistance des jeux de données prêts pour l'analyse en Parquet, pour un stockage efficace, une évolution de schéma souple et un traitement sur Databricks.",
-      "Création de rapports Power BI sur environ 10 ans d'historique des métaux pour dégager les tendances et offrir des vues décisionnelles aux parties prenantes.",
+      "Création de pipelines Python modulaires qui centralisent les données SharePoint et d'API pour des tableaux de bord Power BI en production.",
+      "Mise en place d'une architecture médaillon (atterrissage, bronze, argent, or, platine) avec transformations réutilisables, sorties Parquet et orchestrateur central.",
+      "Intégration des prix Fastmarkets et Argus, avec normalisation des devises et des unités (USD/kg, USD/lb) pour des comparaisons de métaux cohérentes.",
+      "Mise en place des branches et du processus de pull requests dans Azure DevOps; accompagnement des coéquipiers sur place et à l'étranger dans l'adoption de Git.",
+      "Amélioration des tableaux de bord Power BI avec comparaisons de prix historiques, variations en pourcentage et périodes flexibles.",
+      "Refonte en cours d'un tableau de bord d'indices économiques (IPC, IPP, coûts de main-d'œuvre) vers des sources S&P intégrées au pipeline centralisé, pour en améliorer la performance.",
     ],
   },
   fonex: {
@@ -67,9 +69,10 @@ export const frExperience: Record<string, JobOverride> = {
     location: "Montréal, QC",
     period: "Mai 2025 – août 2025",
     bullets: [
-      "Développement d'un backend BLE en Python avec bleak et asyncio pour communiquer avec des émetteurs-récepteurs optiques.",
-      "Implémentation d'une couche GATT pour lire et écrire de façon fiable les pages EEPROM des modules SFP/QSFP.",
-      "Conception d'un gestionnaire de connexions multithread faisant le pont entre le service BLE et une interface Tkinter.",
+      "Création d'une application de bureau Python/Tkinter pour inspecter et reconfigurer des émetteurs-récepteurs au moyen des appareils Buddy.",
+      "Implémentation de la communication BLE asynchrone avec bleak et asyncio pour lire et écrire la mémoire des appareils.",
+      "Création d'un gestionnaire de connexions multithread qui coordonne la communication avec les appareils et l'interface de bureau.",
+      "Tests des versions alpha et bêta de l'application mobile dans QMetry, couvrant la connectivité des appareils et la configuration des émetteurs-récepteurs.",
     ],
   },
   "pwc-2025": {
@@ -77,22 +80,22 @@ export const frExperience: Record<string, JobOverride> = {
     location: "Longueuil, QC",
     period: "Janv. 2025 – avr. 2025",
     bullets: [
-      "Refonte de pipelines Databricks hérités en une base de code PySpark modulaire et unifiée, plus facile à maintenir.",
-      "Création de fonctions réutilisables et de tests automatisés pour garder les flux de données organisés et à l'abri des régressions.",
-      "Unification de plus de 20 sources en DataFrames prêts pour l'analyse, alimentant des rapports Power BI plus propres.",
-      "Refonte des tableaux de bord pour faire ressortir des signaux de performance d'une semaine à l'autre plus clairs.",
+      "Regroupement de plus de 20 sources Databricks en jeux de données organisés pour les rapports Power BI sur les ventes de pièces.",
+      "Refonte de l'ingestion, du nettoyage et des transformations PySpark en fonctions réutilisables pour les pipelines existants.",
+      "Rédaction de tests automatisés pour les fonctions de transformation dans le cadre de tests existant.",
+      "Refonte des tableaux de bord pour faire ressortir les tendances de ventes quotidiennes, hebdomadaires et mensuelles par rapport aux objectifs.",
     ],
   },
 };
 
 export const frJobLabel: Record<string, string> = {
-  "pwc-2026": "P&WC — Ingénierie de données",
+  "pwc-2026": "P&WC — Analytique (ingénierie de données)",
   fonex: "Fonex",
   "pwc-2025": "P&WC — Analytique de données",
 };
 
 export const frHeroRotatingRoles = [
-  "Stagiaire en ingénierie de données @ Pratt & Whitney Canada",
+  "Stagiaire en analytique (ingénierie de données) @ Pratt & Whitney Canada",
   "Pipelines médaillon en Python",
   "Backend et systèmes BLE",
   "ML appliqué dans le navigateur",
@@ -113,7 +116,7 @@ export const frProjects: Record<string, ProjectOverride> = {
     overview:
       "MAKESOFT est un projet d'équipe de 9 personnes mené en Agile sur quatre sprints. L'application couvre tout le problème de navigation des étudiants de Concordia : trouver les pavillons, obtenir des itinéraires extérieurs à pied, en voiture ou en transport en commun, suivre le service de navettes intercampus avec les départs en direct, naviguer à l'intérieur d'une salle à l'autre sur plusieurs étages, et générer automatiquement l'itinéraire vers le prochain cours à partir de Google Agenda. Les deux campus (SGW et Loyola) sont entièrement pris en charge avec des superpositions de pavillons personnalisées sur Google Maps.",
     role:
-      "Développeur mobile et contributeur backend — implémentation des itinéraires extérieurs avec l'API Google Directions, intégration de l'horaire des navettes de Concordia (selon l'heure et la position), connexion à Google Agenda pour les itinéraires vers les cours, et contribution au module de recherche de chemin pour la navigation intérieure.",
+      "Contributeur frontend — création des interfaces reliant les cartes du campus, les itinéraires et la navigation vers les cours selon l'agenda, et contribution aux tests automatisés dans un flux CI/CD intégrant les contrôles de qualité SonarQube.",
     keyFeatures: [
       "Cartes interactives des campus SGW et Loyola avec formes de pavillons personnalisées et fenêtres d'information.",
       "Itinéraires extérieurs (marche, voiture, transport en commun) entre deux pavillons du campus.",
@@ -161,7 +164,7 @@ export const frProjects: Record<string, ProjectOverride> = {
     overview:
       "Le Mindfulness & Focus Tracker AI est un système de suivi de l'attention entièrement dans le navigateur, conçu par une équipe de 4 personnes. L'utilisateur se connecte avec un pseudonyme, configure une séance d'étude (matière, objectif, durée prévue, ambiance sonore, bips d'alerte), puis démarre une session où le flux webcam est traité localement avec TensorFlow.js — aucune vidéo ne quitte l'appareil. Le système superpose un maillage facial 3D sur le flux, analyse la direction du regard, l'ouverture des yeux et la pose de la tête pour estimer l'attention en temps réel, et déclenche un bip discret lorsqu'une distraction dépasse un délai de récupération. Après la session, l'utilisateur remplit un court sondage sur son niveau de concentration, la source de distraction et ses préférences d'interface. Les données de session et de sondage sont stockées localement et exportables vers Excel. Une étude auprès de 10 participants a montré une amélioration moyenne de 6,3 % du pourcentage de concentration lorsque les bips d'alerte étaient activés.",
     role:
-      "Codéveloppeur — implémentation du pipeline de détection d'attention par maillage facial avec TensorFlow.js, de la configuration de session et de l'interface de suivi en direct en React, de la logique de délai des bips d'alerte, du sondage post-session, ainsi que de l'historique des sessions et de l'export Excel.",
+      "Codéveloppeur — création des interfaces React pour la configuration de session, le suivi en direct et la rétroaction post-session, et contribution à l'historique des sessions et aux exports Excel pour consulter les mesures de concentration et les résultats du sondage.",
     keyFeatures: [
       "Estimation de l'attention en temps réel par maillage facial avec TensorFlow.js et MediaPipe — direction du regard, ouverture des yeux et rotation de la tête.",
       "Bip d'alerte discret déclenché après un délai configurable lorsqu'une distraction est détectée, ce qui limite les interruptions inutiles.",

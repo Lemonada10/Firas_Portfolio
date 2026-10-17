@@ -26,7 +26,8 @@ export const personal: Personal = {
   school: "Concordia University",
   portfolioUrl: "https://firas-portfolio-zhdz.vercel.app/",
   linkedInUrl: "https://www.linkedin.com/in/firas-al-haddad-207a26280/",
-  resumeUrl: "/CV/CV.pdf?v=20260908",
+  githubUrl: "https://github.com/Lemonada10",
+  resumeUrl: "/CV/CV.pdf?v=20261017",
 };
 
 export const education: Education[] = [
@@ -138,11 +139,11 @@ export const skillGroups: SkillGroup[] = [
     items: [
       {
         name: "Databricks",
-        related: { jobs: ["pwc-2026", "pwc-2025"] },
+        related: { jobs: ["pwc-2025"] },
       },
       {
         name: "Azure DevOps",
-        related: { jobs: ["pwc-2026", "pwc-2025"] },
+        related: { jobs: ["pwc-2026"] },
       },
       { name: "Git/GitHub" },
       { name: "Vercel" },
@@ -186,30 +187,33 @@ export const skillGroups: SkillGroup[] = [
 export const experience: Job[] = [
   {
     id: "pwc-2026",
-    title: "Data Engineering Intern",
+    title: "Data Analytics Intern – Data Engineering Focus",
     company: "Pratt & Whitney Canada",
     location: "Longueuil, QC",
     period: "May 2026 – Present",
     current: true,
-    tech: ["Python", "Parquet", "Power BI", "REST APIs", "Databricks"],
+    tech: ["Python", "Parquet", "Power BI", "REST APIs", "Azure DevOps"],
     bullets: [
-      "Designing and implementing medallion-architecture pipelines (bronze/silver/gold) to land, clean, and model operational data at scale.",
-      "Integrating market-data REST APIs into automated ingestion jobs so commodity and metals feeds stay current for downstream analytics.",
-      "Persisting analytics-ready datasets as Parquet for efficient storage, schema evolution, and Databricks processing.",
-      "Building Power BI reports on ~10 years of metals history to surface trends and decision-ready views for stakeholders.",
+      "Built modular Python pipelines centralizing SharePoint and API data for production Power BI dashboards.",
+      "Implemented a medallion architecture (landing, bronze, silver, gold, platinum) with reusable transformations, Parquet outputs, and a central orchestrator.",
+      "Integrated Fastmarkets and Argus pricing, standardizing currencies and units (USD/kg, USD/lb) for consistent metals comparisons.",
+      "Established Azure DevOps branching and pull-request workflows; onboarded onsite and offshore teammates to Git.",
+      "Enhanced Power BI dashboards with historical price comparisons, percentage changes, and flexible periods.",
+      "Refactoring an economic-indices dashboard (CPI, PPI, labour rates) onto S&P sources within the centralized pipeline to improve performance.",
     ],
   },
   {
     id: "fonex",
     title: "Software Engineering Intern",
-    company: "Fonex",
+    company: "Fonex Data Systems",
     location: "Montreal, QC",
     period: "May 2025 – Aug 2025",
-    tech: ["Python", "bleak", "asyncio", "Tkinter", "BLE"],
+    tech: ["Python", "Tkinter", "bleak", "asyncio", "BLE", "QMetry"],
     bullets: [
-      "Developed a Python BLE backend with bleak and asyncio to communicate with optical transceivers.",
-      "Implemented a GATT layer to read/write SFP/QSFP EEPROM pages reliably.",
-      "Designed a threaded connection manager bridging the BLE service and a Tkinter GUI.",
+      "Built a Python/Tkinter desktop application to inspect and reconfigure transceivers through Buddy devices.",
+      "Implemented asynchronous BLE communication with bleak and asyncio to read and write device memory.",
+      "Built a multithreaded connection manager coordinating device communication with the desktop interface.",
+      "Tested alpha and beta mobile releases using QMetry, covering device connectivity and transceiver configuration.",
     ],
   },
   {
@@ -220,10 +224,10 @@ export const experience: Job[] = [
     period: "Jan 2025 – Apr 2025",
     tech: ["PySpark", "Databricks", "Power BI"],
     bullets: [
-      "Refactored legacy Databricks pipelines into a single modular PySpark codebase for maintainability.",
-      "Built reusable functions and automated tests to keep data workflows organized and regression-safe.",
-      "Unified 20+ sources into analytics-ready DataFrames feeding cleaner Power BI reporting.",
-      "Re-engineered dashboards to surface clearer week-over-week performance signals for stakeholders.",
+      "Consolidated 20+ Databricks sources into curated datasets supporting parts sales reporting in Power BI.",
+      "Refactored PySpark ingestion, cleaning, and transformations into reusable functions for existing pipelines.",
+      "Wrote automated tests for transformation functions within the existing testing framework.",
+      "Redesigned dashboards to highlight daily, weekly, and monthly sales trends against business targets.",
     ],
   },
 ];
@@ -259,7 +263,7 @@ export const projects: Project[] = [
     overview:
       "MAKESOFT is a 9-person Agile team project built across four sprints. The app covers the full navigation problem for Concordia students: finding buildings, getting outdoor walking/driving/transit directions, tracking the inter-campus shuttle service with live departure times, navigating indoors room-to-room across floors, and automatically routing to the next class by reading Google Calendar. The two campuses (SGW and Loyola) are fully supported with custom-styled building overlays on Google Maps.",
     role:
-      "Mobile developer and backend contributor — implemented outdoor directions with the Google Directions API, integrated the Concordia shuttle schedule (time-aware and location-aware), connected Google Calendar for class-based routing, and contributed to the indoor navigation pathfinding module.",
+      "Frontend contributor — built interfaces connecting campus maps, directions, and calendar-based class navigation, and contributed automated tests within a CI/CD workflow incorporating SonarQube code-quality checks.",
     keyFeatures: [
       "Interactive SGW & Loyola campus maps with custom building shapes and info pop-ups.",
       "Outdoor directions (walk, drive, transit) between any two campus buildings.",
@@ -280,7 +284,7 @@ export const projects: Project[] = [
       "Trade-offs between client-side and server-side data fetching for real-time transit information.",
       "Accessibility-first design for users with mobility constraints in a navigation context.",
     ],
-    githubUrl: null,
+    githubUrl: "https://github.com/SOEN-390-MakeSoft/SOEN-390-MakeSoft",
     demoUrl: null,
     imageAlt: "MAKESOFT — Concordia Campus Navigation App banner",
   },
@@ -312,7 +316,7 @@ export const projects: Project[] = [
     overview:
       "The Mindfulness & Focus Tracker AI is a fully browser-based attention monitoring system built by a 4-person team. Users log in with a nickname, configure a study session (subject, goal, planned duration, background audio, alert beeps), then start a focus session where a live webcam feed is processed client-side using TensorFlow.js — no video ever leaves the device. The system overlays a 3D face mesh on the webcam feed, analyses gaze direction, eye openness, and head pose to estimate attention in real time, and triggers a soft audio beep after a distraction is detected beyond a cool-down threshold. After the session, users complete a short survey rating focus level, distraction source, and UI preferences. All session data and survey results are stored locally and can be exported to Excel. A study with 10 participants showed an average 6.3% improvement in focus percentage when alert beeps were enabled.",
     role:
-      "Co-developer — implemented the TensorFlow.js face-mesh attention detection pipeline, the session setup and live monitoring UI in React, the alert beep cool-down logic, the post-session survey flow, and the session history and Excel export feature.",
+      "Co-developer — built the React interfaces for session setup, live monitoring, and post-session feedback, and contributed the session history and Excel exports for reviewing focus metrics and survey results.",
     keyFeatures: [
       "Real-time face-mesh attention estimation using TensorFlow.js and MediaPipe — gaze direction, eye openness, and head-turn detection.",
       "Soft audio alert beep triggered after a configurable cool-down when distraction is detected, minimising unnecessary interruptions.",
@@ -337,7 +341,7 @@ export const projects: Project[] = [
       "That distraction count and focus % are independent metrics: more distractions with alerts enabled can still yield higher focus time because recovery is faster.",
       "Iterative UX research: survey data directly drove the decision to make the mesh overlay optional in the next release.",
     ],
-    githubUrl: null,
+    githubUrl: "https://github.com/Anthony4044/Focus-Tracker-AI",
     demoUrl: null,
     imageAlt: "Mindfulness & Focus Tracker AI — live session with face-mesh attention overlay",
   },
@@ -395,14 +399,14 @@ export const projects: Project[] = [
       "The UX value of immediate, per-criteria confirmation after form submission.",
       "Coordinating a multi-person team with sprint-based Agile practices and pull-request reviews.",
     ],
-    githubUrl: null,
+    githubUrl: "https://github.com/Anthony4044/MakeSoft-SOEN341_Project_F24",
     demoUrl: null,
     imageAlt: "Peer Review Web Application — instructor dashboard showing team management",
   },
 ];
 
 export const jobLabel: Record<string, string> = {
-  "pwc-2026": "P&WC Data Engineering",
+  "pwc-2026": "P&WC Data Analytics (Data Eng.)",
   fonex: "Fonex",
   "pwc-2025": "P&WC Data Analytics",
 };
@@ -414,7 +418,7 @@ export const projectLabel: Record<string, string> = {
 };
 
 export const heroRotatingRoles = [
-  "Data Engineering Intern @ Pratt & Whitney Canada",
+  "Data Analytics Intern (Data Engineering) @ Pratt & Whitney Canada",
   "Python medallion pipelines",
   "Backend & BLE systems",
   "Applied ML in the browser",

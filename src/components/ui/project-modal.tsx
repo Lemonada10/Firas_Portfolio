@@ -13,7 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import type { Project } from "@/types";
 import { cn } from "@/lib/utils";
@@ -101,12 +101,7 @@ export function ProjectModal({
                 <ExternalLink className="size-4" aria-hidden />
                 {t.project.liveDemo}
               </a>
-            ) : (
-              <Button variant="outline" size="sm" disabled className="gap-2">
-                <ExternalLink className="size-4" aria-hidden />
-                {t.project.demoSoon}
-              </Button>
-            )}
+            ) : null}
             <Link
               href={`/projects/${project.slug}`}
               className={cn(
