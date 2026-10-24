@@ -57,7 +57,7 @@ const en = {
     bioTail:
       "(expected May 2027). I build Python medallion pipelines, BLE backends, and browser ML that stays fast and usable.",
     bioSecond:
-      "Current work at Pratt & Whitney Canada: ingesting finance and metals data, validating it, publishing Parquet, and modeling 10 years of pricing in Power BI. Before that: a GATT/BLE desktop stack at Fonex and modular PySpark on Databricks.",
+      "Current work at Pratt & Whitney Canada: Python medallion pipelines that centralize SharePoint and API data (Argus, Fastmarkets) as Parquet for production Power BI dashboards. Before that: a Python/Tkinter BLE desktop app at Fonex and consolidating 20+ Databricks sources with PySpark.",
     bilingualLabel: "Bilingual:",
     bilingualEnglish: "English",
     bilingualFrench: "French",
@@ -131,7 +131,6 @@ const en = {
     repo: "Repo",
     viewRepository: "View repository",
     demo: "Demo",
-    demoSoon: "Demo soon",
     cursorOpen: "Open",
   },
   project: {
@@ -144,7 +143,6 @@ const en = {
     gallery: "Gallery",
     github: "GitHub",
     liveDemo: "Live demo",
-    demoSoon: "Demo (soon)",
     fullPage: "Full page",
   },
   contact: {
@@ -231,10 +229,10 @@ const en = {
     keyHelp: "This overlay",
     keyTop: "Back to top",
     pitch:
-      "Firas Al Haddad — Software Engineering Co-op at Concordia (GPA 3.47). Data Engineering Intern at Pratt & Whitney Canada building medallion pipelines (Python, Databricks, Parquet, Power BI). Bilingual EN/FR. Open to full-time roles starting Summer 2027. Montreal.",
+      "Firas Al Haddad — Software Engineering Co-op at Concordia (GPA 3.47). Data Analytics Intern (data engineering focus) at Pratt & Whitney Canada building medallion pipelines (Python, Parquet, Power BI, Azure DevOps). Bilingual EN/FR. Open to full-time roles starting Summer 2027. Montreal.",
     whyLabel: "For recruiters",
     why: [
-      { title: "Production data", body: "Medallion pipelines, Parquet models, and 10 years of metals history in Power BI." },
+      { title: "Production data", body: "Medallion pipelines, Parquet outputs, and Argus/Fastmarkets metals pricing in production Power BI." },
       { title: "Shipped products", body: "Campus navigation, browser ML focus tracking, and a full-stack peer-review platform." },
       { title: "Ready in 2027", body: "Bilingual Montreal-based co-op, available full-time from Summer 2027." },
     ],
@@ -247,9 +245,9 @@ const en = {
     unknown: "command not found. Try help.",
     help: "whoami   bio and availability\nstack    tools I ship with\njobs     internships\nresume   open the CV\ncontact  email and LinkedIn\nclear    reset the screen",
     whoami:
-      "Firas Al Haddad · Software Engineering Co-op, Concordia (GPA 3.47)\nData Engineering Intern @ Pratt & Whitney Canada\nBilingual EN/FR · Montreal · Open to full-time Summer 2027",
+      "Firas Al Haddad · Software Engineering Co-op, Concordia (GPA 3.47)\nData Analytics Intern (Data Engineering) @ Pratt & Whitney Canada\nBilingual EN/FR · Montreal · Open to full-time Summer 2027",
     stack: "Python · PySpark · SQL · TypeScript · React\nDatabricks · Parquet · Power BI · Azure DevOps\nSpring Boot · PostgreSQL · TensorFlow.js",
-    jobs: "2026–now  Data Engineering Intern · Pratt & Whitney Canada\n2025       Software Engineering Intern · Fonex\n2025       Data Analytics Intern · Pratt & Whitney Canada",
+    jobs: "2026–now  Data Analytics Intern (Data Eng.) · Pratt & Whitney Canada\n2025       Software Engineering Intern · Fonex Data Systems\n2025       Data Analytics Intern · Pratt & Whitney Canada",
     contact: "email     Firas.haddad.h@gmail.com\nlinkedin  linkedin.com/in/firas-al-haddad-207a26280\nopening   resume…",
     resumeOut: "opening CV in a new tab…",
   },
@@ -315,7 +313,7 @@ const fr: Dictionary = {
     bioTail:
       "(diplôme prévu en mai 2027). Je conçois des pipelines médaillon en Python, des backends BLE et du ML dans le navigateur qui reste rapide et utilisable.",
     bioSecond:
-      "Chez Pratt & Whitney Canada : ingestion de données financières et de métaux, validation, publication en Parquet et modélisation de 10 ans de prix dans Power BI. Avant cela : une pile bureau GATT/BLE chez Fonex et du PySpark modulaire sur Databricks.",
+      "Chez Pratt & Whitney Canada : des pipelines médaillon en Python qui centralisent les données SharePoint et d'API (Argus, Fastmarkets) en Parquet pour des tableaux de bord Power BI en production. Avant cela : une application de bureau BLE en Python/Tkinter chez Fonex et le regroupement de plus de 20 sources Databricks avec PySpark.",
     bilingualLabel: "Bilingue :",
     bilingualEnglish: "anglais",
     bilingualFrench: "français",
@@ -390,7 +388,6 @@ const fr: Dictionary = {
     repo: "Dépôt",
     viewRepository: "Voir le dépôt",
     demo: "Démo",
-    demoSoon: "Démo à venir",
     cursorOpen: "Ouvrir",
   },
   project: {
@@ -403,7 +400,6 @@ const fr: Dictionary = {
     gallery: "Galerie",
     github: "GitHub",
     liveDemo: "Démo en ligne",
-    demoSoon: "Démo (à venir)",
     fullPage: "Page complète",
   },
   contact: {
@@ -490,10 +486,10 @@ const fr: Dictionary = {
     keyHelp: "Cet overlay",
     keyTop: "Retour en haut",
     pitch:
-      "Firas Al Haddad — génie logiciel (régime coop) à Concordia (moyenne 3,47). Stagiaire en ingénierie de données chez Pratt & Whitney Canada : pipelines médaillon (Python, Databricks, Parquet, Power BI). Bilingue EN/FR. Disponible à temps plein dès l'été 2027. Montréal.",
+      "Firas Al Haddad — génie logiciel (régime coop) à Concordia (moyenne 3,47). Stagiaire en analytique de données (volet ingénierie de données) chez Pratt & Whitney Canada : pipelines médaillon (Python, Parquet, Power BI, Azure DevOps). Bilingue EN/FR. Disponible à temps plein dès l'été 2027. Montréal.",
     whyLabel: "Pour les recruteurs",
     why: [
-      { title: "Données en production", body: "Pipelines médaillon, modèles Parquet et 10 ans d'historique des métaux dans Power BI." },
+      { title: "Données en production", body: "Pipelines médaillon, sorties Parquet et prix des métaux Argus/Fastmarkets dans Power BI en production." },
       { title: "Produits livrés", body: "Navigation de campus, suivi de concentration par ML dans le navigateur, et plateforme d'évaluation par les pairs." },
       { title: "Prêt en 2027", body: "Coop bilingue basé à Montréal, disponible à temps plein dès l'été 2027." },
     ],
@@ -506,9 +502,9 @@ const fr: Dictionary = {
     unknown: "commande introuvable. Essayez help.",
     help: "whoami   bio et disponibilité\nstack    outils que j'utilise\njobs     stages\nresume   ouvrir le CV\ncontact  courriel et LinkedIn\nclear    réinitialiser l'écran",
     whoami:
-      "Firas Al Haddad · génie logiciel (coop), Concordia (moyenne 3,47)\nStagiaire en ingénierie de données @ Pratt & Whitney Canada\nBilingue EN/FR · Montréal · Disponible à temps plein été 2027",
+      "Firas Al Haddad · génie logiciel (coop), Concordia (moyenne 3,47)\nStagiaire en analytique (ingénierie de données) @ Pratt & Whitney Canada\nBilingue EN/FR · Montréal · Disponible à temps plein été 2027",
     stack: "Python · PySpark · SQL · TypeScript · React\nDatabricks · Parquet · Power BI · Azure DevOps\nSpring Boot · PostgreSQL · TensorFlow.js",
-    jobs: "2026–auj.  Stagiaire ingénierie de données · Pratt & Whitney Canada\n2025        Stagiaire génie logiciel · Fonex\n2025        Stagiaire analytique de données · Pratt & Whitney Canada",
+    jobs: "2026–auj.  Stagiaire analytique (ingénierie de données) · Pratt & Whitney Canada\n2025        Stagiaire génie logiciel · Fonex Data Systems\n2025        Stagiaire analytique de données · Pratt & Whitney Canada",
     contact: "courriel  Firas.haddad.h@gmail.com\nlinkedin  linkedin.com/in/firas-al-haddad-207a26280\nouverture du CV…",
     resumeOut: "ouverture du CV dans un nouvel onglet…",
   },

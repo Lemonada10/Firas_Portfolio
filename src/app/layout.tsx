@@ -22,6 +22,7 @@ import { RecruiterDock } from "@/components/ui/recruiter-dock";
 import { SectionRail } from "@/components/ui/section-rail";
 import { ShortcutOverlay } from "@/components/ui/shortcut-overlay";
 import { personal } from "@/lib/data";
+import { Analytics } from "@vercel/analytics/next";
 
 /* Canvas background — client only, no SSR → no hydration mismatch */
 const CanvasBackground = dynamic(
@@ -77,7 +78,7 @@ const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: personal.name,
-  jobTitle: "Software Engineering Co-op · Data Engineering Intern",
+  jobTitle: "Software Engineering Co-op · Data Analytics Intern (Data Engineering)",
   email: personal.email,
   telephone: personal.phone,
   address: { "@type": "PostalAddress", addressLocality: "Montreal", addressRegion: "QC", addressCountry: "CA" },
@@ -138,6 +139,7 @@ export default function RootLayout({
             </TooltipProvider>
           </LanguageProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
