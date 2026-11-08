@@ -27,7 +27,7 @@ export const personal: Personal = {
   portfolioUrl: "https://firas-portfolio-zhdz.vercel.app/",
   linkedInUrl: "https://www.linkedin.com/in/firas-al-haddad-207a26280/",
   githubUrl: "https://github.com/Lemonada10",
-  resumeUrl: "/CV/CV.pdf?v=20261017",
+  resumeUrl: "/CV/CV.pdf?v=20261107",
 };
 
 export const education: Education[] = [
@@ -38,7 +38,7 @@ export const education: Education[] = [
     location: "Montreal, QC",
     start: "2023",
     end: "May 2027",
-    details: "GPA: 3.47",
+    details: "GPA: 3.47/4.3",
   },
   {
     id: "vanier",
@@ -50,14 +50,7 @@ export const education: Education[] = [
   },
 ];
 
-export const certifications: Certification[] = [
-  {
-    id: "aws-dea",
-    name: "AWS Certified Data Engineer – Associate",
-    status: "Expected",
-    expected: "Feb 2027",
-  },
-];
+export const certifications: Certification[] = [];
 
 export const skillGroups: SkillGroup[] = [
   {
@@ -67,7 +60,11 @@ export const skillGroups: SkillGroup[] = [
     items: [
       {
         name: "Python",
-        related: { jobs: ["pwc-2026", "fonex", "pwc-2025"] },
+        related: { jobs: ["pwc-2026", "fonex", "pwc-2025"], projects: ["iris"] },
+      },
+      {
+        name: "SQL",
+        related: { jobs: ["pwc-2026", "pwc-2025"], projects: ["iris", "peer-review-web-app"] },
       },
       {
         name: "Java",
@@ -78,16 +75,13 @@ export const skillGroups: SkillGroup[] = [
         related: {
           projects: [
             "concordia-campus-guide",
+            "iris",
             "mindfulness-focus-tracker-ai",
             "peer-review-web-app",
           ],
         },
       },
-      {
-        name: "SQL",
-        related: { jobs: ["pwc-2026", "pwc-2025"] },
-      },
-      { name: "C++" },
+      { name: "C#" },
     ],
   },
   {
@@ -99,8 +93,12 @@ export const skillGroups: SkillGroup[] = [
         name: "REST APIs",
         related: {
           jobs: ["pwc-2026"],
-          projects: ["peer-review-web-app", "concordia-campus-guide"],
+          projects: ["peer-review-web-app", "concordia-campus-guide", "iris"],
         },
+      },
+      {
+        name: "Django",
+        related: { projects: ["iris"] },
       },
       {
         name: "Spring Boot",
@@ -116,11 +114,15 @@ export const skillGroups: SkillGroup[] = [
       },
       {
         name: "PostgreSQL",
-        related: { projects: ["peer-review-web-app", "concordia-campus-guide"] },
+        related: { projects: ["peer-review-web-app", "iris"] },
       },
       {
         name: "ETL Pipelines",
         related: { jobs: ["pwc-2026", "pwc-2025"] },
+      },
+      {
+        name: "Medallion Architecture",
+        related: { jobs: ["pwc-2026"] },
       },
       {
         name: "Data Modeling",
@@ -145,8 +147,11 @@ export const skillGroups: SkillGroup[] = [
         name: "Azure DevOps",
         related: { jobs: ["pwc-2026"] },
       },
+      {
+        name: "Docker",
+        related: { projects: ["iris"] },
+      },
       { name: "Git/GitHub" },
-      { name: "Vercel" },
       {
         name: "Power BI",
         related: { jobs: ["pwc-2026", "pwc-2025"] },
@@ -161,7 +166,7 @@ export const skillGroups: SkillGroup[] = [
       {
         name: "React",
         related: {
-          projects: ["mindfulness-focus-tracker-ai", "peer-review-web-app"],
+          projects: ["iris", "mindfulness-focus-tracker-ai", "peer-review-web-app"],
         },
       },
       {
@@ -172,12 +177,6 @@ export const skillGroups: SkillGroup[] = [
         name: "Firebase",
         related: {
           projects: ["concordia-campus-guide", "peer-review-web-app"],
-        },
-      },
-      {
-        name: "Tailwind CSS",
-        related: {
-          projects: ["peer-review-web-app", "mindfulness-focus-tracker-ai"],
         },
       },
     ],
@@ -194,12 +193,12 @@ export const experience: Job[] = [
     current: true,
     tech: ["Python", "Parquet", "Power BI", "REST APIs", "Azure DevOps"],
     bullets: [
-      "Built modular Python pipelines centralizing SharePoint and API data for production Power BI dashboards.",
-      "Implemented a medallion architecture (landing, bronze, silver, gold, platinum) with reusable transformations, Parquet outputs, and a central orchestrator.",
-      "Integrated Fastmarkets and Argus pricing, standardizing currencies and units (USD/kg, USD/lb) for consistent metals comparisons.",
-      "Established Azure DevOps branching and pull-request workflows; onboarded onsite and offshore teammates to Git.",
-      "Enhanced Power BI dashboards with historical price comparisons, percentage changes, and flexible periods.",
-      "Refactoring an economic-indices dashboard (CPI, PPI, labour rates) onto S&P sources within the centralized pipeline to improve performance.",
+      "Built a modular Python ETL pipeline consolidating SharePoint and REST API data into reusable Parquet datasets for Power BI dashboards.",
+      "Designed a five-layer medallion architecture (Landing to Platinum), with centralized orchestration, reusable API clients, and modular transformations.",
+      "Integrated metal pricing data sources (Fastmarkets and Argus); standardized foreign currencies using S&P FX rates.",
+      "Enhanced Power BI metal-pricing dashboards with historical comparisons, monthly/yearly averages, and period-over-period price changes.",
+      "Established Azure DevOps branching and pull-request workflows; onboarded cross-regional teammates to Git-based collaboration.",
+      "Extended Python ETL pipelines and Power BI dashboards to report CPI, PPI, and FX-adjusted economic indices for supplier-transition analysis.",
     ],
   },
   {
@@ -210,10 +209,10 @@ export const experience: Job[] = [
     period: "May 2025 – Aug 2025",
     tech: ["Python", "Tkinter", "bleak", "asyncio", "BLE", "QMetry"],
     bullets: [
-      "Built a Python/Tkinter desktop application to inspect and reconfigure transceivers through Buddy devices.",
-      "Implemented asynchronous BLE communication with bleak and asyncio to read and write device memory.",
-      "Built a multithreaded connection manager coordinating device communication with the desktop interface.",
-      "Tested alpha and beta mobile releases using QMetry, covering device connectivity and transceiver configuration.",
+      "Built an internal Python/Tkinter desktop application to inspect, read, and reconfigure SFP optical transceivers through a hardware device.",
+      "Implemented asynchronous Bluetooth Low Energy communication with bleak/asyncio for protected memory-page reads and writes.",
+      "Designed a multithreaded connection manager to coordinate device I/O with the desktop interface; added transceiver photo capture.",
+      "Tested alpha/beta mobile app releases with QMetry and performed optical-transceiver temperature checks in the hardware lab.",
     ],
   },
   {
@@ -224,10 +223,9 @@ export const experience: Job[] = [
     period: "Jan 2025 – Apr 2025",
     tech: ["PySpark", "Databricks", "Power BI"],
     bullets: [
-      "Consolidated 20+ Databricks sources into curated datasets supporting parts sales reporting in Power BI.",
-      "Refactored PySpark ingestion, cleaning, and transformations into reusable functions for existing pipelines.",
-      "Wrote automated tests for transformation functions within the existing testing framework.",
-      "Redesigned dashboards to highlight daily, weekly, and monthly sales trends against business targets.",
+      "Consolidated 20+ Databricks data sources into a small set of curated datasets for spare-parts and manufacturing sales reporting.",
+      "Refactored PySpark ingestion, cleaning, and transformations into reusable pipeline-compatible functions with automated tests.",
+      "Redesigned Power BI views to surface daily, weekly, and monthly sales trends and progress toward business targets.",
     ],
   },
 ];
@@ -244,9 +242,9 @@ export const projects: Project[] = [
       "Team-built React Native app (MAKESOFT) that helps Concordia students navigate both SGW and Loyola campuses — indoors and outdoors — with real-time shuttle schedules and class-aware routing.",
     tech: ["React Native", "TypeScript", "Google Maps", "Firebase"],
     highlights: [
-      "Indoor & outdoor directions",
-      "Concordia shuttle integration",
-      "Google Calendar class routing",
+      "Indoor room-to-room directions",
+      "Cross-campus shuttle routing",
+      "Travel-time estimates & navigation tests",
     ],
     image: "/projects/makesoft/banner.png",
     gallery: [
@@ -263,7 +261,7 @@ export const projects: Project[] = [
     overview:
       "MAKESOFT is a 9-person Agile team project built across four sprints. The app covers the full navigation problem for Concordia students: finding buildings, getting outdoor walking/driving/transit directions, tracking the inter-campus shuttle service with live departure times, navigating indoors room-to-room across floors, and automatically routing to the next class by reading Google Calendar. The two campuses (SGW and Loyola) are fully supported with custom-styled building overlays on Google Maps.",
     role:
-      "Frontend contributor — built interfaces connecting campus maps, directions, and calendar-based class navigation, and contributed automated tests within a CI/CD workflow incorporating SonarQube code-quality checks.",
+      "Developed features for a Google Maps-based campus navigation app, integrating indoor room-to-room directions, cross-campus shuttle routing, travel-time estimates, and navigation tests.",
     keyFeatures: [
       "Interactive SGW & Loyola campus maps with custom building shapes and info pop-ups.",
       "Outdoor directions (walk, drive, transit) between any two campus buildings.",
@@ -289,6 +287,104 @@ export const projects: Project[] = [
     imageAlt: "MAKESOFT — Concordia Campus Navigation App banner",
   },
   {
+    slug: "iris",
+    title: "IRIS",
+    location: "Montreal, QC",
+    featured: true,
+    tagline:
+      "In progress — a nonprofit web app that verifies low-income households and reserves surplus food and goods for pickup.",
+    description:
+      "Co-developing a nonprofit platform for verifying low-income households and reserving surplus food and goods for pickup, with Django seed data and household-expiry tests.",
+    tech: ["React", "TypeScript", "Django", "PostgreSQL", "Docker"],
+    highlights: [
+      "Low-income household verification",
+      "Surplus food & goods reservations",
+      "Django seed data & expiry tests",
+    ],
+    overview:
+      "IRIS is an in-progress nonprofit web application that helps organizations verify low-income households and let eligible families reserve surplus food and goods for pickup. The stack pairs a React/TypeScript frontend with a Django and PostgreSQL backend, containerized with Docker for a repeatable local and deployment setup.",
+    role:
+      "Co-developing a nonprofit web app for verifying low-income households and reserving surplus food and goods for pickup; built repeatable Django seed data and household-expiry tests.",
+    keyFeatures: [
+      "Household eligibility verification for low-income applicants.",
+      "Reservation flow for surplus food and goods ready for pickup.",
+      "Repeatable Django seed data for realistic local development and demos.",
+      "Household-expiry tests covering eligibility windows and edge cases.",
+      "Dockerized Django + PostgreSQL setup for consistent environments.",
+    ],
+    challenges: [
+      "Modeling household eligibility and expiry rules without locking out valid applicants.",
+      "Keeping seed data realistic enough for demos while remaining safe to reset.",
+      "Coordinating frontend and backend contracts while the product is still evolving.",
+    ],
+    learnings: [
+      "How to structure Django tests around time-sensitive eligibility rules.",
+      "Building seed scripts that support both empty and fully populated demo states.",
+      "Shipping an early nonprofit product with clear verification and reservation flows.",
+    ],
+    githubUrl: null,
+    demoUrl: null,
+    imageAlt: "IRIS — nonprofit household verification and surplus goods reservation app",
+  },
+  {
+    slug: "peer-review-web-app",
+    title: "Peer Review",
+    location: "Montreal, QC",
+    featured: true,
+    tagline:
+      "Full-stack academic peer evaluation platform with dual-role auth, team management, and structured multi-criteria scoring.",
+    description:
+      "A web app where instructors create teams and students submit structured peer evaluations—rating teammates across Cooperation, Conceptual Contribution, Practical Contribution, and Work Ethic.",
+    tech: ["React", "Java", "Spring Boot", "PostgreSQL"],
+    highlights: [
+      "Role-aware student & instructor interfaces",
+      "REST API integrations",
+      "Sign-in tests & CI improvements",
+    ],
+    image: "/projects/peer-review/landing-hero.png",
+    gallery: [
+      { src: "/projects/peer-review/landing.png", alt: "Landing page — Peer Evaluation by MakeSoft" },
+      { src: "/projects/peer-review/signup-student.png", alt: "Student sign-up form with Full Name, Student ID, Section, Email, and Password fields" },
+      { src: "/projects/peer-review/signup-instructor.png", alt: "Instructor sign-up form with Full Name, Instructor Section, Email, and Password fields" },
+      { src: "/projects/peer-review/login.png", alt: "Student login screen with email/password and social OAuth options" },
+      { src: "/projects/peer-review/instructor-dashboard.png", alt: "Instructor dashboard showing team creation, unassigned students, and teams list" },
+      { src: "/projects/peer-review/instructor-assign.png", alt: "Instructor assigning a student to a team via dropdown" },
+      { src: "/projects/peer-review/instructor-assigned.png", alt: "Instructor view after assigning students — team members shown with Remove buttons" },
+      { src: "/projects/peer-review/student-dashboard.png", alt: "Student dashboard showing team name, team members, and Evaluate buttons" },
+      { src: "/projects/peer-review/eval-form.png", alt: "Peer evaluation form with 4 criteria and a 1–5 rating dropdown open" },
+      { src: "/projects/peer-review/eval-form-filled.png", alt: "Completed peer evaluation form before submission" },
+      { src: "/projects/peer-review/eval-submitted.png", alt: "Evaluation submitted confirmation with recorded scores" },
+    ],
+    overview:
+      "Built as a team (MakeSoft), this web application streamlines peer evaluations in academic settings. Instructors sign up and receive a section code, then create named teams and assign enrolled students to them. Students see their team, view all teammates, and submit individual evaluations rating each person across four dimensions on a 1–5 scale with optional written comments. The platform enforces role separation throughout: instructors never evaluate and students cannot manage teams.",
+    role:
+      "Developed role-aware student/instructor evaluation interfaces and REST API integrations; contributed sign-in unit tests and CI workflow improvements.",
+    keyFeatures: [
+      "Role-based access control: separate Instructor and Student dashboards with guarded routes.",
+      "Instructor team management: create named teams, view unassigned students, assign/remove members.",
+      "Student home: displays team name, lists teammates, and surfaces Evaluate buttons for peers (never for self).",
+      "Peer evaluation form: four scored criteria (Cooperation, Conceptual Contribution, Practical Contribution, Work Ethic) each rated 1–5 with optional comments.",
+      "Evaluation confirmation page: shows a per-criterion summary immediately after submission.",
+      "Firebase Auth with email/password and social OAuth (GitHub, Google) plus instructor-mode sign-up with section codes.",
+      "Animated particle background and dark UI built with Tailwind CSS for a polished, consistent look.",
+    ],
+    challenges: [
+      "Keeping role-gated views clean without duplicating layout logic across instructor and student components.",
+      "Preventing students from evaluating themselves while dynamically rendering the teammate list.",
+      "Designing a section-code flow so instructors and students are always matched to the correct cohort.",
+      "Structuring the evaluation schema to allow future criteria additions without breaking existing submissions.",
+    ],
+    learnings: [
+      "How to model bi-directional relationships (student ↔ team ↔ evaluation) cleanly in a relational schema.",
+      "Practical RBAC at the API and UI layer without over-engineering middleware.",
+      "The UX value of immediate, per-criteria confirmation after form submission.",
+      "Coordinating a multi-person team with sprint-based Agile practices and pull-request reviews.",
+    ],
+    githubUrl: "https://github.com/Anthony4044/MakeSoft-SOEN341_Project_F24",
+    demoUrl: null,
+    imageAlt: "Peer Review Web Application — instructor dashboard showing team management",
+  },
+  {
     slug: "mindfulness-focus-tracker-ai",
     title: "Focus Tracker",
     location: "Montreal, QC",
@@ -297,11 +393,11 @@ export const projects: Project[] = [
       "Browser-based real-time attention monitor using face-mesh AI — detects distraction and delivers gentle audio/visual cues to help users refocus.",
     description:
       "A webcam-powered focus coach that tracks gaze, head pose, and facial cues in real time, logs session metrics, and nudges users back on task with subtle beep alerts — no specialized hardware needed.",
-    tech: ["React", "TypeScript", "TensorFlow.js", "MediaPipe"],
+    tech: ["React", "TypeScript", "TensorFlow.js"],
     highlights: [
-      "Live face-mesh attention tracking",
-      "6.3% avg focus improvement with alerts",
-      "Post-session survey & Excel export",
+      "Webcam facial-attention tracking",
+      "Distraction alerts",
+      "Session metrics recording",
     ],
     image: "/projects/focus-tracker/active-session.png",
     gallery: [
@@ -316,7 +412,7 @@ export const projects: Project[] = [
     overview:
       "The Mindfulness & Focus Tracker AI is a fully browser-based attention monitoring system built by a 4-person team. Users log in with a nickname, configure a study session (subject, goal, planned duration, background audio, alert beeps), then start a focus session where a live webcam feed is processed client-side using TensorFlow.js — no video ever leaves the device. The system overlays a 3D face mesh on the webcam feed, analyses gaze direction, eye openness, and head pose to estimate attention in real time, and triggers a soft audio beep after a distraction is detected beyond a cool-down threshold. After the session, users complete a short survey rating focus level, distraction source, and UI preferences. All session data and survey results are stored locally and can be exported to Excel. A study with 10 participants showed an average 6.3% improvement in focus percentage when alert beeps were enabled.",
     role:
-      "Co-developer — built the React interfaces for session setup, live monitoring, and post-session feedback, and contributed the session history and Excel exports for reviewing focus metrics and survey results.",
+      "Developed React interfaces for a study-focus web app that monitors attention through webcam-based facial tracking, provides distraction alerts, and records session metrics.",
     keyFeatures: [
       "Real-time face-mesh attention estimation using TensorFlow.js and MediaPipe — gaze direction, eye openness, and head-turn detection.",
       "Soft audio alert beep triggered after a configurable cool-down when distraction is detected, minimising unnecessary interruptions.",
@@ -345,64 +441,6 @@ export const projects: Project[] = [
     demoUrl: null,
     imageAlt: "Mindfulness & Focus Tracker AI — live session with face-mesh attention overlay",
   },
-  {
-    slug: "peer-review-web-app",
-    title: "Peer Review",
-    location: "Montreal, QC",
-    extra: true,
-    tagline:
-      "Full-stack academic peer evaluation platform with dual-role auth, team management, and structured multi-criteria scoring.",
-    description:
-      "A web app where instructors create teams and students submit structured peer evaluations—rating teammates across Cooperation, Conceptual Contribution, Practical Contribution, and Work Ethic.",
-    tech: ["React", "TypeScript", "Java", "Spring Boot", "PostgreSQL", "Firebase"],
-    highlights: [
-      "Instructor & student role dashboards",
-      "Team creation & student assignment",
-      "Multi-criteria peer evaluation (1–5 scale)",
-    ],
-    image: "/projects/peer-review/landing-hero.png",
-    gallery: [
-      { src: "/projects/peer-review/landing.png", alt: "Landing page — Peer Evaluation by MakeSoft" },
-      { src: "/projects/peer-review/signup-student.png", alt: "Student sign-up form with Full Name, Student ID, Section, Email, and Password fields" },
-      { src: "/projects/peer-review/signup-instructor.png", alt: "Instructor sign-up form with Full Name, Instructor Section, Email, and Password fields" },
-      { src: "/projects/peer-review/login.png", alt: "Student login screen with email/password and social OAuth options" },
-      { src: "/projects/peer-review/instructor-dashboard.png", alt: "Instructor dashboard showing team creation, unassigned students, and teams list" },
-      { src: "/projects/peer-review/instructor-assign.png", alt: "Instructor assigning a student to a team via dropdown" },
-      { src: "/projects/peer-review/instructor-assigned.png", alt: "Instructor view after assigning students — team members shown with Remove buttons" },
-      { src: "/projects/peer-review/student-dashboard.png", alt: "Student dashboard showing team name, team members, and Evaluate buttons" },
-      { src: "/projects/peer-review/eval-form.png", alt: "Peer evaluation form with 4 criteria and a 1–5 rating dropdown open" },
-      { src: "/projects/peer-review/eval-form-filled.png", alt: "Completed peer evaluation form before submission" },
-      { src: "/projects/peer-review/eval-submitted.png", alt: "Evaluation submitted confirmation with recorded scores" },
-    ],
-    overview:
-      "Built as a team (MakeSoft), this web application streamlines peer evaluations in academic settings. Instructors sign up and receive a section code, then create named teams and assign enrolled students to them. Students see their team, view all teammates, and submit individual evaluations rating each person across four dimensions on a 1–5 scale with optional written comments. The platform enforces role separation throughout: instructors never evaluate and students cannot manage teams.",
-    role:
-      "Full-stack contributor — designed the React frontend with role-aware routing, implemented Spring Boot REST APIs for user management, team CRUD, and evaluation submission, modelled the PostgreSQL schema, and configured the Firebase Auth integration for social and email-based sign-in.",
-    keyFeatures: [
-      "Role-based access control: separate Instructor and Student dashboards with guarded routes.",
-      "Instructor team management: create named teams, view unassigned students, assign/remove members.",
-      "Student home: displays team name, lists teammates, and surfaces Evaluate buttons for peers (never for self).",
-      "Peer evaluation form: four scored criteria (Cooperation, Conceptual Contribution, Practical Contribution, Work Ethic) each rated 1–5 with optional comments.",
-      "Evaluation confirmation page: shows a per-criterion summary immediately after submission.",
-      "Firebase Auth with email/password and social OAuth (GitHub, Google) plus instructor-mode sign-up with section codes.",
-      "Animated particle background and dark UI built with Tailwind CSS for a polished, consistent look.",
-    ],
-    challenges: [
-      "Keeping role-gated views clean without duplicating layout logic across instructor and student components.",
-      "Preventing students from evaluating themselves while dynamically rendering the teammate list.",
-      "Designing a section-code flow so instructors and students are always matched to the correct cohort.",
-      "Structuring the evaluation schema to allow future criteria additions without breaking existing submissions.",
-    ],
-    learnings: [
-      "How to model bi-directional relationships (student ↔ team ↔ evaluation) cleanly in a relational schema.",
-      "Practical RBAC at the API and UI layer without over-engineering middleware.",
-      "The UX value of immediate, per-criteria confirmation after form submission.",
-      "Coordinating a multi-person team with sprint-based Agile practices and pull-request reviews.",
-    ],
-    githubUrl: "https://github.com/Anthony4044/MakeSoft-SOEN341_Project_F24",
-    demoUrl: null,
-    imageAlt: "Peer Review Web Application — instructor dashboard showing team management",
-  },
 ];
 
 export const jobLabel: Record<string, string> = {
@@ -413,8 +451,9 @@ export const jobLabel: Record<string, string> = {
 
 export const projectLabel: Record<string, string> = {
   "concordia-campus-guide": "Campus Guide",
-  "mindfulness-focus-tracker-ai": "Focus Tracker",
+  iris: "IRIS",
   "peer-review-web-app": "Peer Review",
+  "mindfulness-focus-tracker-ai": "Focus Tracker",
 };
 
 export const heroRotatingRoles = [

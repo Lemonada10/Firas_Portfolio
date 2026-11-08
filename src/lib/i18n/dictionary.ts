@@ -57,7 +57,7 @@ const en = {
     bioTail:
       "(expected May 2027). I build Python medallion pipelines, BLE backends, and browser ML that stays fast and usable.",
     bioSecond:
-      "Current work at Pratt & Whitney Canada: Python medallion pipelines that centralize SharePoint and API data (Argus, Fastmarkets) as Parquet for production Power BI dashboards. Before that: a Python/Tkinter BLE desktop app at Fonex and consolidating 20+ Databricks sources with PySpark.",
+      "Current work at Pratt & Whitney Canada: modular Python ETL pipelines and a five-layer medallion architecture that feed production Power BI dashboards for metals pricing and FX-adjusted economic indices. Before that: a Python/Tkinter BLE desktop app at Fonex and consolidating 20+ Databricks sources with PySpark.",
     bilingualLabel: "Bilingual:",
     bilingualEnglish: "English",
     bilingualFrench: "French",
@@ -120,7 +120,7 @@ const en = {
   projects: {
     eyebrow: "05 · Featured work",
     heading: "Projects",
-    subtitle: "Campus Guide – Focus Tracker – Peer Review",
+    subtitle: "Campus Guide – IRIS – Peer Review – Focus Tracker",
     all: "All",
     shown: "shown",
     moreOnGithub: "More on GitHub",
@@ -232,8 +232,8 @@ const en = {
       "Firas Al Haddad — Software Engineering Co-op at Concordia (GPA 3.47). Data Analytics Intern (data engineering focus) at Pratt & Whitney Canada building medallion pipelines (Python, Parquet, Power BI, Azure DevOps). Bilingual EN/FR. Open to full-time roles starting Summer 2027. Montreal.",
     whyLabel: "For recruiters",
     why: [
-      { title: "Production data", body: "Medallion pipelines, Parquet outputs, and Argus/Fastmarkets metals pricing in production Power BI." },
-      { title: "Shipped products", body: "Campus navigation, browser ML focus tracking, and a full-stack peer-review platform." },
+      { title: "Production data", body: "Medallion ETL pipelines, Parquet datasets, and Power BI for metals pricing plus FX-adjusted economic indices." },
+      { title: "Shipped products", body: "Campus navigation, IRIS nonprofit reservations, peer review, and browser ML focus tracking." },
       { title: "Ready in 2027", body: "Bilingual Montreal-based co-op, available full-time from Summer 2027." },
     ],
   },
@@ -313,7 +313,7 @@ const fr: Dictionary = {
     bioTail:
       "(diplôme prévu en mai 2027). Je conçois des pipelines médaillon en Python, des backends BLE et du ML dans le navigateur qui reste rapide et utilisable.",
     bioSecond:
-      "Chez Pratt & Whitney Canada : des pipelines médaillon en Python qui centralisent les données SharePoint et d'API (Argus, Fastmarkets) en Parquet pour des tableaux de bord Power BI en production. Avant cela : une application de bureau BLE en Python/Tkinter chez Fonex et le regroupement de plus de 20 sources Databricks avec PySpark.",
+      "Chez Pratt & Whitney Canada : des pipelines ETL Python modulaires et une architecture médaillon à cinq couches qui alimentent des tableaux de bord Power BI en production pour les prix des métaux et des indices économiques ajustés au taux de change. Avant cela : une application de bureau BLE en Python/Tkinter chez Fonex et le regroupement de plus de 20 sources Databricks avec PySpark.",
     bilingualLabel: "Bilingue :",
     bilingualEnglish: "anglais",
     bilingualFrench: "français",
@@ -377,7 +377,7 @@ const fr: Dictionary = {
   projects: {
     eyebrow: "05 · Projets phares",
     heading: "Projets",
-    subtitle: "Campus Guide – Focus Tracker – Peer Review",
+    subtitle: "Campus Guide – IRIS – Peer Review – Focus Tracker",
     all: "Tous",
     shown: "affichés",
     moreOnGithub: "Plus sur GitHub",
@@ -489,8 +489,8 @@ const fr: Dictionary = {
       "Firas Al Haddad — génie logiciel (régime coop) à Concordia (moyenne 3,47). Stagiaire en analytique de données (volet ingénierie de données) chez Pratt & Whitney Canada : pipelines médaillon (Python, Parquet, Power BI, Azure DevOps). Bilingue EN/FR. Disponible à temps plein dès l'été 2027. Montréal.",
     whyLabel: "Pour les recruteurs",
     why: [
-      { title: "Données en production", body: "Pipelines médaillon, sorties Parquet et prix des métaux Argus/Fastmarkets dans Power BI en production." },
-      { title: "Produits livrés", body: "Navigation de campus, suivi de concentration par ML dans le navigateur, et plateforme d'évaluation par les pairs." },
+      { title: "Données en production", body: "Pipelines ETL médaillon, jeux Parquet et Power BI pour les prix des métaux et des indices économiques ajustés au taux de change." },
+      { title: "Produits livrés", body: "Navigation de campus, réservations IRIS à but non lucratif, évaluation par les pairs et suivi de concentration par ML." },
       { title: "Prêt en 2027", body: "Coop bilingue basé à Montréal, disponible à temps plein dès l'été 2027." },
     ],
   },

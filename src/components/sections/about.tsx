@@ -90,7 +90,7 @@ export function About() {
   const stats = [
     { value: 3.47, decimals: 2, ...t.about.stats.gpa },
     { value: 3, decimals: 0, ...t.about.stats.internships },
-    { value: 3, decimals: 0, ...t.about.stats.projects },
+    { value: 4, decimals: 0, ...t.about.stats.projects },
     { value: 2, decimals: 0, ...t.about.stats.languages },
   ];
 
@@ -197,11 +197,15 @@ export function About() {
                       ),
                     },
                     { Icon: Languages, label: t.about.cards.languages, text: t.about.languagesText },
-                    {
-                      Icon: Award,
-                      label: t.about.cards.certification,
-                      text: `${certifications[0].name} · ${certifications[0].status} · ${certifications[0].expected}`,
-                    },
+                    ...(certifications[0]
+                      ? [
+                          {
+                            Icon: Award,
+                            label: t.about.cards.certification,
+                            text: `${certifications[0].name} · ${certifications[0].status} · ${certifications[0].expected}`,
+                          },
+                        ]
+                      : []),
                   ].map(({ Icon, label, text, custom }) => (
                     <div key={label} className="flex items-start gap-3">
                       <span className="mt-0.5 inline-flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
