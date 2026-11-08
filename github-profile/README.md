@@ -23,7 +23,7 @@ I enjoy engineering the systems behind useful products: **Python data pipelines,
 | Organization | What I worked on |
 | --- | --- |
 | **Pratt & Whitney Canada** · 2026 | Built modular Python pipelines for SharePoint and API data, organized transformations in a medallion architecture, and prepared curated datasets for Power BI reporting. Integrated market-data APIs with currency and unit normalization; helped establish Git/PR practices for a distributed team. |
-| **Fonex Data Systems** · 2025 | Built a Python/Tkinter desktop utility communicating with an optical-transceiver configuration device using BLE, \`bleak\`, and \`asyncio\`. Supported device testing and mobile-app QA. |
+| **Fonex Data Systems** · 2025 | Built a Python/Tkinter desktop utility communicating with an optical-transceiver configuration device using BLE, `bleak`, and `asyncio`. Supported device testing and mobile-app QA. |
 | **Pratt & Whitney Canada** · 2025 | Consolidated **20+ Databricks data sources** into curated reporting datasets, refactored PySpark transformations, added tests, and improved high-level parts-sales KPI reporting. |
 
 > Employer source code, datasets, credentials, and business-sensitive implementation details are not published here. The architecture below is **illustrative**, not a diagram of an internal production system.
