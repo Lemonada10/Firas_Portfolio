@@ -43,6 +43,8 @@ I focus on separating **ingestion**, **storage**, **standardization**, **busines
 | **Peer Review** (team project) | Full-stack peer-evaluation app with student/instructor workflows, REST APIs, relational data, and role-aware UI. | [Code](https://github.com/Anthony4044/MakeSoft-SOEN341_Project_F24) · [Case study](https://firas-portfolio-zhdz.vercel.app/projects/peer-review-web-app) |
 | **Portfolio website** | Next.js, TypeScript, Tailwind CSS, structured project case studies, responsive UI. | [Code](https://github.com/Lemonada10/Firas_Portfolio) · [Live site](https://firas-portfolio-zhdz.vercel.app/) |
 
+**Selected merged contributions (my pull requests):** [Indoor navigation and travel-time UI](https://github.com/SOEN-390-MakeSoft/SOEN-390-MakeSoft/pull/259) · [Cross-campus shuttle routing and tests](https://github.com/SOEN-390-MakeSoft/SOEN-390-MakeSoft/pull/179) · [Focus Tracker UI foundation](https://github.com/Anthony4044/Focus-Tracker-AI/pull/3) · [Peer Review sign-in tests](https://github.com/Anthony4044/MakeSoft-SOEN341_Project_F24/pull/149).
+
 **Project snapshots**
 
 <a href="https://firas-portfolio-zhdz.vercel.app/projects/concordia-campus-guide"><img src="https://raw.githubusercontent.com/Lemonada10/Firas_Portfolio/main/public/projects/makesoft/screen-sgw-map.png" alt="Campus Guide map view" height="170" /></a>
