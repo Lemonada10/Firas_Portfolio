@@ -27,7 +27,11 @@ export const personal: Personal = {
   portfolioUrl: "https://firas-portfolio-zhdz.vercel.app/",
   linkedInUrl: "https://www.linkedin.com/in/firas-al-haddad-207a26280/",
   githubUrl: "https://github.com/Lemonada10",
+<<<<<<< HEAD
   resumeUrl: "/CV/CV.pdf?v=20261107",
+=======
+  resumeUrl: "/CV/CV.pdf?v=20261024",
+>>>>>>> d2b818cdfc3fa7dc5cb4f9f59a6b93e90aa43cb2
 };
 
 export const education: Education[] = [

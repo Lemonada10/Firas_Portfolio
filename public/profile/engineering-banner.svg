@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="324" viewBox="0 0 1280 324" role="img" aria-labelledby="title desc">
+<title id="title">Firas Al Haddad — Software Engineering, Data Engineering and Backend</title>
+<desc id="desc">Professional profile banner with name, specialization, and Montreal location.</desc>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#071321"/><stop offset=".58" stop-color="#0d2138"/><stop offset="1" stop-color="#123248"/></linearGradient>
+ <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#32d5c4"/><stop offset="1" stop-color="#6da5ff"/></linearGradient>
+ <pattern id="grid" width="38" height="38" patternUnits="userSpaceOnUse"><path d="M 38 0 L 0 0 0 38" fill="none" stroke="#ffffff" stroke-opacity=".055" stroke-width="1"/></pattern>
+</defs>
+<rect width="1280" height="324" fill="url(#bg)"/>
+<rect width="1280" height="324" fill="url(#grid)"/>
+<path d="M0 0 H1280" stroke="url(#accent)" stroke-width="7"/>
+<rect x="63" y="62" width="6" height="198" rx="3" fill="url(#accent)"/>
+<text x="99" y="96" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" letter-spacing="3" fill="#69ded2">SOFTWARE ENGINEERING · CONCORDIA UNIVERSITY</text>
+<text x="98" y="158" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="700" fill="#ffffff">Firas Al Haddad</text>
+<text x="99" y="207" font-family="Arial, Helvetica, sans-serif" font-size="26" fill="#e0edf5">Data Engineering &amp; Backend Development</text>
+<text x="99" y="253" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#91b4c8">Montréal, Canada  ·  Available May 2027</text>
+<g transform="translate(954 78)" fill="none" stroke-width="2">
+ <path d="M13 66 L95 13 L175 67 L255 12" stroke="#32d5c4" stroke-opacity=".48"/>
+ <path d="M20 142 L90 95 L172 144 L250 89" stroke="#77a6ff" stroke-opacity=".55"/>
+ <path d="M91 13 L91 95 M175 67 L172 144 M250 12 L250 89" stroke="#89b8cc" stroke-opacity=".32"/>
+ <g fill="#0b2737" stroke="#49d8c9"><circle cx="13" cy="66" r="10"/><circle cx="95" cy="13" r="10"/><circle cx="175" cy="67" r="10"/><circle cx="255" cy="12" r="10"/></g>
+ <g fill="#0b2737" stroke="#79a6ff"><circle cx="20" cy="142" r="10"/><circle cx="90" cy="95" r="10"/><circle cx="172" cy="144" r="10"/><circle cx="250" cy="89" r="10"/></g>
+ <path d="M45 177 H220" stroke="#ffffff" stroke-opacity=".23" stroke-width="1"/>
+ <text x="59" y="204" fill="#b3d8e4" font-family="monospace" font-size="15" stroke="none">{ python · sql · data }</text>
+</g>
+</svg>

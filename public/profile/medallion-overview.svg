@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="338" viewBox="0 0 1400 338" role="img" aria-labelledby="title desc">
+<title id="title">Illustrative medallion data pipeline</title>
+<desc id="desc">Sources flow through landing, bronze, silver, gold and platinum layers into reporting.</desc>
+<defs>
+ <linearGradient id="back" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#091727"/><stop offset="1" stop-color="#102a3c"/></linearGradient>
+ <linearGradient id="stroke" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#47d9ca"/><stop offset="1" stop-color="#80a8ff"/></linearGradient>
+ <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#65aab9" stroke-width="1.4"/></marker>
+</defs>
+<rect width="1400" height="338" rx="18" fill="url(#back)"/>
+<text x="37" y="47" font-family="Arial,sans-serif" font-weight="700" font-size="25" fill="#fff">From fragmented inputs to analytics-ready datasets</text>
+<text x="37" y="77" font-family="Arial,sans-serif" font-size="14" fill="#a4becc">Conceptual example based on common medallion design patterns · Not a reproduction of employer systems</text>
+<g font-family="Arial,sans-serif">
+  <g>
+   <rect x="33" y="111" width="167" height="124" rx="12" fill="#123345" stroke="#3d7a92"/><text x="116" y="155" text-anchor="middle" fill="#d9ffff" font-weight="700" font-size="18">Sources</text><text x="116" y="182" text-anchor="middle" fill="#adcfdf" font-size="13">APIs · SharePoint</text><text x="116" y="201" text-anchor="middle" fill="#adcfdf" font-size="13">Excel · JSON</text>
+   <rect x="233" y="111" width="167" height="124" rx="12" fill="#123345" stroke="#359c9a"/><text x="316" y="155" text-anchor="middle" fill="#e2ffff" font-weight="700" font-size="18">Landing</text><text x="316" y="182" text-anchor="middle" fill="#adcfdf" font-size="13">Acquire and</text><text x="316" y="201" text-anchor="middle" fill="#adcfdf" font-size="13">preserve inputs</text>
+   <rect x="433" y="111" width="167" height="124" rx="12" fill="#3a2d26" stroke="#ca8950"/><text x="516" y="155" text-anchor="middle" fill="#ffdfbe" font-weight="700" font-size="18">Bronze</text><text x="516" y="182" text-anchor="middle" fill="#dfc6aa" font-size="13">Standard file</text><text x="516" y="201" text-anchor="middle" fill="#dfc6aa" font-size="13">formats · Parquet</text>
+   <rect x="633" y="111" width="167" height="124" rx="12" fill="#2d3743" stroke="#a5b2bb"/><text x="716" y="155" text-anchor="middle" fill="#e7eef6" font-weight="700" font-size="18">Silver</text><text x="716" y="182" text-anchor="middle" fill="#cbd5dd" font-size="13">Clean · validate</text><text x="716" y="201" text-anchor="middle" fill="#cbd5dd" font-size="13">normalize schemas</text>
+   <rect x="833" y="111" width="167" height="124" rx="12" fill="#453821" stroke="#d3b762"/><text x="916" y="155" text-anchor="middle" fill="#ffebbb" font-weight="700" font-size="18">Gold</text><text x="916" y="182" text-anchor="middle" fill="#ebddab" font-size="13">Curated</text><text x="916" y="201" text-anchor="middle" fill="#ebddab" font-size="13">analytics fields</text>
+   <rect x="1033" y="111" width="167" height="124" rx="12" fill="#302c4b" stroke="#a998e2"/><text x="1116" y="155" text-anchor="middle" fill="#ebe2ff" font-weight="700" font-size="18">Platinum</text><text x="1116" y="182" text-anchor="middle" fill="#d1c5f8" font-size="13">Consumer-specific</text><text x="1116" y="201" text-anchor="middle" fill="#d1c5f8" font-size="13">datasets</text>
+   <rect x="1233" y="111" width="134" height="124" rx="12" fill="#173c39" stroke="#49bcaa"/><text x="1300" y="155" text-anchor="middle" fill="#e0fff0" font-weight="700" font-size="18">Reporting</text><text x="1300" y="182" text-anchor="middle" fill="#c0e3d9" font-size="13">Power BI</text><text x="1300" y="201" text-anchor="middle" fill="#c0e3d9" font-size="13">KPI analysis</text>
+  </g>
+  <g stroke="#6ca6b7" stroke-width="2" marker-end="url(#arrow)"><path d="M203 174 H227"/><path d="M403 174 H427"/><path d="M603 174 H627"/><path d="M803 174 H827"/><path d="M1003 174 H1027"/><path d="M1203 174 H1227"/></g>
+</g>
+<path d="M 37 266 H1365" stroke="#ffffff" stroke-opacity=".16"/>
+<circle cx="50" cy="291" r="5" fill="#42d1c4"/><text x="67" y="296" fill="#b9d2df" font-family="Arial,sans-serif" font-size="15">Reusable Python transforms</text>
+<circle cx="355" cy="291" r="5" fill="#77a6ff"/><text x="372" y="296" fill="#b9d2df" font-family="Arial,sans-serif" font-size="15">Configuration &amp; API clients</text>
+<circle cx="700" cy="291" r="5" fill="#d9b860"/><text x="717" y="296" fill="#b9d2df" font-family="Arial,sans-serif" font-size="15">Orchestrated processing</text>
+<circle cx="1024" cy="291" r="5" fill="#ad9af2"/><text x="1041" y="296" fill="#b9d2df" font-family="Arial,sans-serif" font-size="15">Data validation</text>
+</svg>
