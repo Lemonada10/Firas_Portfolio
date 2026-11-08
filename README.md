@@ -46,7 +46,7 @@ This site features the following **conceptual** pipeline illustration:
 
 - **Framework:** Next.js 14 App Router, React, TypeScript
 - **UI:** Tailwind CSS, Framer Motion, shadcn/ui, Lucide, next-themes
-- **Content:** Typed and centralized in \`src/lib/data.ts\`
+- **Content:** Typed and centralized in `src/lib/data.ts`
 - **Pages:** Home + project case-study routes
 - **Deployment:** Vercel
 
@@ -54,31 +54,31 @@ This site features the following **conceptual** pipeline illustration:
 
 Requires Node.js and npm.
 
-\`\`\`bash
+```bash
 git clone https://github.com/Lemonada10/Firas_Portfolio.git
 cd Firas_Portfolio
 npm install
 npm run dev
-\`\`\`
+```
 
 Visit [http://localhost:3000](http://localhost:3000).
 
 | Command | Purpose |
 | --- | --- |
-| \`npm run dev\` | Start the local development server |
-| \`npm run build\` | Create a production build |
-| \`npm run start\` | Start the production server |
-| \`npm run lint\` | Run ESLint |
+| `npm run dev` | Start the local development server |
+| `npm run build` | Create a production build |
+| `npm run start` | Start the production server |
+| `npm run lint` | Run ESLint |
 
 ## Repository guide
 
-- \`src/lib/data.ts\` — professional experience, project summaries, skills and links
-- \`src/app/\` — app routes, layout, metadata and pages
-- \`src/components/sections/\` — main portfolio sections
-- \`src/components/ui/\` — reusable UI elements
-- \`public/projects/\` — project screenshots and illustrations
-- \`public/profile/\` — profile header and illustrative engineering diagram
-- \`github-profile/README.md\` — copy-ready GitHub profile README, for the special \`Lemonada10/Lemonada10\` repository
+- `src/lib/data.ts` — professional experience, project summaries, skills and links
+- `src/app/` — app routes, layout, metadata and pages
+- `src/components/sections/` — main portfolio sections
+- `src/components/ui/` — reusable UI elements
+- `public/projects/` — project screenshots and illustrations
+- `public/profile/` — profile header and illustrative engineering diagram
+- `github-profile/README.md` — copy-ready GitHub profile README, for the special `Lemonada10/Lemonada10` repository
 
 ## Contact
 
