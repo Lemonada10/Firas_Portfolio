@@ -32,6 +32,15 @@ The site is designed to help reviewers quickly navigate from a concise professio
   </tr>
 </table>
 
+## Verifiable code contributions
+
+These are merged pull requests from team repositories, with code and review history that recruiters can inspect:
+
+- [Campus Guide: indoor navigation and travel-time interface](https://github.com/SOEN-390-MakeSoft/SOEN-390-MakeSoft/pull/259)
+- [Campus Guide: cross-campus shuttle routing and unit tests](https://github.com/SOEN-390-MakeSoft/SOEN-390-MakeSoft/pull/179)
+- [Focus Tracker: initial UI design](https://github.com/Anthony4044/Focus-Tracker-AI/pull/3)
+- [Peer Review: sign-in unit tests](https://github.com/Anthony4044/MakeSoft-SOEN341_Project_F24/pull/149)
+
 ## Professional engineering experience
 
 Across internships at **Pratt & Whitney Canada** and **Fonex Data Systems**, I've worked on data-source consolidation, reusable PySpark/Python transformations, medallion-pattern ETL pipelines, API and currency/unit integrations, Power BI reporting, and Python desktop utilities communicating with hardware over Bluetooth Low Energy.
