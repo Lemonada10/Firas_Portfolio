@@ -55,9 +55,7 @@ export function ProjectArticle({ project: base }: { project: Project }) {
         <Image
           src={
             project.image ??
-            `https://placehold.co/1200x400/1e1b4b/818cf8/png?text=${encodeURIComponent(
-              project.title
-            )}`
+            "/projects/project-placeholder.svg"
           }
           alt={project.imageAlt}
           fill
@@ -154,7 +152,7 @@ export function ProjectArticle({ project: base }: { project: Project }) {
             <h2 className="text-xl font-semibold text-foreground">{t.project.gallery}</h2>
             <GalleryLightbox
               images={project.gallery!}
-              thumbAspect="9/16"
+              thumbAspect={project.slug === "iris" ? "4/3" : undefined}
               gridClassName="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4"
             />
           </motion.section>

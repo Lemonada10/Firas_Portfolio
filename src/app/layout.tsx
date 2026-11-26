@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import dynamic from "next/dynamic";
 import "./globals.css";
@@ -13,29 +12,26 @@ import { ResumeDialog } from "@/components/ui/resume-dialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AmbientBackground } from "@/components/ui/ambient-background";
 import { CursorGlow } from "@/components/ui/cursor-glow";
-import { MotionRoot } from "@/components/ui/motion-root";
-import { LocaleFade } from "@/components/ui/locale-fade";
 import { SiteAtmosphere } from "@/components/ui/site-atmosphere";
-import { CommandPalette } from "@/components/ui/command-palette";
-import { ToastHost } from "@/components/ui/toast";
 import { RecruiterDock } from "@/components/ui/recruiter-dock";
 import { SectionRail } from "@/components/ui/section-rail";
 import { ShortcutOverlay } from "@/components/ui/shortcut-overlay";
+import { MotionRoot } from "@/components/ui/motion-root";
+import { LocaleFade } from "@/components/ui/locale-fade";
+import { CommandPalette } from "@/components/ui/command-palette";
+import { ToastHost } from "@/components/ui/toast";
 import { personal } from "@/lib/data";
 import { Analytics } from "@vercel/analytics/next";
 
-/* Canvas background — client only, no SSR → no hydration mismatch */
 const CanvasBackground = dynamic(
-  () =>
-    import("@/components/ui/canvas-background").then(
-      (m) => ({ default: m.CanvasBackground })
-    ),
+  () => import("@/components/ui/canvas-background").then((m) => ({ default: m.CanvasBackground })),
   { ssr: false }
 );
 
-const inter = Inter({
-  subsets: ["latin"],
+const inter = localFont({
+  src: "./fonts/GeistVF.woff",
   variable: "--font-sans",
+  weight: "100 900",
   display: "swap",
 });
 
@@ -89,7 +85,7 @@ const personJsonLd = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#b4b9c9" },
+    { media: "(prefers-color-scheme: light)", color: "#f2f4f9" },
     { media: "(prefers-color-scheme: dark)", color: "#09090f" },
   ],
 };

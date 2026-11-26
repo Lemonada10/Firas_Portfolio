@@ -8,6 +8,9 @@
   .text-balance { text-wrap: balance; }
 }
 
+.pipeline-stage { background: #fff; border: 1px solid #a5afc2; color: #24324a; }
+.dark .pipeline-stage { background: rgba(9, 9, 15, 0.65); border: 1px solid rgba(255,255,255,0.3); color: #f4f6ff; }
+
 /* Custom cursor replaces the OS pointer on fine pointers only */
 html.has-custom-cursor,
 html.has-custom-cursor * {
@@ -48,6 +51,31 @@ html.has-custom-cursor [contenteditable="true"] {
   50%       { transform: translateY(-8px); }
 }
 
+/* A quiet moving highlight connects the hero surface to the constellation. */
+@keyframes console-glint {
+  0%, 100% { opacity: 0.35; transform: translateX(-38%); }
+  50% { opacity: 0.9; transform: translateX(38%); }
+}
+.hero-console::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  inset: 0 12% auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #818cf8, #c4b5fd, transparent);
+  animation: console-glint 8s ease-in-out infinite;
+}
+.dark .hero-console {
+  background: linear-gradient(135deg, rgba(24,26,49,0.96), rgba(15,16,29,0.94));
+  border-color: rgba(165,180,252,0.2);
+}
+.project-surface {
+  transition: border-color 300ms ease, box-shadow 300ms ease;
+}
+.project-surface:focus-within {
+  border-color: var(--primary);
+}
+
 /* ── Scan line ─────────────────────────────────────────────────── */
 @keyframes pipe-dash {
   to { stroke-dashoffset: -28; }
@@ -71,38 +99,37 @@ html.has-custom-cursor [contenteditable="true"] {
 
   :root {
     --card-shadow:
-      0 1px 0 rgba(255,255,255,0.55) inset,
-      0 5px 0 rgba(0,0,0,0.055),
-      0 10px 30px rgba(0,0,0,0.11),
-      0 2px 8px rgba(0,0,0,0.07);
-    --background: #b4b9c9;
+      0 1px 0 rgba(255,255,255,0.8) inset,
+      0 12px 32px rgba(49,46,129,0.08),
+      0 2px 8px rgba(22,25,42,0.05);
+    --background: #f2f4f9;
     --foreground: #16192a;
-    --card: #e8ebf4;
+    --card: #ffffff;
     --card-foreground: #16192a;
-    --popover: #e8ebf4;
+    --popover: #ffffff;
     --popover-foreground: #16192a;
     --brand: oklch(0.42 0.18 275);
     --brand-foreground: oklch(0.99 0 0);
     --primary: #3730a3;
     --primary-foreground: #f8fafc;
-    --secondary: #cfd3e0;
+    --secondary: #e6e9f2;
     --secondary-foreground: #16192a;
-    --muted: #cfd3e0;
+    --muted: #e6e9f2;
     --muted-foreground: #3a4158;
-    --accent: #cfd3e0;
+    --accent: #e6e9f2;
     --accent-foreground: #16192a;
     --destructive: oklch(0.577 0.245 27.325);
-    --border: #5c647a;
-    --input: #5c647a;
+    --border: #a6aec0;
+    --input: #7b849a;
     --ring: #4338ca;
     --radius: 0.625rem;
-    --sidebar: #b4b9c9;
+    --sidebar: #f2f4f9;
     --sidebar-foreground: #16192a;
     --sidebar-primary: #3730a3;
     --sidebar-primary-foreground: #f8fafc;
     --sidebar-accent: #cfd3e0;
     --sidebar-accent-foreground: #16192a;
-    --sidebar-border: #5c647a;
+    --sidebar-border: #7b849a;
     --sidebar-ring: #4338ca;
   }
 
@@ -121,7 +148,7 @@ html.has-custom-cursor [contenteditable="true"] {
     --secondary: oklch(0.18 0.025 265);
     --secondary-foreground: oklch(0.985 0 0);
     --muted: oklch(0.18 0.025 265);
-    --muted-foreground: oklch(0.62 0.02 265);
+    --muted-foreground: #b4bbca;
     --accent: oklch(0.18 0.025 265);
     --accent-foreground: oklch(0.985 0 0);
     --destructive: oklch(0.704 0.191 22.216);

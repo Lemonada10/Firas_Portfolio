@@ -143,7 +143,7 @@ function ExperienceCard({ job, index, reduceMotion }: { job: Job; index: number;
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="text-lg font-semibold text-foreground">{job.title}</h3>
               {job.current && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-500">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-xs font-semibold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
                   <span className="relative flex size-1.5">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
                     <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
@@ -152,23 +152,9 @@ function ExperienceCard({ job, index, reduceMotion }: { job: Job; index: number;
                 </span>
               )}
             </div>
-            <motion.p
-              className="text-sm font-medium"
-              initial={reduceMotion ? false : { backgroundSize: "0% 100%" }}
-              whileInView={reduceMotion ? undefined : { backgroundSize: "100% 100%" }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, delay: index * 0.2 + 0.4, ease: "easeOut" }}
-              style={{
-                backgroundImage: "linear-gradient(90deg, #818cf8, #a78bfa)",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "left center",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
+            <p className="text-sm font-semibold text-primary">
               {job.company}
-            </motion.p>
+            </p>
           </div>
           <div className="text-left text-xs text-foreground/60 sm:text-right">
             <p className="font-mono">{job.period}</p>

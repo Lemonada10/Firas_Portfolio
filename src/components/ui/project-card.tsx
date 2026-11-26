@@ -116,9 +116,9 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
         reduceMotion
           ? undefined
           : {
-              y: -12,
-              scale: 1.02,
-              transition: { duration: 0.2, ease: "easeOut" },
+              y: -6,
+              scale: 1.005,
+              transition: { duration: 0.3, ease: "easeOut" },
             }
       }
       exit={reduceMotion ? undefined : { opacity: 0, scale: 0.98 }}
@@ -128,7 +128,7 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
       onMouseLeave={handleMouseLeave}
       onMouseDown={handleMouseDown}
       style={{ x: cardX, y: cardY }}
-      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-card/60 shadow-sm backdrop-blur-sm hover:border-primary/40 hover:shadow-[0_16px_48px_rgba(99,102,241,0.18)] dark:bg-card/40 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_8px_32px_-10px_rgba(0,0,0,0.45)]"
+      className="project-surface group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-card/60 shadow-sm backdrop-blur-sm hover:border-primary/40 hover:shadow-[0_16px_48px_rgba(99,102,241,0.18)] dark:bg-card/40 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_8px_32px_-10px_rgba(0,0,0,0.45)]"
     >
       {/* cursor spotlight */}
       <div className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 group-hover:opacity-100">
@@ -158,16 +158,14 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
           <Image
             src={
               project.image ??
-              `https://placehold.co/800x500/1e1b4b/818cf8/png?text=${encodeURIComponent(
-                project.title
-              )}`
+              "/projects/project-placeholder.svg"
             }
             alt={project.imageAlt}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            className={cn("transition-transform duration-500 group-hover:scale-[1.03]", project.slug === "iris" ? "object-contain bg-white" : "object-cover")}
             sizes="(max-width: 768px) 100vw, 50vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-80 transition-opacity group-hover:opacity-95" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/75 via-transparent to-transparent opacity-70 transition-opacity group-hover:opacity-90" />
           {project.featured && (
             <span className="absolute left-3 top-3 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
               {t.projects.featured}
@@ -176,6 +174,11 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
           {project.extra && (
             <span className="absolute left-3 top-3 rounded-full border border-border bg-background/85 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               {t.projects.alsoBuilt}
+            </span>
+          )}
+          {project.slug === "iris" && (
+            <span className="absolute right-3 top-3 rounded-full bg-background/95 px-3 py-1 text-xs font-medium text-foreground shadow-sm">
+              {t.nav.home === "Home" ? "Design mockup" : "Maquette"}
             </span>
           )}
           <span className="absolute bottom-3 left-3 rounded-full bg-background/80 px-2 py-0.5 font-mono text-[10px] text-muted-foreground backdrop-blur">
@@ -200,7 +203,7 @@ export function ProjectCard({ project, onOpen, index }: ProjectCardProps) {
             ))}
           </div>
           <div>
-            <h3 className="text-xl font-semibold tracking-tight text-foreground group-hover:text-primary">
+            <h3 className="text-xl font-semibold tracking-tight text-foreground transition-colors duration-300 group-hover:text-primary">
               {project.title}
             </h3>
             <p className="mt-2 line-clamp-2 text-base text-muted-foreground">

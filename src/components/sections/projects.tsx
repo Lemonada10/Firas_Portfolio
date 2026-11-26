@@ -61,8 +61,9 @@ export function Projects() {
   }, [projects]);
 
   const visible = React.useMemo(() => {
-    if (activeTech === ALL) return projects;
-    return projects.filter((p) => p.tech.includes(activeTech));
+    const ordered = [...projects].sort((a, b) => Number(b.slug === "iris") - Number(a.slug === "iris"));
+    if (activeTech === ALL) return ordered;
+    return ordered.filter((p) => p.tech.includes(activeTech));
   }, [activeTech, projects]);
 
   return (

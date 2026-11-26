@@ -68,7 +68,7 @@ function useTypewriter(words: string[], typingMs = 55, pauseMs = 2000) {
 
 export function Hero() {
   const reduceMotion = useReducedMotion();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { personal, heroRotatingRoles } = useContent();
   const typed = useTypewriter(heroRotatingRoles);
   const word = reduceMotion ? heroRotatingRoles[0] : typed;
@@ -127,7 +127,7 @@ export function Hero() {
             transition={{ duration: 0.65, delay: 0.05, ease: [0.22,1,0.36,1] }}
             className="space-y-4"
           >
-            <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+            <h1 className="text-balance text-5xl font-bold leading-[1.04] tracking-[-0.045em] text-foreground sm:text-6xl lg:text-[4.5rem]">
               <span className="block">{personal.name.split(" ")[0]}</span>
               {/* Surname: deep violet in light (readable); soft shimmer in dark */}
               <span
@@ -146,10 +146,14 @@ export function Hero() {
             <p className="max-w-xl text-lg text-muted-foreground sm:text-xl">
               {personal.headline}
             </p>
+            <p className="max-w-xl text-base leading-relaxed text-muted-foreground">
+              {locale === "fr" ? "Expérience de stage chez Pratt & Whitney Canada et Fonex. Diplôme prévu en mai 2027." : "Internship experience at Pratt & Whitney Canada and Fonex. Expected to graduate in May 2027."}
+            </p>
 
-            <p className="font-mono text-sm text-primary sm:text-base" aria-live="polite">
+            <p className="font-mono text-sm text-primary sm:text-base">
               <span className="text-muted-foreground">{t.hero.currently} </span>
-              <span className="font-semibold text-foreground">{word}</span>
+              <span className="font-semibold text-foreground" aria-hidden>{word}</span>
+              <span className="sr-only">{heroRotatingRoles[0]}</span>
               <span className="ml-0.5 inline-block h-[1em] w-[2px] translate-y-[2px] animate-pulse rounded-sm bg-primary" aria-hidden />
             </p>
           </motion.div>
@@ -228,7 +232,7 @@ export function Hero() {
               transformStyle: "preserve-3d",
               willChange: "transform",
             }}
-            className="relative overflow-hidden rounded-2xl border border-border/80 bg-card/90 shadow-xl backdrop-blur-md hover:shadow-[0_20px_50px_rgba(80,90,255,0.30)] dark:bg-card/70"
+            className="hero-console relative overflow-hidden rounded-2xl border border-border/80 bg-card/90 shadow-xl backdrop-blur-md hover:shadow-[0_20px_50px_rgba(80,90,255,0.30)] dark:bg-card/90"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-slate-500/[0.07] via-transparent to-slate-600/[0.05] dark:from-primary/6 dark:via-transparent dark:to-violet-500/6" />
             <div
@@ -246,7 +250,7 @@ export function Hero() {
               }}
             />
 
-            <div className="p-6" style={{ transform: "translateZ(28px)", transformStyle: "preserve-3d" }}>
+            <div className="p-6 sm:p-8" style={{ transform: "translateZ(28px)", transformStyle: "preserve-3d" }}>
               <div className="space-y-4 font-mono text-xs sm:text-sm">
                 <div className="flex items-center justify-between text-muted-foreground">
                   <div className="flex items-center gap-2">
@@ -299,6 +303,12 @@ export function Hero() {
                     <span className="text-foreground/70">{",\n}"}</span>
                   </code>
                 </pre>
+              </div>
+              <div aria-hidden className="mt-7 flex items-center gap-3 border-t border-border/60 pt-5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                <span className="size-1.5 rounded-full bg-emerald-500" />
+                <span>Python</span><span className="text-primary/50">/</span>
+                <span>Data</span><span className="text-primary/50">/</span>
+                <span>Backend</span>
               </div>
             </div>
           </div>

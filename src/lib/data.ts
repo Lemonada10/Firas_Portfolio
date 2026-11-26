@@ -27,7 +27,7 @@ export const personal: Personal = {
   portfolioUrl: "https://firas-portfolio-zhdz.vercel.app/",
   linkedInUrl: "https://www.linkedin.com/in/firas-al-haddad-207a26280/",
   githubUrl: "https://github.com/Lemonada10",
-  resumeUrl: "/CV/CV.pdf?v=20261107",
+  resumeUrl: "/CV/CV.pdf?v=20261122",
 };
 
 export const education: Education[] = [
@@ -191,14 +191,14 @@ export const experience: Job[] = [
     location: "Longueuil, QC",
     period: "May 2026 – Present",
     current: true,
-    tech: ["Python", "Parquet", "Power BI", "REST APIs", "Azure DevOps"],
+    tech: ["Python", "Parquet", "Power BI", "REST APIs", "SharePoint", "VBA", "Azure DevOps", "Jira"],
     bullets: [
-      "Built a modular Python ETL pipeline consolidating SharePoint and REST API data into reusable Parquet datasets for Power BI dashboards.",
-      "Designed a five-layer medallion architecture (Landing to Platinum), with centralized orchestration, reusable API clients, and modular transformations.",
-      "Integrated metal pricing data sources (Fastmarkets and Argus); standardized foreign currencies using S&P FX rates.",
-      "Enhanced Power BI metal-pricing dashboards with historical comparisons, monthly/yearly averages, and period-over-period price changes.",
-      "Established Azure DevOps branching and pull-request workflows; onboarded cross-regional teammates to Git-based collaboration.",
-      "Extended Python ETL pipelines and Power BI dashboards to report CPI, PPI, and FX-adjusted economic indices for supplier-transition analysis.",
+      "Built a modular Python ETL pipeline that consolidates API and SharePoint data into reusable Parquet datasets for supply-management reporting.",
+      "Designed a five-layer medallion architecture with centralized orchestration, reusable API clients, and transformations shared across products.",
+      "Integrated Argus and Fastmarkets metal prices, standardized currencies and units, and developed data models and Power BI comparisons for metals and custom alloys; presented the dashboard to the team.",
+      "Worked on CPI, PPI, and exchange-rate data and Power BI reporting to support supplier-country risk and transition analysis.",
+      "Created a standardized Excel template and Python scripts to extract data from legacy supplier profiles and convert it to the new format.",
+      "Established Azure DevOps branching and pull-request workflows, used Jira for coordination, and onboarded cross-regional teammates to Git collaboration.",
     ],
   },
   {
@@ -223,7 +223,7 @@ export const experience: Job[] = [
     period: "Jan 2025 – Apr 2025",
     tech: ["PySpark", "Databricks", "Power BI"],
     bullets: [
-      "Consolidated 20+ Databricks data sources into a small set of curated datasets for spare-parts and manufacturing sales reporting.",
+      "Consolidated 20+ Databricks data sources into curated datasets for spare-parts and manufacturing sales reporting.",
       "Refactored PySpark ingestion, cleaning, and transformations into reusable pipeline-compatible functions with automated tests.",
       "Redesigned Power BI views to surface daily, weekly, and monthly sales trends and progress toward business targets.",
     ],
@@ -233,7 +233,7 @@ export const experience: Job[] = [
 export const projects: Project[] = [
   {
     slug: "concordia-campus-guide",
-    title: "Campus Guide",
+    title: "Campus Navigation App",
     location: "Montreal, QC",
     featured: true,
     tagline:
@@ -288,47 +288,54 @@ export const projects: Project[] = [
   },
   {
     slug: "iris",
-    title: "IRIS",
+    title: "IRIS — Food & Goods Redistribution",
     location: "Montreal, QC",
     featured: true,
     tagline:
-      "In progress — a nonprofit web app that verifies low-income households and reserves surplus food and goods for pickup.",
+      "Concordia capstone: a bilingual solidarity platform connecting eligible households with surplus food and goods.",
     description:
-      "Co-developing a nonprofit platform for verifying low-income households and reserving surplus food and goods for pickup, with Django seed data and household-expiry tests.",
+      "A 10-person capstone for Montréal nonprofit B.A.D.R. My work includes pickup confirmation APIs and a React flow for QR scanning and manual codes.",
     tech: ["React", "TypeScript", "Django", "PostgreSQL", "Docker"],
     highlights: [
-      "Low-income household verification",
-      "Surplus food & goods reservations",
-      "Django seed data & expiry tests",
+      "Staff-led household registration & eligibility",
+      "Surplus listings & reservation APIs",
+      "My work: pickup confirmation & QR scanning",
+    ],
+    image: "/projects/iris/households.png",
+    gallery: [
+      { src: "/projects/iris/households.png", alt: "Figma mockup of the staff household search screen using fictional data" },
+      { src: "/projects/iris/scan.png", alt: "Figma mockup of a store employee scanning a pickup QR code" },
+      { src: "/projects/iris/confirmation.png", alt: "Figma mockup of a reservation ready for pickup confirmation" },
+      { src: "/projects/iris/listing.png", alt: "Figma mockup of a partner store preparing a surplus listing" },
     ],
     overview:
-      "IRIS is an in-progress nonprofit web application that helps organizations verify low-income households and let eligible families reserve surplus food and goods for pickup. The stack pairs a React/TypeScript frontend with a Django and PostgreSQL backend, containerized with Docker for a repeatable local and deployment setup.",
+      "IRIS is a Concordia SOEN 490 capstone developed by a 10-person team for B.A.D.R., a Montréal nonprofit. It brings household eligibility, partner-store listings, reservations, and pickup confirmation into one bilingual platform. Release 1 includes staff-led registration and pickup confirmation; browsing and reservations are implemented at the API level. The project is in development and staging has not yet been deployed. Images are Figma design mockups using fictional data, not production screenshots.",
     role:
-      "Co-developing a nonprofit web app for verifying low-income households and reserving surplus food and goods for pickup; built repeatable Django seed data and household-expiry tests.",
+      "Co-developing the platform, including Django pickup lookup and confirmation APIs and React interfaces for QR scanning and manual codes. Also contributed repeatable seed data and household-expiry tests.",
     keyFeatures: [
-      "Household eligibility verification for low-income applicants.",
-      "Reservation flow for surplus food and goods ready for pickup.",
-      "Repeatable Django seed data for realistic local development and demos.",
-      "Household-expiry tests covering eligibility windows and edge cases.",
-      "Dockerized Django + PostgreSQL setup for consistent environments.",
+      "Staff-led household registration and eligibility decisions.",
+      "Partner stores post surplus goods; browse and reservation endpoints support eligible households.",
+      "Store staff look up and confirm pickups using a scanned QR code or manual code.",
+      "Role-aware APIs, bilingual interfaces, and generated seed data for development.",
+      "React and TypeScript frontend with a modular Django REST backend and PostgreSQL.",
     ],
     challenges: [
-      "Modeling household eligibility and expiry rules without locking out valid applicants.",
-      "Keeping seed data realistic enough for demos while remaining safe to reset.",
-      "Coordinating frontend and backend contracts while the product is still evolving.",
+      "Preventing duplicate confirmations and rejecting invalid or wrong-store pickup codes.",
+      "Providing a manual-code path when camera scanning is unavailable.",
+      "Coordinating frontend and backend contracts within a modular team project.",
     ],
     learnings: [
-      "How to structure Django tests around time-sensitive eligibility rules.",
-      "Building seed scripts that support both empty and fully populated demo states.",
-      "Shipping an early nonprofit product with clear verification and reservation flows.",
+      "Testing time-sensitive eligibility and pickup edge cases.",
+      "Designing a workflow across API permissions, transactions, and a bilingual interface.",
+      "Building repeatable development data for a multi-person project.",
     ],
-    githubUrl: null,
+    githubUrl: "https://github.com/B-A-D-R-SL/iris",
     demoUrl: null,
-    imageAlt: "IRIS — nonprofit household verification and surplus goods reservation app",
+    imageAlt: "IRIS staff household search Figma mockup with fictional data",
   },
   {
     slug: "peer-review-web-app",
-    title: "Peer Review",
+    title: "Peer Evaluation Platform",
     location: "Montreal, QC",
     featured: true,
     tagline:
@@ -386,7 +393,7 @@ export const projects: Project[] = [
   },
   {
     slug: "mindfulness-focus-tracker-ai",
-    title: "Focus Tracker",
+    title: "Study Focus Tracker",
     location: "Montreal, QC",
     featured: true,
     tagline:
@@ -457,7 +464,7 @@ export const projectLabel: Record<string, string> = {
 };
 
 export const heroRotatingRoles = [
-  "Data Analytics Intern (Data Engineering) @ Pratt & Whitney Canada",
+  "Data engineering at Pratt & Whitney Canada",
   "Python medallion pipelines",
   "Backend & BLE systems",
   "Applied ML in the browser",

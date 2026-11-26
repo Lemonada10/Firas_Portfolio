@@ -173,7 +173,7 @@ export function Navbar() {
           </Link>
         </motion.div>
 
-        <div className="hidden md:flex md:flex-1 md:justify-center">
+        <div className="hidden lg:flex lg:flex-1 lg:justify-center">
           <NavLinks activeId={activeId} showLayoutIndicator />
         </div>
 
@@ -199,7 +199,7 @@ export function Navbar() {
             <SheetTrigger
               className={cn(
                 buttonVariants({ variant: "outline", size: "icon" }),
-                "md:hidden"
+                "lg:hidden"
               )}
               aria-label={t.nav.openMenu}
             >

@@ -2,28 +2,12 @@
 
 import { useEffect, useRef } from "react";
 
-type Particle = {
-  x: number; y: number;
-  vx: number; vy: number;
-  baseVx: number; baseVy: number; // original gentle drift
-  size: number;
-  phase: number;
-};
+type Point = { x: number; y: number };
 
-type Pulse = {
-  from: number; to: number;
-  progress: number;
-  speed: number;
-  hue: number;
-};
-
-type Ripple = {
-  x: number; y: number;
-  radius: number;
-  maxRadius: number;
-  opacity: number;
-};
-
+/**
+ * A flowing silk aurora: broad translucent folds, traveling highlights, and
+ * sparse dust. All motion uses elapsed time rather than the display refresh rate.
+ */
 export function CanvasBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -33,414 +17,180 @@ export function CanvasBackground() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let raf: number;
-    let W = 0, H = 0;
-    const particles: Particle[] = [];
-    const pulses: Pulse[]       = [];
-    const ripples: Ripple[]     = [];
-    const MAX_DIST = 170;
-    const COUNT    = 48;
-    const MAX_SPEED = 4.5;
+    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let width = 1;
+    let height = 1;
+    let frame = 0;
+    let lastTime = 0;
+    let time = 0;
+    let dark = document.documentElement.classList.contains("dark");
+    const pointer = { x: 0, y: 0 };
+    const drift = { x: 0, y: 0 };
+    const dust = Array.from({ length: 36 }, () => ({
+      x: Math.random(), y: Math.random(), size: 0.5 + Math.random(),
+      phase: Math.random() * Math.PI * 2, speed: 0.004 + Math.random() * 0.006,
+    }));
 
-    // ── 3-D sphere state ────────────────────────────────────────
-    let sphRY = 0, sphRX = 0.35; // auto-rotate angles
-    let sphMX = 0, sphMZ = 0;    // mouse-tilt lerp targets
-    let mouseX = 0, mouseY = 0;
-
-    // ── Resize ──────────────────────────────────────────────────
-    const resize = () => {
-      W = canvas.width  = window.innerWidth;
-      H = canvas.height = window.innerHeight;
+    // One continuous, open curve; the folds never form a globe or closed rings.
+    const ribbonPoint = (u: number, lane: number, edge = 0): Point => {
+      const wave = Math.sin(u * 6.2 - time * 0.19 + lane * 0.58);
+      const fold = Math.sin(u * 10.4 + time * 0.13 + lane * 0.7);
+      const spread = Math.sin(Math.PI * u) * Math.min(width * 0.09, 130)
+        * (0.75 + 0.25 * Math.sin(u * 7 - time * 0.2 + lane));
+      return {
+        x: width * (-0.12 + 1.28 * u) + drift.x * Math.sin(Math.PI * u),
+        y: height * (1.06 - 1.08 * u + wave * 0.23 + lane * 0.095)
+          + fold * 22 + edge * spread + drift.y * Math.sin(Math.PI * u),
+      };
     };
-    resize();
-    window.addEventListener("resize", resize);
 
-    // ── Mouse tracking for sphere tilt ──────────────────────────
-    const onMouseMove = (e: MouseEvent) => { mouseX = e.clientX; mouseY = e.clientY; };
-    window.addEventListener("mousemove", onMouseMove, { passive: true });
+    const paint = () => {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = dark ? "#09090f" : "#f2f4f9";
+      ctx.fillRect(0, 0, width, height);
 
-    // ── Init particles ───────────────────────────────────────────
-    for (let i = 0; i < COUNT; i++) {
-      const bvx = 0.18 + Math.random() * 0.35;
-      const bvy = (Math.random() - 0.5) * 0.28;
-      particles.push({
-        x: Math.random() * W, y: Math.random() * H,
-        vx: bvx, vy: bvy,
-        baseVx: bvx, baseVy: bvy,
-        size:  Math.random() * 1.8 + 0.8,
-        phase: Math.random() * Math.PI * 2,
-      });
-    }
+      const atmosphere = ctx.createRadialGradient(
+        width * 0.8, height * 0.55, 0, width * 0.8, height * 0.55, Math.max(width, height) * 0.75
+      );
+      atmosphere.addColorStop(0, dark ? "rgba(75,58,150,0.18)" : "rgba(126,110,210,0.06)");
+      atmosphere.addColorStop(1, "rgba(80,60,160,0)");
+      ctx.fillStyle = atmosphere;
+      ctx.fillRect(0, 0, width, height);
 
-    // ── Click → repulse + ripple ─────────────────────────────────
-    const handleClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (target?.closest("a, button, input, textarea, select, [role='dialog'], [role='menu']")) {
-        return;
-      }
-      const cx = e.clientX;
-      const cy_screen = e.clientY; // canvas is fixed → use viewport coords
+      const colors = dark
+        ? ["104,118,250", "153,108,240", "83,180,209"]
+        : ["79,70,170", "134,75,177", "34,128,155"];
+      const steps = width < 600 ? 64 : 100;
 
-      // Ripple shockwave
-      ripples.push({ x: cx, y: cy_screen, radius: 0, maxRadius: 200, opacity: 1 });
+      for (let lane = 2; lane >= 0; lane--) {
+        const color = colors[lane];
+        const gradient = ctx.createLinearGradient(0, height, width, 0);
+        gradient.addColorStop(0, `rgba(${color},0)`);
+        gradient.addColorStop(0.35, `rgba(${color},${dark ? 0.045 : 0.025})`);
+        gradient.addColorStop(0.7, `rgba(${color},${dark ? 0.34 : 0.12})`);
+        gradient.addColorStop(1, `rgba(${color},0)`);
 
-      // Burst ripple (second smaller ring, slight delay via smaller initial radius)
-      ripples.push({ x: cx, y: cy_screen, radius: 8, maxRadius: 120, opacity: 0.6 });
-
-      // Repulse particles
-      const REPULSE_DIST = 220;
-      const FORCE        = 6.5;
-      for (const p of particles) {
-        const dx = p.x - cx;
-        const dy = p.y - cy_screen;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < REPULSE_DIST && dist > 0) {
-          const strength = (1 - dist / REPULSE_DIST) * FORCE;
-          p.vx += (dx / dist) * strength;
-          p.vy += (dy / dist) * strength;
-        }
-      }
-
-      // Extra: spawn a burst of data pulses from the nearest particle
-      let nearest = 0, nearestDist = Infinity;
-      for (let i = 0; i < particles.length; i++) {
-        const dx = particles[i].x - cx;
-        const dy = particles[i].y - cy_screen;
-        const d  = dx*dx + dy*dy;
-        if (d < nearestDist) { nearestDist = d; nearest = i; }
-      }
-      const nearby: number[] = [];
-      for (let j = 0; j < particles.length; j++) {
-        if (j === nearest) continue;
-        const dx = particles[nearest].x - particles[j].x;
-        const dy = particles[nearest].y - particles[j].y;
-        if (dx*dx + dy*dy < MAX_DIST * MAX_DIST) nearby.push(j);
-      }
-      // Spawn up to 5 pulses outward from the nearest node
-      const burst = Math.min(5, nearby.length);
-      for (let b = 0; b < burst; b++) {
-        const ti = nearby[Math.floor(Math.random() * nearby.length)];
-        if (pulses.length < 40) {
-          pulses.push({ from: nearest, to: ti, progress: 0, speed: 0.015 + Math.random() * 0.018, hue: 240 });
-        }
-      }
-    };
-    window.addEventListener("click", handleClick);
-
-    let t = 0;
-
-    // ── Draw loop ────────────────────────────────────────────────
-    const draw = () => {
-      t += 0.006;
-      ctx.clearRect(0, 0, W, H);
-
-      const isDark =
-        typeof document !== "undefined" &&
-        document.documentElement.classList.contains("dark");
-
-      // — base background (must track theme — light text sits on this layer) —
-      ctx.fillStyle = isDark ? "#09090f" : "#b4b9c9";
-      ctx.fillRect(0, 0, W, H);
-
-      // — aurora layer 1: top-left indigo —
-      {
-        const g = ctx.createRadialGradient(W*0.15, H*0.22, 0, W*0.15, H*0.22, W*0.55);
-        const a = isDark
-          ? 0.18 + Math.sin(t * 0.6) * 0.05
-          : 0.07 + Math.sin(t * 0.6) * 0.02;
-        g.addColorStop(0, `rgba(99,102,241,${a})`);
-        g.addColorStop(1, "rgba(99,102,241,0)");
-        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-      }
-      // — aurora layer 2: bottom-right violet —
-      {
-        const g = ctx.createRadialGradient(W*0.85, H*0.72, 0, W*0.85, H*0.72, W*0.48);
-        const a = isDark
-          ? 0.14 + Math.sin(t * 0.45 + 1.2) * 0.04
-          : 0.038 + Math.sin(t * 0.45 + 1.2) * 0.012;
-        g.addColorStop(0, `rgba(139,92,246,${a})`);
-        g.addColorStop(1, "rgba(139,92,246,0)");
-        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-      }
-      // — aurora layer 3: centre soft blue —
-      {
-        const g = ctx.createRadialGradient(W*0.5, H*0.5, 0, W*0.5, H*0.5, W*0.38);
-        const a = isDark
-          ? 0.07 + Math.sin(t * 0.35 + 2.5) * 0.03
-          : 0.022 + Math.sin(t * 0.35 + 2.5) * 0.01;
-        g.addColorStop(0, `rgba(59,130,246,${a})`);
-        g.addColorStop(1, "rgba(59,130,246,0)");
-        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-      }
-
-      // ── 3-D wireframe sphere ──────────────────────────────────
-      {
-        // advance rotation
-        sphRY += 0.0010;
-        sphRX += 0.00045;
-
-        // mouse-tilt (lerp toward target)
-        const tX = ((mouseY / (H || 1)) - 0.5) * 0.35;
-        const tZ = ((mouseX / (W || 1)) - 0.5) * 0.35;
-        sphMX += (tX - sphMX) * 0.018;
-        sphMZ += (tZ - sphMZ) * 0.018;
-
-        const rx = sphRX + sphMX;
-        const ry = sphRY + sphMZ;
-        const R   = Math.min(W, H) * 0.40;
-        const CX  = W * 0.74;
-        const CY  = H * 0.46;
-        const FOV = 950;
-        const LATS = 10, LONS = 14, SEGS = 52;
-
-        // inline perspective project
-        const proj = (px: number, py: number, pz: number): [number, number, number] => {
-          const x2 =  px * Math.cos(ry) + pz * Math.sin(ry);
-          const z2 = -px * Math.sin(ry) + pz * Math.cos(ry);
-          const y3 =  py * Math.cos(rx) - z2 * Math.sin(rx);
-          const z3 =  py * Math.sin(rx) + z2 * Math.cos(rx);
-          const s  = FOV / (FOV + z3);
-          return [CX + x2 * s, CY + y3 * s, z3];
-        };
-
-        const baseA = isDark ? 0.10 : 0.14;
-        ctx.save();
-        ctx.lineWidth = isDark ? 0.9 : 1.6;
-
-        // latitude rings
-        for (let i = 1; i < LATS; i++) {
-          const lat  = ((i / LATS) - 0.5) * Math.PI;
-          const rLat = Math.cos(lat) * R;
-          const zLat = Math.sin(lat) * R;
-          // sample depth at lon=0 to tint near/far sides
-          const [,, d0] = proj(rLat, zLat, 0);
-          const depthA  = baseA * (0.45 + 0.6 * ((d0 + R) / (2 * R)));
-          ctx.strokeStyle = isDark
-            ? `rgba(129,140,248,${depthA.toFixed(3)})`
-            : `rgba(90,60,210,${depthA.toFixed(3)})`;
+        // Translucent ribbon surface with a tapered, gently twisting width.
+        for (let strip = 0; strip < 16; strip++) {
           ctx.beginPath();
-          for (let j = 0; j <= SEGS; j++) {
-            const lon = (j / SEGS) * Math.PI * 2;
-            const [sx, sy] = proj(rLat * Math.cos(lon), zLat, rLat * Math.sin(lon));
-            if (j === 0) { ctx.moveTo(sx, sy); } else { ctx.lineTo(sx, sy); }
+          for (let step = 0; step <= steps; step++) {
+            const p = ribbonPoint(step / steps, lane, strip / 16);
+            if (step === 0) ctx.moveTo(p.x, p.y);
+            else ctx.lineTo(p.x, p.y);
           }
-          ctx.stroke();
-        }
-
-        // longitude arcs
-        for (let j = 0; j < LONS; j++) {
-          const lon = (j / LONS) * Math.PI * 2;
-          // sample depth at equator to tint
-          const [,, d0] = proj(R * Math.cos(lon), 0, R * Math.sin(lon));
-          const depthA  = baseA * (0.45 + 0.6 * ((d0 + R) / (2 * R)));
-          ctx.strokeStyle = isDark
-            ? `rgba(167,139,250,${depthA.toFixed(3)})`
-            : `rgba(105,65,215,${depthA.toFixed(3)})`;
-          ctx.beginPath();
-          for (let i = 0; i <= SEGS; i++) {
-            const lat  = ((i / SEGS) - 0.5) * Math.PI;
-            const rLat = Math.cos(lat) * R;
-            const zLat = Math.sin(lat) * R;
-            const [sx, sy] = proj(rLat * Math.cos(lon), zLat, rLat * Math.sin(lon));
-            if (i === 0) { ctx.moveTo(sx, sy); } else { ctx.lineTo(sx, sy); }
+          for (let step = steps; step >= 0; step--) {
+            const p = ribbonPoint(step / steps, lane, (strip + 1) / 16);
+            ctx.lineTo(p.x, p.y);
           }
-          ctx.stroke();
+          ctx.closePath();
+          ctx.globalAlpha = Math.pow(1 - strip / 16, 1.8);
+          ctx.fillStyle = gradient;
+          ctx.fill();
         }
+        ctx.globalAlpha = 1;
 
-        ctx.restore();
-      }
-
-      // — move & damp particles —
-      for (const p of particles) {
-        // Damp back toward base velocity gently
-        p.vx = p.vx * 0.96 + p.baseVx * 0.04;
-        p.vy = p.vy * 0.96 + p.baseVy * 0.04;
-
-        // Clamp speed
-        const speed = Math.sqrt(p.vx*p.vx + p.vy*p.vy);
-        if (speed > MAX_SPEED) { p.vx = (p.vx/speed)*MAX_SPEED; p.vy = (p.vy/speed)*MAX_SPEED; }
-
-        p.x += p.vx; p.y += p.vy; p.phase += 0.018;
-        if (p.x < -10) p.x = W + 10;
-        if (p.x > W+10) p.x = -10;
-        if (p.y < -10) p.y = H + 10;
-        if (p.y > H+10) p.y = -10;
-      }
-
-      // — draw connections —
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i+1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const d2 = dx*dx + dy*dy;
-          if (d2 < MAX_DIST*MAX_DIST) {
-            const fade = 1 - Math.sqrt(d2)/MAX_DIST;
-            const lineA = fade * (isDark ? 0.14 : 0.072);
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(99,102,241,${lineA})`;
-            ctx.lineWidth = isDark ? 0.9 : 0.75;
-            ctx.stroke();
-          }
-        }
-      }
-
-      // — spawn random data pulses —
-      if (Math.random() < 0.025 && pulses.length < 20) {
-        const fi = Math.floor(Math.random() * particles.length);
-        const nearby: number[] = [];
-        for (let j = 0; j < particles.length; j++) {
-          if (j === fi) continue;
-          const dx = particles[fi].x - particles[j].x;
-          const dy = particles[fi].y - particles[j].y;
-          if (dx*dx + dy*dy < MAX_DIST*MAX_DIST) nearby.push(j);
-        }
-        if (nearby.length) {
-          pulses.push({
-            from: fi, to: nearby[Math.floor(Math.random() * nearby.length)],
-            progress: 0, speed: 0.007 + Math.random() * 0.013,
-            hue: Math.random() < 0.5 ? 240 : 270,
-          });
-        }
-      }
-
-      // — draw & update pulses —
-      for (let i = pulses.length-1; i >= 0; i--) {
-        const pulse = pulses[i];
-        pulse.progress += pulse.speed;
-        if (pulse.progress >= 1) { pulses.splice(i, 1); continue; }
-
-        const from = particles[pulse.from];
-        const to   = particles[pulse.to];
-        const px   = from.x + (to.x - from.x) * pulse.progress;
-        const py   = from.y + (to.y - from.y) * pulse.progress;
-
-        const glow = ctx.createRadialGradient(px, py, 0, px, py, 9);
-        const g0 = isDark ? 0.55 : 0.26;
-        glow.addColorStop(
-          0,
-          pulse.hue === 240 ? `rgba(129,140,248,${g0})` : `rgba(167,139,250,${g0})`
-        );
-        glow.addColorStop(1, "rgba(0,0,0,0)");
-        ctx.fillStyle = glow;
-        ctx.beginPath(); ctx.arc(px, py, 9, 0, Math.PI*2); ctx.fill();
-
-        ctx.beginPath(); ctx.arc(px, py, 2.2, 0, Math.PI*2);
-        const core = isDark ? 0.95 : 0.72;
-        ctx.fillStyle =
-          pulse.hue === 240
-            ? `rgba(79,70,229,${core})`
-            : `rgba(109,40,217,${core})`;
-        ctx.fill();
-      }
-
-      // — draw particles —
-      for (const p of particles) {
-        const breathe = (Math.sin(p.phase) + 1) * 0.5;
-        const opacity = 0.25 + breathe * 0.55;
-        const r       = p.size * (0.85 + breathe * 0.32);
-
-        if (breathe > 0.65) {
-          const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r*5);
-          const haloA = isDark ? opacity * 0.3 : opacity * 0.2;
-          g.addColorStop(
-            0,
-            isDark ? `rgba(129,140,248,${haloA})` : `rgba(99,102,241,${haloA})`
-          );
-          g.addColorStop(1, "rgba(0,0,0,0)");
-          ctx.fillStyle = g;
-          ctx.beginPath(); ctx.arc(p.x, p.y, r*5, 0, Math.PI*2); ctx.fill();
-        }
-
-        /* Light: indigo/violet to match hero surname gradient; dark: soft indigo-300 */
-        ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI*2);
-        ctx.fillStyle = isDark
-          ? `rgba(165,180,252,${opacity})`
-          : `rgba(79,70,229,${0.26 + breathe * 0.44})`;
-        ctx.fill();
-      }
-
-      // — draw & update ripples —
-      for (let i = ripples.length-1; i >= 0; i--) {
-        const rp = ripples[i];
-        rp.radius  += 5.5;
-        rp.opacity  = (1 - rp.radius / rp.maxRadius) * 0.75;
-
-        if (rp.radius >= rp.maxRadius) { ripples.splice(i, 1); continue; }
-
-        // outer ring
+        // Just one luminous edge per fold, with a broad soft halo underneath.
         ctx.beginPath();
-        ctx.arc(rp.x, rp.y, rp.radius, 0, Math.PI*2);
-        ctx.strokeStyle = isDark
-          ? `rgba(165,180,252,${rp.opacity})`
-          : `rgba(99,102,241,${rp.opacity * 0.42})`;
-        ctx.lineWidth   = isDark ? 1.6 : 1.15;
+        for (let step = 0; step <= steps; step++) {
+          const p = ribbonPoint(step / steps, lane);
+          if (step === 0) ctx.moveTo(p.x, p.y);
+          else ctx.lineTo(p.x, p.y);
+        }
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = dark ? 22 : 16;
+        ctx.globalAlpha = 0.12;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        ctx.lineWidth = 1.2;
         ctx.stroke();
 
-        // inner glowing fill (near origin only)
-        if (rp.radius < 60) {
-          const inner = ctx.createRadialGradient(rp.x, rp.y, 0, rp.x, rp.y, rp.radius);
-          if (isDark) {
-            inner.addColorStop(0,   `rgba(196,181,253,${rp.opacity * 0.25})`);
-            inner.addColorStop(0.5, `rgba(129,140,248,${rp.opacity * 0.08})`);
-          } else {
-            inner.addColorStop(0,   `rgba(129,140,248,${rp.opacity * 0.12})`);
-            inner.addColorStop(0.5, `rgba(99,102,241,${rp.opacity * 0.05})`);
-          }
-          inner.addColorStop(1,   "rgba(0,0,0,0)");
-          ctx.fillStyle = inner;
-          ctx.beginPath(); ctx.arc(rp.x, rp.y, rp.radius, 0, Math.PI*2); ctx.fill();
-        }
-
-        // second thinner ring at 60% radius
-        const r2 = rp.radius * 0.6;
-        if (r2 > 4) {
+        // Short light trails follow the exact moving edge and fade at both ends.
+        const progress = (time * (0.035 + lane * 0.006) + lane * 0.31) % 1;
+        for (let segment = 0; segment < 18; segment++) {
+          const u = progress - segment * 0.003;
+          if (u < 0 || u > 1) continue;
+          const a = ribbonPoint(u, lane);
+          const b = ribbonPoint(Math.max(0, u - 0.003), lane);
+          const fade = Math.sin(Math.PI * u) * (1 - segment / 18);
           ctx.beginPath();
-          ctx.arc(rp.x, rp.y, r2, 0, Math.PI*2);
-          ctx.strokeStyle = isDark
-            ? `rgba(196,181,253,${rp.opacity * 0.45})`
-            : `rgba(99,102,241,${rp.opacity * 0.28})`;
-          ctx.lineWidth   = 0.7;
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = `rgba(${color},${fade * (dark ? 0.8 : 0.45)})`;
+          ctx.lineWidth = 2;
           ctx.stroke();
         }
       }
 
-      // — top edge glow line —
-      const edgeGrad = ctx.createLinearGradient(0, 0, W, 0);
-      if (isDark) {
-        edgeGrad.addColorStop(0,   "rgba(129,140,248,0)");
-        edgeGrad.addColorStop(0.3, "rgba(129,140,248,0.45)");
-        edgeGrad.addColorStop(0.5, "rgba(167,139,250,0.55)");
-        edgeGrad.addColorStop(0.7, "rgba(129,140,248,0.45)");
-        edgeGrad.addColorStop(1,   "rgba(129,140,248,0)");
-      } else {
-        edgeGrad.addColorStop(0,   "rgba(99,102,241,0)");
-        edgeGrad.addColorStop(0.35, "rgba(99,102,241,0.12)");
-        edgeGrad.addColorStop(0.5, "rgba(129,140,248,0.16)");
-        edgeGrad.addColorStop(0.65, "rgba(99,102,241,0.12)");
-        edgeGrad.addColorStop(1,   "rgba(99,102,241,0)");
+      for (const speck of dust) {
+        const x = ((speck.x + time * speck.speed * 0.15) % 1) * width;
+        const y = ((speck.y - time * speck.speed * 0.2) % 1 + 1) % 1 * height;
+        const alpha = 0.13 + (Math.sin(time * 0.6 + speck.phase) + 1) * 0.12;
+        ctx.beginPath();
+        ctx.arc(x, y, speck.size, 0, Math.PI * 2);
+        ctx.fillStyle = dark ? `rgba(190,199,255,${alpha})` : `rgba(79,70,150,${alpha * 0.6})`;
+        ctx.fill();
       }
-      ctx.fillStyle = edgeGrad;
-      ctx.fillRect(0, 0, W, 1);
-
-      raf = requestAnimationFrame(draw);
     };
 
-    draw();
+    const tick = (now: number) => {
+      const delta = lastTime ? Math.min((now - lastTime) / 1000, 0.05) : 0;
+      lastTime = now;
+      time += delta;
+      const ease = 1 - Math.exp(-delta * 2.5);
+      drift.x += (pointer.x - drift.x) * ease;
+      drift.y += (pointer.y - drift.y) * ease;
+      paint();
+      frame = requestAnimationFrame(tick);
+    };
+
+    const syncMotion = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      lastTime = 0;
+      if (!document.hidden) {
+        paint();
+        if (!motionPreference.matches) frame = requestAnimationFrame(tick);
+      }
+    };
+    const resize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
+      canvas.width = Math.round(width * ratio);
+      canvas.height = Math.round(height * ratio);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      paint();
+    };
+    const onPointerMove = (event: PointerEvent) => {
+      if (event.pointerType !== "mouse") return;
+      pointer.x = (event.clientX / width - 0.5) * 34;
+      pointer.y = (event.clientY / height - 0.5) * 26;
+    };
+    const resetPointer = () => { pointer.x = 0; pointer.y = 0; };
+    const themeObserver = new MutationObserver(() => {
+      dark = document.documentElement.classList.contains("dark");
+      if (!document.hidden) paint();
+    });
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    resize();
+    syncMotion();
+    window.addEventListener("resize", resize);
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("blur", resetPointer);
+    document.addEventListener("visibilitychange", syncMotion);
+    motionPreference.addEventListener("change", syncMotion);
     return () => {
-      cancelAnimationFrame(raf);
+      cancelAnimationFrame(frame);
+      themeObserver.disconnect();
       window.removeEventListener("resize", resize);
-      window.removeEventListener("click", handleClick);
-      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("blur", resetPointer);
+      document.removeEventListener("visibilitychange", syncMotion);
+      motionPreference.removeEventListener("change", syncMotion);
     };
   }, []);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      aria-hidden
-      style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}
-    />
-  );
+  return <canvas ref={canvasRef} aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }} />;
 }

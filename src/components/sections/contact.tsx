@@ -243,7 +243,7 @@ export function Contact() {
               style={{ background: "linear-gradient(180deg, rgba(129,140,248,0.4), transparent 75%)" }}
             />
 
-            <form onSubmit={handleSubmit} noValidate>
+            <form onSubmit={handleSubmit}>
               <div className="grid gap-5 sm:grid-cols-2">
                 {formFields.map(({ id, label, type, autoComplete, colSpan }, fi) => (
                   <motion.div

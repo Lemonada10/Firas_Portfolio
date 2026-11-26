@@ -29,7 +29,7 @@ const en = {
   hero: {
     intro: "Introduction",
     openTo: "Open to full-time positions starting Summer 2027",
-    currently: "Currently:",
+    currently: "Experience:",
     viewWork: "View featured work",
     downloadResume: "Download resume",
     previewResume: "Preview resume",
@@ -42,12 +42,12 @@ const en = {
     },
   },
   about: {
-    eyebrow: "01 · About",
+    eyebrow: "About",
     heading: "Engineering background",
     stats: {
       gpa: { label: "GPA", sub: "Concordia University" },
       internships: { label: "Internships", sub: "Industry experience" },
-      projects: { label: "Projects", sub: "Shipped & documented" },
+      projects: { label: "Projects", sub: "Featured work" },
       languages: { label: "Languages", sub: "English & French" },
     },
     bioLead: "I'm a",
@@ -57,7 +57,7 @@ const en = {
     bioTail:
       "(expected May 2027). I build Python medallion pipelines, BLE backends, and browser ML that stays fast and usable.",
     bioSecond:
-      "Current work at Pratt & Whitney Canada: modular Python ETL pipelines and a five-layer medallion architecture that feed production Power BI dashboards for metals pricing and FX-adjusted economic indices. Before that: a Python/Tkinter BLE desktop app at Fonex and consolidating 20+ Databricks sources with PySpark.",
+      "At Pratt & Whitney Canada, I build a centralized Python data pipeline that supports metals pricing, economic-indices reporting, and supplier tools. Before that: a Python/Tkinter BLE desktop app at Fonex and consolidating 20+ Databricks sources with PySpark.",
     bilingualLabel: "Bilingual:",
     bilingualEnglish: "English",
     bilingualFrench: "French",
@@ -70,10 +70,10 @@ const en = {
     languagesText: "English & French — professional proficiency",
   },
   pipeline: {
-    eyebrow: "02 · Signature",
-    heading: "Medallion pipeline",
+    eyebrow: "Data engineering",
+    heading: "Data engineering in practice",
     subtitle:
-      "How I think about production data at Pratt & Whitney — hover a layer to explore the pipeline.",
+      "A closer look at my work with data pipelines and reporting.",
     aria: "Medallion data pipeline",
     layerSuffix: "layer",
     stages: ["Ingest", "Land", "Parquet", "Cleanse", "Calc", "Product", "Power BI"],
@@ -84,7 +84,7 @@ const en = {
       },
       bronze: {
         name: "Bronze",
-        copy: "Convert raw JSON and Excel files into Parquet format — structured, schema-enforced, and ready for efficient Databricks reads downstream.",
+        copy: "Convert raw JSON and Excel files into Parquet format for downstream processing and reporting.",
       },
       silver: {
         name: "Silver",
@@ -96,12 +96,12 @@ const en = {
       },
       platinum: {
         name: "Platinum",
-        copy: "Final product-specific transformations — SIO metal indices, alloy cost breakdowns, and KPI views. The output table imports directly into Power BI.",
+        copy: "Prepare product-specific datasets for reporting, including metal and economic indices, ready for downstream tools such as Power BI.",
       },
     },
   },
   skills: {
-    eyebrow: "03 · Skills",
+    eyebrow: "Skills",
     heading: "Tools from internships and projects",
     subtitle: "Hover or tap a skill to see where it showed up in production work.",
     idle: "Linked work appears here",
@@ -113,14 +113,14 @@ const en = {
     },
   },
   experience: {
-    eyebrow: "04 · Experience",
+    eyebrow: "Experience",
     heading: "Internships",
     current: "Current",
   },
   projects: {
-    eyebrow: "05 · Featured work",
+    eyebrow: "Featured work",
     heading: "Projects",
-    subtitle: "Campus Guide – IRIS – Peer Review – Focus Tracker",
+    subtitle: "A selection of data, mobile, and full-stack work.",
     all: "All",
     shown: "shown",
     moreOnGithub: "More on GitHub",
@@ -146,7 +146,7 @@ const en = {
     fullPage: "Full page",
   },
   contact: {
-    eyebrow: "06 · Contact",
+    eyebrow: "Contact",
     heading: "Let's build something solid and creative",
     subtitle:
       "I'm actively seeking opportunities in software engineering, data engineering, and full-stack roles. Reach out.",
@@ -285,7 +285,7 @@ const fr: Dictionary = {
   hero: {
     intro: "Introduction",
     openTo: "Disponible pour un poste à temps plein dès l'été 2027",
-    currently: "En ce moment :",
+    currently: "Expérience :",
     viewWork: "Voir mes projets",
     downloadResume: "Télécharger le CV",
     previewResume: "Aperçu du CV",
@@ -298,12 +298,12 @@ const fr: Dictionary = {
     },
   },
   about: {
-    eyebrow: "01 · À propos",
+    eyebrow: "À propos",
     heading: "Parcours en génie",
     stats: {
       gpa: { label: "Moyenne", sub: "Université Concordia" },
       internships: { label: "Stages", sub: "Expérience en industrie" },
-      projects: { label: "Projets", sub: "Livrés et documentés" },
+      projects: { label: "Projets", sub: "Projets présentés" },
       languages: { label: "Langues", sub: "Anglais et français" },
     },
     bioLead: "Je suis étudiant en",
@@ -313,7 +313,7 @@ const fr: Dictionary = {
     bioTail:
       "(diplôme prévu en mai 2027). Je conçois des pipelines médaillon en Python, des backends BLE et du ML dans le navigateur qui reste rapide et utilisable.",
     bioSecond:
-      "Chez Pratt & Whitney Canada : des pipelines ETL Python modulaires et une architecture médaillon à cinq couches qui alimentent des tableaux de bord Power BI en production pour les prix des métaux et des indices économiques ajustés au taux de change. Avant cela : une application de bureau BLE en Python/Tkinter chez Fonex et le regroupement de plus de 20 sources Databricks avec PySpark.",
+      "Chez Pratt & Whitney Canada, je construis un pipeline Python centralisé qui alimente les rapports de prix des métaux, d'indices économiques et les outils fournisseurs. Avant cela : une application de bureau BLE en Python/Tkinter chez Fonex et le regroupement de plus de 20 sources Databricks avec PySpark.",
     bilingualLabel: "Bilingue :",
     bilingualEnglish: "anglais",
     bilingualFrench: "français",
@@ -326,10 +326,10 @@ const fr: Dictionary = {
     languagesText: "Anglais et français — maîtrise professionnelle",
   },
   pipeline: {
-    eyebrow: "02 · Signature",
-    heading: "Pipeline médaillon",
+    eyebrow: "Ingénierie des données",
+    heading: "L'ingénierie des données en pratique",
     subtitle:
-      "Ma façon d'aborder les données en production chez Pratt & Whitney — survolez une couche pour explorer le pipeline.",
+      "Un aperçu de mon travail sur les pipelines de données et les rapports.",
     aria: "Pipeline de données médaillon",
     layerSuffix: "couche",
     stages: ["Ingestion", "Dépôt", "Parquet", "Nettoyage", "Calcul", "Produit", "Power BI"],
@@ -340,7 +340,7 @@ const fr: Dictionary = {
       },
       bronze: {
         name: "Bronze",
-        copy: "Conversion des fichiers JSON et Excel bruts en Parquet — structuré, avec schéma enforced, prêt pour une lecture Databricks efficace en aval.",
+        copy: "Conversion des fichiers JSON et Excel bruts en Parquet pour les transformations et les rapports en aval.",
       },
       silver: {
         name: "Argent",
@@ -352,12 +352,12 @@ const fr: Dictionary = {
       },
       platinum: {
         name: "Platine",
-        copy: "Transformations finales propres aux produits — indices de métaux SIO, ventilations des coûts d'alliages et vues KPI. La table de sortie s'importe directement dans Power BI.",
+        copy: "Préparation de jeux de données propres aux produits, notamment les indices de métaux et économiques, pour des outils de rapports comme Power BI.",
       },
     },
   },
   skills: {
-    eyebrow: "03 · Compétences",
+    eyebrow: "Compétences",
     heading: "Des outils issus de stages et de projets",
     subtitle:
       "Survolez ou touchez une compétence pour voir où elle a servi en production.",
@@ -370,14 +370,14 @@ const fr: Dictionary = {
     },
   },
   experience: {
-    eyebrow: "04 · Expérience",
+    eyebrow: "Expérience",
     heading: "Stages",
     current: "En cours",
   },
   projects: {
-    eyebrow: "05 · Projets phares",
+    eyebrow: "Projets phares",
     heading: "Projets",
-    subtitle: "Campus Guide – IRIS – Peer Review – Focus Tracker",
+    subtitle: "Une sélection de projets en données, mobile et développement full-stack.",
     all: "Tous",
     shown: "affichés",
     moreOnGithub: "Plus sur GitHub",
@@ -403,7 +403,7 @@ const fr: Dictionary = {
     fullPage: "Page complète",
   },
   contact: {
-    eyebrow: "06 · Contact",
+    eyebrow: "Contact",
     heading: "Créons quelque chose de solide et de créatif",
     subtitle:
       "Je cherche activement des postes en génie logiciel, en ingénierie de données et en développement full-stack. Écrivez-moi — je réponds généralement en moins d'une journée.",

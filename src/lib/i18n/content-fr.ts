@@ -11,6 +11,7 @@ type JobOverride = {
 };
 
 type ProjectOverride = {
+  title?: string;
   location: string;
   tagline: string;
   description: string;
@@ -56,12 +57,12 @@ export const frExperience: Record<string, JobOverride> = {
     location: "Longueuil, QC",
     period: "Mai 2026 – aujourd'hui",
     bullets: [
-      "Création d'un pipeline ETL Python modulaire consolidant les données SharePoint et d'API REST en jeux Parquet réutilisables pour les tableaux de bord Power BI.",
-      "Conception d'une architecture médaillon à cinq couches (atterrissage à platine), avec orchestration centralisée, clients d'API réutilisables et transformations modulaires.",
-      "Intégration des sources de prix des métaux (Fastmarkets et Argus); normalisation des devises étrangères à l'aide des taux de change S&P.",
-      "Amélioration des tableaux de bord Power BI sur les prix des métaux avec comparaisons historiques, moyennes mensuelles/annuelles et variations de prix d'une période à l'autre.",
-      "Mise en place des branches et du processus de pull requests dans Azure DevOps; accompagnement des coéquipiers de plusieurs régions dans la collaboration Git.",
-      "Extension des pipelines ETL Python et des tableaux de bord Power BI pour rapporter l'IPC, l'IPP et des indices économiques ajustés au taux de change, à l'appui de l'analyse des transitions de fournisseurs.",
+      "Création d'un pipeline ETL Python modulaire consolidant les données d'API et de SharePoint en jeux Parquet réutilisables pour les rapports de gestion des approvisionnements.",
+      "Conception d'une architecture médaillon à cinq couches avec orchestration centralisée, clients d'API réutilisables et transformations partagées entre les produits.",
+      "Intégration des prix d'Argus et de Fastmarkets, normalisation des devises et unités, et travail sur les modèles de données et les comparaisons Power BI pour les métaux et alliages personnalisés; présentation du tableau de bord à l'équipe.",
+      "Travail sur les données et les rapports Power BI liés à l'IPC, l'IPP et aux taux de change pour l'analyse des risques et des transitions de fournisseurs.",
+      "Création d'un modèle Excel standardisé et de scripts Python qui extraient les données des anciens profils fournisseurs et les convertissent vers le nouveau format.",
+      "Mise en place des branches et des pull requests Azure DevOps, utilisation de Jira et accompagnement de collègues de plusieurs régions dans la collaboration Git.",
     ],
   },
   fonex: {
@@ -94,7 +95,7 @@ export const frJobLabel: Record<string, string> = {
 };
 
 export const frHeroRotatingRoles = [
-  "Stagiaire en analytique (ingénierie de données) @ Pratt & Whitney Canada",
+  "Ingénierie des données chez Pratt & Whitney Canada",
   "Pipelines médaillon en Python",
   "Backend et systèmes BLE",
   "ML appliqué dans le navigateur",
@@ -102,6 +103,7 @@ export const frHeroRotatingRoles = [
 
 export const frProjects: Record<string, ProjectOverride> = {
   "concordia-campus-guide": {
+    title: "Application de navigation sur le campus",
     location: "Montréal, QC",
     tagline:
       "Un guide de campus Android/iOS complet avec navigation intérieure et extérieure, suivi des navettes et itinéraires vers les cours tirés de Google Agenda.",
@@ -150,42 +152,44 @@ export const frProjects: Record<string, ProjectOverride> = {
     ],
   },
   iris: {
+    title: "IRIS — Redistribution alimentaire et de biens",
     location: "Montréal, QC",
     tagline:
-      "En cours — une application web à but non lucratif qui vérifie les ménages à faible revenu et réserve des surplus alimentaires et de biens pour le ramassage.",
+      "Projet de fin d’études à Concordia : une plateforme solidaire bilingue reliant les ménages admissibles à des surplus alimentaires et de biens.",
     description:
-      "Codéveloppement d'une plateforme à but non lucratif pour vérifier les ménages à faible revenu et réserver des surplus alimentaires et de biens pour le ramassage, avec des données de seed Django et des tests d'expiration des ménages.",
+      "Projet de 10 étudiants pour l'organisme montréalais B.A.D.R. : j'ai contribué aux API de confirmation de ramassage et aux interfaces React pour les codes QR et manuels.",
     highlights: [
-      "Vérification des ménages à faible revenu",
-      "Réservations de surplus alimentaires et de biens",
-      "Données de seed Django et tests d'expiration",
+      "Inscription et admissibilité des ménages par le personnel",
+      "Offres de surplus et API de réservation",
+      "Ma contribution : confirmation et lecture de codes QR",
     ],
     overview:
-      "IRIS est une application web à but non lucratif en cours de développement qui aide les organismes à vérifier les ménages à faible revenu et à laisser les familles admissibles réserver des surplus alimentaires et de biens pour le ramassage. La pile combine un frontend React/TypeScript avec un backend Django et PostgreSQL, conteneurisé avec Docker pour un environnement local et de déploiement reproductible.",
+      "IRIS est un projet de fin d'études SOEN 490 réalisé par une équipe de 10 étudiants pour B.A.D.R., un organisme montréalais. La plateforme bilingue réunit l'admissibilité des ménages, les offres des commerces, les réservations et la confirmation des ramassages. La première version comprend l'inscription par le personnel et la confirmation des ramassages; la consultation et les réservations sont disponibles au niveau des API. Le projet est en développement et l'environnement de staging n'est pas encore déployé. Les images sont des maquettes Figma avec des données fictives, et non des captures en production.",
     role:
-      "Codéveloppement d'une application web à but non lucratif pour vérifier les ménages à faible revenu et réserver des surplus alimentaires et de biens pour le ramassage; création de données de seed Django reproductibles et de tests d'expiration des ménages.",
+      "Codéveloppement de la plateforme, notamment les API Django de recherche et de confirmation de ramassage et les interfaces React pour les codes QR et manuels. Contribution également aux données de test et aux tests d'expiration des ménages.",
     keyFeatures: [
-      "Vérification de l'admissibilité des ménages à faible revenu.",
-      "Flux de réservation pour les surplus alimentaires et de biens prêts à ramasser.",
-      "Données de seed Django reproductibles pour le développement local et les démos.",
-      "Tests d'expiration des ménages couvrant les fenêtres d'admissibilité et les cas limites.",
-      "Environnement Django + PostgreSQL conteneurisé avec Docker.",
+      "Inscription des ménages et décisions d'admissibilité par le personnel.",
+      "Offres des commerces partenaires et API de consultation et de réservation.",
+      "Recherche et confirmation des ramassages par code QR ou manuel.",
+      "API avec permissions, interfaces bilingues et données de test générées.",
+      "Frontend React et TypeScript, backend Django REST modulaire et PostgreSQL.",
     ],
     challenges: [
-      "Modéliser les règles d'admissibilité et d'expiration des ménages sans exclure des demandeurs valides.",
-      "Garder des données de seed assez réalistes pour les démos tout en restant sûres à réinitialiser.",
-      "Coordonner les contrats frontend et backend pendant que le produit évolue encore.",
+      "Empêcher les confirmations en double et refuser les codes invalides ou associés à un autre commerce.",
+      "Prévoir la saisie manuelle lorsque la caméra n'est pas disponible.",
+      "Coordonner les contrats frontend et backend dans une équipe modulaire.",
     ],
     learnings: [
-      "Comment structurer des tests Django autour de règles d'admissibilité liées au temps.",
-      "Construire des scripts de seed qui supportent à la fois un état vide et un état de démo complètement peuplé.",
-      "Livrer tôt un produit à but non lucratif avec des flux clairs de vérification et de réservation.",
+      "Tester les règles d'admissibilité et les cas limites des ramassages.",
+      "Concevoir un flux reliant les permissions des API, les transactions et une interface bilingue.",
+      "Créer des données de développement reproductibles pour une équipe.",
     ],
     imageAlt:
-      "IRIS — application de vérification des ménages et de réservation de surplus à but non lucratif",
-    galleryAlt: [],
+      "Maquette Figma de recherche de ménages dans IRIS avec données fictives",
+    galleryAlt: ["Maquette Figma de recherche de ménages avec données fictives", "Maquette Figma de lecture d'un code QR de ramassage", "Maquette Figma d'une réservation prête à confirmer", "Maquette Figma d'une offre de surplus préparée par un commerce partenaire"],
   },
   "mindfulness-focus-tracker-ai": {
+    title: "Suivi de concentration pour les études",
     location: "Montréal, QC",
     tagline:
       "Moniteur d'attention en temps réel dans le navigateur, basé sur un maillage facial IA — détecte la distraction et envoie de légers signaux audio et visuels pour aider à se reconcentrer.",
@@ -237,6 +241,7 @@ export const frProjects: Record<string, ProjectOverride> = {
     ],
   },
   "peer-review-web-app": {
+    title: "Plateforme d'évaluation par les pairs",
     location: "Montréal, QC",
     tagline:
       "Plateforme full-stack d'évaluation par les pairs en milieu académique, avec authentification à deux rôles, gestion d'équipes et notation structurée sur plusieurs critères.",

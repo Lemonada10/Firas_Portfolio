@@ -10,7 +10,7 @@ import { useI18n } from "@/components/providers/language-provider";
 const LAYERS = [
   {
     id: "landing",
-    tone: "from-cyan-900/60 to-teal-800/30",
+    tone: "from-cyan-100/90 to-white dark:from-cyan-900/60 dark:to-teal-800/30",
     ring: "border-cyan-600/40",
     activeShadow: "shadow-[0_0_32px_rgba(6,182,212,0.25)]",
     dot: "bg-cyan-400",
@@ -19,34 +19,34 @@ const LAYERS = [
   },
   {
     id: "bronze",
-    tone: "from-amber-900/60 to-amber-700/30",
+    tone: "from-amber-100/90 to-white dark:from-amber-900/60 dark:to-amber-700/30",
     ring: "border-amber-700/40",
     activeShadow: "shadow-[0_0_32px_rgba(217,119,6,0.28)]",
     dot: "bg-amber-400",
     glow: "rgba(217,119,6,0.3)",
-    stages: [2, 3],
+    stages: [2],
   },
   {
     id: "silver",
-    tone: "from-slate-700/60 to-zinc-600/30",
+    tone: "from-slate-200/90 to-white dark:from-slate-700/60 dark:to-zinc-600/30",
     ring: "border-slate-400/50",
     activeShadow: "shadow-[0_0_32px_rgba(148,163,184,0.22)]",
     dot: "bg-slate-300",
     glow: "rgba(148,163,184,0.25)",
-    stages: [4],
+    stages: [3],
   },
   {
     id: "gold",
-    tone: "from-yellow-900/60 to-amber-700/30",
+    tone: "from-yellow-100/90 to-white dark:from-yellow-900/60 dark:to-amber-700/30",
     ring: "border-yellow-500/40",
     activeShadow: "shadow-[0_0_32px_rgba(234,179,8,0.28)]",
     dot: "bg-yellow-400",
     glow: "rgba(234,179,8,0.3)",
-    stages: [5],
+    stages: [4],
   },
   {
     id: "platinum",
-    tone: "from-purple-900/60 to-violet-800/30",
+    tone: "from-violet-100/90 to-white dark:from-purple-900/60 dark:to-violet-800/30",
     ring: "border-purple-500/40",
     activeShadow: "shadow-[0_0_32px_rgba(168,85,247,0.30)]",
     dot: "bg-purple-400",
@@ -78,7 +78,7 @@ function DataPacket({ delay, color }: { delay: number; color: string }) {
 
 export function Pipeline() {
   const reduceMotion = useReducedMotion();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [active, setActive] = React.useState<LayerId>("bronze");
   const STAGES = t.pipeline.stages;
 
@@ -103,8 +103,82 @@ export function Pipeline() {
           <p className="mt-4 text-muted-foreground">{t.pipeline.subtitle}</p>
         </div>
 
+        <article className="mt-10 overflow-hidden rounded-3xl border border-primary/20 bg-card/95 shadow-[0_18px_60px_-30px_rgba(79,70,229,0.35)] dark:bg-[#151625]/95">
+          <div className="border-b border-border/50 bg-gradient-to-br from-primary/10 via-transparent to-transparent px-6 py-7 sm:px-8 sm:py-9">
+            <p className="text-sm font-semibold uppercase tracking-wider text-primary">Pratt &amp; Whitney Canada · 2026</p>
+            <h3 className="mt-3 max-w-3xl text-2xl font-semibold tracking-tight sm:text-3xl">
+              {locale === "fr" ? "Centraliser les données pour les équipes de gestion des approvisionnements" : "Centralizing data for supply management"}
+            </h3>
+          </div>
+          <div className="grid gap-7 p-6 md:grid-cols-3 md:gap-8 sm:p-8">
+            {(
+              locale === "fr"
+                ? [
+                    ["Le défi", "Les données et transformations étaient dispersées entre plusieurs sources et rapports. L'équipe avait besoin d'un emplacement commun et plus facile à maintenir."],
+                    ["Ma contribution", "J'ai construit un pipeline ETL Python modulaire : intégration d'API et de fichiers SharePoint, architecture médaillon à cinq couches, orchestration et transformations réutilisables."],
+                    ["Ce que cela permet", "Les données préparées sont centralisées dans SharePoint pour alimenter plusieurs produits. Le traitement en Python réduit les transformations nécessaires dans Power BI et facilite la maintenance."],
+                  ]
+                : [
+                    ["The challenge", "Data and transformations were spread across sources and reports. The team needed a shared, more maintainable place for supply-management data."],
+                    ["My contribution", "I built a modular Python ETL pipeline integrating APIs and SharePoint files, with five medallion layers, centralized orchestration, and reusable transformations."],
+                    ["What it enables", "Prepared data is centralized in SharePoint for multiple products. Moving transformation into Python reduces work in Power BI and makes the data easier to maintain."],
+                  ]
+            ).map(([title, copy]) => (
+              <div key={title} className="border-l-2 border-primary/40 pl-4">
+                <h4 className="text-sm font-semibold uppercase tracking-wider text-primary">{title}</h4>
+                <p className="mt-3 text-base leading-relaxed text-foreground/85">{copy}</p>
+              </div>
+            ))}
+          </div>
+          <div className="border-t border-border/50 px-6 py-6 sm:px-8">
+            <h4 className="text-lg font-semibold">{locale === "fr" ? "Les produits alimentés par ces données" : "Products using the shared data"}</h4>
+            <div className="mt-5 grid gap-4 md:grid-cols-3">
+              {(
+                locale === "fr"
+                  ? [
+                      ["Prix des métaux", "Intégration d'Argus et de Fastmarkets, conversion des devises et unités, et modèles de données pour les comparaisons de prix et les compositions d'alliages dans Power BI. J'ai aussi présenté une démonstration à l'équipe."],
+                      ["Indices économiques", "Travail sur les données et les rapports IPC, IPP et taux de change pour aider à évaluer les risques liés aux pays des fournisseurs et aux transitions."],
+                      ["Profils fournisseurs", "Création d'un modèle Excel standardisé et de scripts Python qui lisent les anciens profils fournisseurs et convertissent leurs données vers ce modèle."],
+                    ]
+                  : [
+                      ["Metal indices", "I integrated Argus and Fastmarkets data, standardized currencies and units, and worked on the data model for Power BI price comparisons and custom alloy compositions. I also demoed the dashboard to the team."],
+                      ["Economic indices", "I work on CPI, PPI, and exchange-rate data and reporting to support supplier-country risk and transition decisions."],
+                      ["Supplier profiles", "I created a standardized Excel template and Python scripts that read legacy supplier profiles and convert their inputs into the new format."],
+                    ]
+              ).map(([title, copy]) => (
+                <div key={title} className="rounded-2xl border border-border/60 bg-background/70 p-5 dark:border-white/10 dark:bg-white/[0.04]">
+                  <h5 className="text-base font-semibold text-foreground">{title}</h5>
+                  <p className="mt-3 text-sm leading-relaxed text-foreground/85">{copy}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <p className="border-t border-border/50 px-6 py-4 text-sm text-muted-foreground sm:px-8">
+            {locale === "fr" ? "Python · API REST · Parquet · SharePoint · Power BI · Excel/VBA · Azure DevOps · Jira" : "Python · REST APIs · Parquet · SharePoint · Power BI · Excel/VBA · Azure DevOps · Jira"}
+          </p>
+        </article>
+
+        <article className="mt-6 grid overflow-hidden rounded-3xl border border-border/70 bg-card/95 shadow-sm dark:bg-[#151625]/95 md:grid-cols-[14rem_1fr]">
+          <div className="flex flex-col justify-center bg-primary/10 p-6 sm:p-8">
+            <span className="text-4xl font-bold tracking-tight text-primary">20+</span>
+            <span className="mt-2 text-sm font-semibold text-foreground">{locale === "fr" ? "sources Databricks" : "Databricks sources"}</span>
+          </div>
+          <div className="p-6 sm:p-8">
+            <p className="text-sm font-semibold uppercase tracking-wider text-primary">Pratt &amp; Whitney Canada · 2025</p>
+            <h3 className="mt-2 text-xl font-semibold tracking-tight">{locale === "fr" ? "Simplifier les données de ventes" : "Simplifying sales reporting"}</h3>
+            <p className="mt-3 max-w-3xl text-base leading-relaxed text-foreground/85">
+              {locale === "fr" ? "J'ai regroupé plus de 20 sources Databricks en un petit ensemble de tables, organisé l'ingestion et les transformations PySpark en fonctions réutilisables, puis amélioré les vues Power BI pour suivre les tendances quotidiennes, hebdomadaires et mensuelles par rapport aux objectifs." : "I consolidated more than 20 Databricks sources into a small set of tables, organized PySpark ingestion and transformations into reusable functions, and improved Power BI views to show daily, weekly, and monthly trends against targets."}
+            </p>
+            <p className="mt-4 text-sm font-medium text-muted-foreground">PySpark · Databricks · Power BI</p>
+          </div>
+        </article>
+
+        <p className="mt-12 text-center text-sm text-muted-foreground">
+          {locale === "fr" ? "Schéma illustratif : explorez les couches du pipeline médaillon." : "Illustrative diagram: explore the medallion pipeline layers."}
+        </p>
+
         {/* pipeline body */}
-        <div className="mt-14 grid gap-8 lg:grid-cols-[1fr_1.15fr] lg:items-start">
+        <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_1.15fr] lg:items-start">
 
           {/* ── LEFT: vertical layer flow ── */}
           <div className="relative flex flex-col">
@@ -134,7 +208,7 @@ export function Pipeline() {
                       layer.ring,
                       on
                         ? `scale-[1.02] border-opacity-80 ${layer.activeShadow}`
-                        : "opacity-70 hover:opacity-90 hover:scale-[1.01]",
+                        : "hover:scale-[1.01]",
                     ].join(" ")}
                     aria-pressed={on}
                   >
@@ -163,13 +237,16 @@ export function Pipeline() {
                           {layer.stages.map((s) => (
                             <span
                               key={s}
-                              className="rounded-full border border-white/10 bg-black/20 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-foreground/70"
+                              className="pipeline-stage rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider"
                             >
                               {STAGES[s]}
                             </span>
                           ))}
                         </div>
                       </div>
+                      {on && (
+                        <p className="mt-3 text-sm leading-relaxed text-foreground lg:hidden">{text.copy}</p>
+                      )}
                     </div>
                   </button>
 
@@ -192,7 +269,7 @@ export function Pipeline() {
 
           {/* ── RIGHT: detail panel ── */}
           <div
-            className="sticky top-24 overflow-hidden rounded-3xl border border-border/70 bg-card/50 backdrop-blur-md dark:bg-card/30"
+            className="sticky top-24 hidden overflow-hidden rounded-3xl border border-border/70 bg-card/50 backdrop-blur-md dark:bg-card/30 lg:block"
             style={{ minHeight: "18rem" }}
           >
             {/* glow strip at top matching active layer */}

@@ -17,6 +17,7 @@ type GalleryLightboxProps = {
 
 export function GalleryLightbox({
   images,
+  thumbAspect,
   gridClassName = "mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3",
 }: GalleryLightboxProps) {
   const [activeIdx, setActiveIdx] = React.useState<number | null>(null);
@@ -56,12 +57,13 @@ export function GalleryLightbox({
             onClick={() => setActiveIdx(i)}
             className="group relative overflow-hidden rounded-xl border border-border/80 bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-label={`${t.gallery.view} — ${img.alt}`}
+            style={thumbAspect ? { aspectRatio: thumbAspect } : undefined}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={img.src}
               alt={img.alt}
-              className="w-full transition-transform duration-300 group-hover:scale-105"
+              className={thumbAspect ? "h-full w-full object-contain transition-transform duration-300 group-hover:scale-105" : "w-full transition-transform duration-300 group-hover:scale-105"}
               style={{ display: "block" }}
             />
             <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-200 group-hover:bg-black/30">
@@ -114,14 +116,14 @@ export function GalleryLightbox({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.94 }}
                 transition={{ duration: 0.18 }}
-                className="max-h-[90vh] max-w-sm w-full overflow-hidden rounded-xl shadow-2xl"
+                className="flex max-h-[85vh] max-w-[min(90vw,64rem)] items-center justify-center overflow-hidden rounded-xl shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={current.src}
                   alt={current.alt}
-                  className="w-full h-auto block max-h-[90vh] object-contain"
+                  className="block max-h-[85vh] max-w-full object-contain"
                 />
               </motion.div>
             </AnimatePresence>

@@ -43,17 +43,15 @@ export function ProjectModal({
           <Image
             src={
               project.image ??
-              `https://placehold.co/1200x400/1e1b4b/818cf8/png?text=${encodeURIComponent(
-                project.title
-              )}`
+              "/projects/project-placeholder.svg"
             }
             alt={project.imageAlt}
             fill
-            className="object-cover"
+            className={project.slug === "iris" ? "object-contain bg-white" : "object-cover"}
             sizes="(max-width: 768px) 100vw, 672px"
             priority={false}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
+          {project.slug !== "iris" && <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />}
         </div>
 
         <div className="relative z-0 min-h-0 flex-1 overflow-y-auto bg-popover">
@@ -168,7 +166,7 @@ export function ProjectModal({
             <h4 className="text-sm font-semibold text-foreground">{t.project.gallery}</h4>
             <GalleryLightbox
               images={project.gallery!}
-              thumbAspect="9/16"
+              thumbAspect={project.slug === "iris" ? "4/3" : undefined}
               gridClassName="mt-3 grid grid-cols-3 gap-3"
             />
           </section>
