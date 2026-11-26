@@ -21,10 +21,13 @@ import { LocaleFade } from "@/components/ui/locale-fade";
 import { CommandPalette } from "@/components/ui/command-palette";
 import { ToastHost } from "@/components/ui/toast";
 import { personal } from "@/lib/data";
-import { Analytics } from "@vercel/analytics/next";
+import { AnalyticsProvider } from "@/components/providers/analytics-provider";
 
 const CanvasBackground = dynamic(
-  () => import("@/components/ui/canvas-background").then((m) => ({ default: m.CanvasBackground })),
+  () =>
+    import("@/components/ui/canvas-background").then((m) => ({
+      default: m.CanvasBackground,
+    })),
   { ssr: false }
 );
 
@@ -51,13 +54,22 @@ export const metadata: Metadata = {
   },
   description: `${personal.headline} Based in ${personal.location}.`,
   keywords: [
-    "Firas Al Haddad", "Software Engineering", "Concordia University",
-    "Montreal", "data engineering", "Pratt & Whitney", "Databricks", "PySpark",
-    "internship", "full-stack",
+    "Firas Al Haddad",
+    "Software Engineering",
+    "Concordia University",
+    "Montreal",
+    "data engineering",
+    "Pratt & Whitney",
+    "Databricks",
+    "PySpark",
+    "internship",
+    "full-stack",
   ],
   authors: [{ name: personal.name }],
   openGraph: {
-    type: "website", locale: "en_CA", url: siteUrl,
+    type: "website",
+    locale: "en_CA",
+    url: siteUrl,
     siteName: `${personal.name} · Portfolio`,
     title: `${personal.name} · Software Engineering Co-op`,
     description: personal.headline,
@@ -67,17 +79,26 @@ export const metadata: Metadata = {
     title: `${personal.name} · Portfolio`,
     description: personal.headline,
   },
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: personal.name,
-  jobTitle: "Software Engineering Co-op · Data Analytics Intern (Data Engineering)",
+  jobTitle:
+    "Software Engineering Co-op · Data Analytics Intern (Data Engineering)",
   email: personal.email,
   telephone: personal.phone,
-  address: { "@type": "PostalAddress", addressLocality: "Montreal", addressRegion: "QC", addressCountry: "CA" },
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Montreal",
+    addressRegion: "QC",
+    addressCountry: "CA",
+  },
   alumniOf: personal.school,
   url: siteUrl,
   sameAs: [personal.linkedInUrl, personal.portfolioUrl].filter(Boolean),
@@ -85,8 +106,14 @@ const personJsonLd = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f2f4f9" },
-    { media: "(prefers-color-scheme: dark)", color: "#09090f" },
+    {
+      media: "(prefers-color-scheme: light)",
+      color: "#f2f4f9",
+    },
+    {
+      media: "(prefers-color-scheme: dark)",
+      color: "#09090f",
+    },
   ],
 };
 
@@ -102,8 +129,11 @@ export default function RootLayout({
       <body className="min-h-screen overflow-x-hidden font-sans antialiased [text-rendering:optimizeLegibility]">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(personJsonLd),
+          }}
         />
+
         <ThemeProvider>
           <LanguageProvider>
             <TooltipProvider>
@@ -111,6 +141,7 @@ export default function RootLayout({
 
               {/* 1: canvas animation fills the whole page (client-only) */}
               <CanvasBackground />
+
               {/* 2: CSS dot-grid + vignette on top of canvas */}
               <AmbientBackground />
 
@@ -125,17 +156,21 @@ export default function RootLayout({
                 <RecruiterDock />
                 <ShortcutOverlay />
                 <ToastHost />
+
                 <MotionRoot>
                   <main id="main-content" className="flex-1">
                     <LocaleFade>{children}</LocaleFade>
                   </main>
                 </MotionRoot>
+
                 <Footer />
               </div>
             </TooltipProvider>
           </LanguageProvider>
         </ThemeProvider>
-        <Analytics />
+
+        {/* Vercel Analytics with owner exclusion */}
+        <AnalyticsProvider />
       </body>
     </html>
   );
